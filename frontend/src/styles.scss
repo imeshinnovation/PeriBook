@@ -1,0 +1,147 @@
+// ── PeriBook — Paleta Verde Olivo ──────────────────────
+$olive-50:  #f7f8f4;
+$olive-100: #eef0e7;
+$olive-200: #dce0ce;
+$olive-300: #c1c8ab;
+$olive-400: #a4ae86;
+$olive-500: #8b9569;
+$olive-600: #6b7a4f;  // Olive Drab
+$olive-700: #556b2f;  // Dark Olive Green — primario
+$olive-800: #455525;
+$olive-900: #3a4720;
+
+// ── Reset ───────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: $olive-100;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+// ── Utilidades ──────────────────────────────────────────
+.container { max-width: 680px; margin: 0 auto; padding: 1rem; }
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba($olive-900, 0.08);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.625rem 1.5rem;
+  border: none; border-radius: 8px;
+  font-family: inherit; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-primary {
+  background: $olive-700; color: #fff;
+  &:hover:not(:disabled) { background: $olive-800; }
+}
+
+.btn-secondary {
+  background: $olive-200; color: $olive-800;
+  &:hover:not(:disabled) { background: $olive-300; }
+}
+
+.btn-danger {
+  background: #dc3545; color: #fff;
+  &:hover:not(:disabled) { background: darken(#dc3545, 8%); }
+}
+
+.input {
+  width: 100%; padding: 0.75rem 1rem;
+  border: 1.5px solid $olive-300; border-radius: 8px;
+  font-family: inherit; font-size: 0.95rem;
+  transition: border-color 0.2s;
+  &:focus { outline: none; border-color: $olive-700; box-shadow: 0 0 0 3px rgba($olive-700, 0.12); }
+}
+
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; margin-bottom: 0.35rem; font-weight: 500; color: $olive-800; }
+.text-danger { color: #dc3545; font-size: 0.85rem; margin-top: 0.25rem; }
+
+// ── Navbar ──────────────────────────────────────────────
+.navbar {
+  background: $olive-700; color: #fff; padding: 0.75rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 2px 8px rgba($olive-900, 0.15);
+  .navbar-brand { font-size: 1.35rem; font-weight: 700; }
+  .navbar-user { font-size: 0.9rem; opacity: 0.9; }
+  .navbar-actions { display: flex; gap: 0.5rem; }
+  .btn-logout { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.25);
+    padding: 0.4rem 1rem; border-radius: 6px; font-size: 0.85rem; cursor: pointer;
+    &:hover { background: rgba(255,255,255,0.25); }
+  }
+}
+
+// ── Feed ────────────────────────────────────────────────
+.feed-item {
+  .feed-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .feed-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: $olive-300; display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: $olive-800; font-size: 1.1rem;
+  }
+  .feed-author { font-weight: 600; color: $olive-800; }
+  .feed-time { font-size: 0.8rem; color: #888; }
+  .feed-content { font-size: 0.95rem; line-height: 1.55; color: #333; margin-bottom: 0.75rem; }
+  .feed-actions { display: flex; gap: 1.5rem; border-top: 1px solid $olive-200; padding-top: 0.6rem; }
+  .like-btn {
+    background: none; border: none; cursor: pointer; font-size: 0.9rem;
+    color: $olive-600; display: flex; align-items: center; gap: 0.35rem;
+    transition: color 0.2s;
+    &:hover { color: $olive-800; }
+    &.liked { color: #e74c3c; }
+  }
+}
+
+// ── Login ───────────────────────────────────────────────
+.login-page {
+  display: flex; align-items: center; justify-content: center; min-height: 90vh;
+  .login-card {
+    background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba($olive-900, 0.1);
+    padding: 2.5rem; width: 100%; max-width: 420px;
+    h1 { text-align: center; color: $olive-800; margin-bottom: 0.25rem; font-size: 1.8rem; }
+    p { text-align: center; color: #888; margin-bottom: 1.5rem; font-size: 0.9rem; }
+  }
+}
+
+// ── Profile ─────────────────────────────────────────────
+.profile-header {
+  text-align: center; padding: 2rem 0;
+  .profile-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: $olive-300; margin: 0 auto 1rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem; font-weight: 700; color: $olive-800;
+  }
+}
+
+// ── Crear publicación ───────────────────────────────────
+.create-post {
+  display: flex; gap: 0.75rem; margin-bottom: 1.5rem;
+  textarea {
+    flex: 1; padding: 0.75rem; border: 1.5px solid $olive-300;
+    border-radius: 8px; font-family: inherit; font-size: 0.95rem;
+    resize: none; rows: 2;
+    &:focus { outline: none; border-color: $olive-700; }
+  }
+  button { align-self: flex-end; }
+}
+
+// ── Spinner ─────────────────────────────────────────────
+.spinner {
+  display: flex; justify-content: center; padding: 2rem;
+  .loader {
+    width: 32px; height: 32px; border: 3px solid $olive-200;
+    border-top-color: $olive-700; border-radius: 50%; animation: spin 0.8s linear infinite;
+  }
+}
+@keyframes spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,14 @@
+services:
+  frontend:
+    build: .
+    container_name: frontend
+    ports:
+      - "4200:80"
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+networks:
+  peribook-net:
+    name: peribook-net
+    external: true

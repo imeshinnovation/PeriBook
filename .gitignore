@@ -39,3 +39,4 @@ infra/secrets/*
 # Env
 .env
 .env.local
+node_modules/

@@ -9,8 +9,8 @@ SPA Angular 21, clon visual de Facebook en paleta verde oliva. Habla únicamente
 con `api-gateway` (REST y WebSocket).
 
 ## Checklist de esta fase
-- [ ] Standalone components + lazy loading por feature
-- [ ] NgRx SignalStore (AuthStore, FeedStore, ProfileStore)
-- [ ] Pantallas: Login, Feed, Perfil
-- [ ] `RealtimeService` conectado a `ws://.../ws` (vía Gateway)
-- [ ] `Dockerfile` + `docker-compose.yml` propio
+- [x] Standalone components + lazy loading por feature
+- [x] NgRx SignalStore (AuthStore, FeedStore)
+- [x] Pantallas: Login, Feed, Perfil
+- [x] `RealtimeService` conectado a `/ws` vía Gateway (SockJS + STOMP)
+- [x] `Dockerfile` + `docker-compose.yml` propio (nginx + Angular)
