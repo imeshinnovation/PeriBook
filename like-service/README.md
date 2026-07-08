@@ -8,8 +8,8 @@
 Registrar likes (sin duplicados) y publicar `LikeRegistrado` en RabbitMQ.
 
 ## Checklist de esta fase
-- [ ] Agregado `Like`
-- [ ] `sp_registrar_like` (PL/pgSQL, anti-duplicados) — 2º procedure mínimo
-- [ ] `DarLikeUseCase` con TDD (incluye caso "like duplicado")
-- [ ] Publisher de `LikeRegistrado`
-- [ ] `Dockerfile` + `docker-compose.yml` propio (Postgres `like-db`)
+- [x] Agregado `Like`
+- [x] `sp_registrar_like` (PL/pgSQL, anti-duplicados) — 2º procedure mínimo
+- [x] `DarLikeUseCase` con TDD (incluye caso "like duplicado") — 4 tests ✅
+- [x] Publisher de `LikeRegistrado`
+- [x] `Dockerfile` + `docker-compose.yml` propio (Postgres `like-db`)

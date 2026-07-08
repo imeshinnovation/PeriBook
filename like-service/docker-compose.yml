@@ -1,0 +1,48 @@
+services:
+  like-service:
+    build: .
+    container_name: like-service
+    ports:
+      - "8084:8084"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - LIKE_DB_HOST=like-db
+      - LIKE_DB_USER=likeuser
+      - LIKE_DB_PASSWORD=likepass
+      - RABBITMQ_HOST=peribook-rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    depends_on:
+      like-db:
+        condition: service_healthy
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+  like-db:
+    image: postgres:16-alpine
+    container_name: like-db
+    environment:
+      POSTGRES_DB: likedb
+      POSTGRES_USER: likeuser
+      POSTGRES_PASSWORD: likepass
+    ports:
+      - "5435:5432"
+    volumes:
+      - like-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U likeuser -d likedb"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+volumes:
+  like-db-data:
+
+networks:
+  peribook-net:
+    name: peribook-net
+    external: true
