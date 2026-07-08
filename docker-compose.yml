@@ -1,22 +1,25 @@
-version: "3.9"
-
-# Orquestador de desarrollo local — compone el docker-compose.yml propio de cada
-# microservicio (ver ADR 0001). Requiere Docker Compose >= 2.20 para `include:`.
+# ============================================================================
+# PeriBook — Orquestador raíz de desarrollo local
+#
+# Usa `include:` (Docker Compose >= 2.20) para componer el docker-compose.yml
+# de cada microservicio. Cada servicio es 100% autónomo (docker compose up
+# dentro de su directorio funciona sin este archivo).
 #
 # Uso:
-#   docker compose up --build
+#   docker compose up --build          # Levantar todo
+#   docker compose up auth-service     # Levantar solo un servicio + sus depends_on
+#   docker compose down -v             # Tirar todo (incluye volúmenes)
 #
-# Alternativa sin `include:` (Compose < 2.20), documentada también en el README:
-#   docker compose -f docker-compose.yml -f api-gateway/docker-compose.yml \
-#     -f bff-web/docker-compose.yml -f auth-service/docker-compose.yml \
-#     -f user-service/docker-compose.yml -f post-service/docker-compose.yml \
-#     -f like-service/docker-compose.yml -f realtime-service/docker-compose.yml \
-#     -f frontend/docker-compose.yml up --build
+# Requisito: Docker Compose >= 2.20 (incluido en Docker Desktop y docker-ce actual)
+# ============================================================================
+
+name: peribook
 
 networks:
   peribook-net:
     driver: bridge
 
+# ── Infraestructura compartida ────────────────────────────────────────────────
 services:
   rabbitmq:
     image: rabbitmq:3.13-management-alpine
@@ -24,17 +27,27 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks: [peribook-net]
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - peribook-net
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-# Se activa a medida que cada servicio tenga su propio docker-compose.yml
-# (ver el README.md de cada directorio para el estado de cada fase).
-#
-# include:
-#   - api-gateway/docker-compose.yml
-#   - bff-web/docker-compose.yml
-#   - auth-service/docker-compose.yml
-#   - user-service/docker-compose.yml
-#   - post-service/docker-compose.yml
-#   - like-service/docker-compose.yml
-#   - realtime-service/docker-compose.yml
-#   - frontend/docker-compose.yml
+# ── Microservicios + frontend ─────────────────────────────────────────────────
+# Cada servicio se incluye desde su propio docker-compose.yml.
+# La red externa peribook-net se define arriba y se comparte con todos.
+
+include:
+  - api-gateway/docker-compose.yml
+  - bff-web/docker-compose.yml
+  - auth-service/docker-compose.yml
+  - user-service/docker-compose.yml
+  - post-service/docker-compose.yml
+  - like-service/docker-compose.yml
+  - realtime-service/docker-compose.yml
+  - frontend/docker-compose.yml

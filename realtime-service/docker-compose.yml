@@ -13,7 +13,3 @@ services:
       - peribook-net
     restart: unless-stopped
 
-networks:
-  peribook-net:
-    name: peribook-net
-    external: true

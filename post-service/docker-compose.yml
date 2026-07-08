@@ -42,7 +42,3 @@ services:
 volumes:
   post-db-data:
 
-networks:
-  peribook-net:
-    name: peribook-net
-    external: true

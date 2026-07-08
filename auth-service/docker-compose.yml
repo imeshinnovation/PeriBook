@@ -41,7 +41,3 @@ services:
 volumes:
   auth-db-data:
 
-networks:
-  peribook-net:
-    name: peribook-net
-    driver: bridge
