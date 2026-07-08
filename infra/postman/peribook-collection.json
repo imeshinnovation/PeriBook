@@ -1,0 +1,251 @@
+{
+  "info": {
+    "name": "PeriBook API",
+    "description": "Colección completa de endpoints de PeriBook. Usa con la variable {{gateway}} (default: http://localhost:8080).\n\nFlujo:\n1. Login → obtén el token JWT\n2. El token se guarda automáticamente en la variable {{token}}\n3. Usa los demás endpoints (heredan el token del auth header de la colección)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "variable": [
+    { "key": "gateway", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "POST /api/auth/login — Ana",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var json = pm.response.json();",
+                  "  pm.collectionVariables.set('token', json.token);",
+                  "  pm.environment.set('token', json.token);",
+                  "  pm.environment.set('userId', json.userId);",
+                  "  console.log('Token JWT guardado: ' + json.token.substring(0, 30) + '...');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"ana@peribook.com\", \"password\": \"secreto123\"}"
+            },
+            "url": {
+              "raw": "{{gateway}}/api/auth/login",
+              "host": ["{{gateway}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/auth/login — Carlos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  var json = pm.response.json();",
+                  "  pm.environment.set('token_carlos', json.token);",
+                  "  console.log('Token Carlos guardado');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"carlos@peribook.com\", \"password\": \"secreto123\"}"
+            },
+            "url": {
+              "raw": "{{gateway}}/api/auth/login",
+              "host": ["{{gateway}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "POST /api/auth/login — Credenciales inválidas",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"ana@peribook.com\", \"password\": \"wrong\"}"
+            },
+            "url": {
+              "raw": "{{gateway}}/api/auth/login",
+              "host": ["{{gateway}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User Service",
+      "item": [
+        {
+          "name": "GET /api/users/{id} — Perfil propio",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway}}/api/users/{{userId}}",
+              "host": ["{{gateway}}"],
+              "path": ["api", "users", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "GET /api/users/{id} — Perfil inexistente",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway}}/api/users/00000000-0000-0000-0000-000000000000",
+              "host": ["{{gateway}}"],
+              "path": ["api", "users", "00000000-0000-0000-0000-000000000000"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Post Service",
+      "item": [
+        {
+          "name": "GET /api/posts — Listar publicaciones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway}}/api/posts?limite=20",
+              "host": ["{{gateway}}"],
+              "path": ["api", "posts"],
+              "query": [{ "key": "limite", "value": "20" }]
+            }
+          }
+        },
+        {
+          "name": "POST /api/posts — Crear publicación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  var json = pm.response.json();",
+                  "  pm.environment.set('postId', json.id);",
+                  "  console.log('Publicación creada: ' + json.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"contenido\": \"¡Hola PeriBook! Mi primera publicación 🚀\"}"
+            },
+            "url": {
+              "raw": "{{gateway}}/api/posts",
+              "host": ["{{gateway}}"],
+              "path": ["api", "posts"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Like Service",
+      "item": [
+        {
+          "name": "POST /api/likes — Dar like",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{gateway}}/api/likes?publicacionId={{postId}}",
+              "host": ["{{gateway}}"],
+              "path": ["api", "likes"],
+              "query": [{ "key": "publicacionId", "value": "{{postId}}" }]
+            }
+          }
+        },
+        {
+          "name": "POST /api/likes — Like duplicado (idempotente)",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{gateway}}/api/likes?publicacionId={{postId}}",
+              "host": ["{{gateway}}"],
+              "path": ["api", "likes"],
+              "query": [{ "key": "publicacionId", "value": "{{postId}}" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "BFF Web",
+      "item": [
+        {
+          "name": "GET /bff/feed — Feed enriquecido",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway}}/bff/feed?limite=20",
+              "host": ["{{gateway}}"],
+              "path": ["bff", "feed"],
+              "query": [{ "key": "limite", "value": "20" }]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health & Docs",
+      "item": [
+        {
+          "name": "GET /actuator/health — Gateway health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway}}/actuator/health",
+              "host": ["{{gateway}}"],
+              "path": ["actuator", "health"]
+            }
+          }
+        },
+        {
+          "name": "GET /docs — Swagger UI",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gateway}}/docs",
+              "host": ["{{gateway}}"],
+              "path": ["docs"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

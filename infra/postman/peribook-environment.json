@@ -1,0 +1,35 @@
+{
+  "name": "PeriBook — Local Dev",
+  "values": [
+    {
+      "key": "gateway",
+      "value": "http://localhost:8080",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "token_carlos",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "postId",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ]
+}
