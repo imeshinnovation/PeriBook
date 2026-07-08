@@ -7,7 +7,7 @@
 Pruebas de aceptación de caja negra, con evidencias automáticas (Serenity).
 
 ## Checklist de esta fase
-- [ ] `build.gradle` con Serenity + Cucumber + REST Assured + Screenplay
-- [ ] Features API (`@login`, `@perfil`, `@feed`, `@likes-tiempo-real`)
-- [ ] Features UI (Screenplay, incluye el escenario de dos pestañas)
-- [ ] `./gradlew clean test aggregate` genera reporte en `target/site/serenity/`
+- [x] `build.gradle` con Serenity + Cucumber + REST Assured + Screenplay
+- [x] Features API (`@login`, `@perfil`, `@feed`, `@likes-tiempo-real`)
+- [x] Features UI (Screenplay, incluye el escenario de dos pestañas)
+- [x] `./gradlew clean test aggregate` genera reporte en `target/site/serenity/`
