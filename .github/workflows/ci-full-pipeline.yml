@@ -1,0 +1,75 @@
+# Pipeline completo — Build → Test → Snyk → Trivy → Deploy (Docker Swarm)
+# Se ejecuta en push a main después de pasar CI básico
+
+name: Full CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository_owner }}/peribook
+
+jobs:
+  # ── Build & Test ────────────────────────────────────
+  build:
+    uses: ./.github/workflows/ci-build.yml
+
+  # ── Security Scans ──────────────────────────────────
+  security:
+    needs: build
+    uses: ./.github/workflows/snyk-security.yml
+    secrets: inherit
+
+  # ── Build & Push Docker images ──────────────────────
+  docker:
+    needs: security
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service:
+          - auth-service
+          - user-service
+          - post-service
+          - like-service
+          - api-gateway
+          - bff-web
+          - realtime-service
+          - frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push ${{ matrix.service }}
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.service }}
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-${{ matrix.service }}:${{ github.sha }}
+
+  # ── Trivy Scan on pushed images ─────────────────────
+  trivy:
+    needs: docker
+    uses: ./.github/workflows/trivy-scan.yml
+
+  # ── Notify ───────────────────────────────────────────
+  notify:
+    needs: trivy
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Pipeline status
+        run: |
+          if [ "${{ needs.trivy.result }}" = "success" ]; then
+            echo "✅ Pipeline completo — imágenes listas para deploy"
+          else
+            echo "⚠️  Pipeline completado con advertencias"
+          fi

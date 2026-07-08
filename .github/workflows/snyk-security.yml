@@ -1,0 +1,71 @@
+# Snyk — Escaneo de vulnerabilidades en dependencias
+# Ver plan sección 7: se ejecuta por cada push (incremental)
+
+name: Snyk Security Scan
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 7 * * 1'  # Cada lunes a las 7am UTC
+  workflow_dispatch:      # Manual
+
+jobs:
+  snyk-maven:
+    strategy:
+      matrix:
+        service:
+          - auth-service
+          - user-service
+          - post-service
+          - like-service
+          - api-gateway
+          - bff-web
+          - realtime-service
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Snyk on ${{ matrix.service }}
+        uses: snyk/actions/maven@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=${{ matrix.service }}/pom.xml --severity-threshold=medium
+
+  snyk-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Snyk on frontend
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=frontend/package.json --severity-threshold=medium
+
+  snyk-gradle:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Snyk on qa-bdd
+        uses: snyk/actions/gradle@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --file=qa-bdd/build.gradle --severity-threshold=medium
+
+  snyk-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Snyk Code (SAST)
+        uses: snyk/actions/gradle@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          command: code test
+          args: --severity-threshold=medium
