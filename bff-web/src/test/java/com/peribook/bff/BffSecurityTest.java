@@ -1,30 +1,31 @@
 package com.peribook.bff;
 
+import com.peribook.bff.application.ObtenerFeedEnriquecidoUseCase;
 import com.peribook.bff.infrastructure.SecurityConfig;
-import com.peribook.bff.interfaces.HealthController;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@WebFluxTest(controllers = HealthController.class)
+@WebFluxTest
 @Import(SecurityConfig.class)
-class BffWebSmokeTest {
+class BffSecurityTest {
+
+    @MockBean
+    private ObtenerFeedEnriquecidoUseCase useCase;
 
     @Autowired
     private WebTestClient webTestClient;
 
     @Test
-    @DisplayName("GET / debe devolver 200 sin autenticación")
-    void smokeTest() {
+    @DisplayName("GET /bff/feed sin token debe devolver 401")
+    void feedRequiereJwt() {
         webTestClient.get()
-                .uri("/")
+                .uri("/bff/feed")
                 .exchange()
-                .expectStatus().isOk()
-                .expectBody()
-                .jsonPath("$.service").isEqualTo("bff-web")
-                .jsonPath("$.status").isEqualTo("running");
+                .expectStatus().isUnauthorized();
     }
 }

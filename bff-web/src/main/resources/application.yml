@@ -16,6 +16,24 @@ springdoc:
   api-docs:
     path: /v3/api-docs
 
+# Resilience4j — Circuit Breaker para like-service
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        wait-duration-in-open-state: 30s
+        failure-rate-threshold: 50
+    instances:
+      likeService:
+        base-config: default
+        wait-duration-in-open-state: 15s
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 3s
+
 logging:
   level:
     com.peribook: DEBUG

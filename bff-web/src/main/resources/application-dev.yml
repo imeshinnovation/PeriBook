@@ -1,0 +1,11 @@
+resilience4j:
+  circuitbreaker:
+    instances:
+      likeService:
+        wait-duration-in-open-state: 5s  # Más rápido en dev para pruebas
+
+logging:
+  level:
+    com.peribook: DEBUG
+    org.springframework.security: DEBUG
+    io.github.resilience4j: DEBUG
