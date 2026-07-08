@@ -8,8 +8,8 @@
 Perfil de usuario: nombres, apellidos, fecha de nacimiento, alias.
 
 ## Checklist de esta fase
-- [ ] Agregado `Perfil`
-- [ ] `ObtenerPerfilUseCase` con TDD
-- [ ] Endpoint `GET /api/users/{id}`
-- [ ] Valida JWT emitido por auth-service (Resource Server, misma llave pública)
-- [ ] `Dockerfile` + `docker-compose.yml` propio (Postgres `user-db`)
+- [x] Agregado `Perfil`
+- [x] `ObtenerPerfilUseCase` con TDD — 6 tests ✅
+- [x] Endpoint `GET /api/users/{id}`
+- [x] Valida JWT emitido por auth-service (Resource Server, misma llave pública)
+- [x] `Dockerfile` + `docker-compose.yml` propio (Postgres `user-db`)

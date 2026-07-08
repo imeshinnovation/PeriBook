@@ -1,0 +1,45 @@
+services:
+  user-service:
+    build: .
+    container_name: user-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - USER_DB_HOST=user-db
+      - USER_DB_USER=useruser
+      - USER_DB_PASSWORD=userpass
+    depends_on:
+      user-db:
+        condition: service_healthy
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+  user-db:
+    image: postgres:16-alpine
+    container_name: user-db
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: useruser
+      POSTGRES_PASSWORD: userpass
+    ports:
+      - "5433:5432"  # Puerto 5433 en host para no colisionar con auth-db
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U useruser -d userdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+volumes:
+  user-db-data:
+
+networks:
+  peribook-net:
+    name: peribook-net
+    external: true
