@@ -1,0 +1,40 @@
+version: "3.9"
+
+# Orquestador de desarrollo local — compone el docker-compose.yml propio de cada
+# microservicio (ver ADR 0001). Requiere Docker Compose >= 2.20 para `include:`.
+#
+# Uso:
+#   docker compose up --build
+#
+# Alternativa sin `include:` (Compose < 2.20), documentada también en el README:
+#   docker compose -f docker-compose.yml -f api-gateway/docker-compose.yml \
+#     -f bff-web/docker-compose.yml -f auth-service/docker-compose.yml \
+#     -f user-service/docker-compose.yml -f post-service/docker-compose.yml \
+#     -f like-service/docker-compose.yml -f realtime-service/docker-compose.yml \
+#     -f frontend/docker-compose.yml up --build
+
+networks:
+  peribook-net:
+    driver: bridge
+
+services:
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: peribook-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks: [peribook-net]
+
+# Se activa a medida que cada servicio tenga su propio docker-compose.yml
+# (ver el README.md de cada directorio para el estado de cada fase).
+#
+# include:
+#   - api-gateway/docker-compose.yml
+#   - bff-web/docker-compose.yml
+#   - auth-service/docker-compose.yml
+#   - user-service/docker-compose.yml
+#   - post-service/docker-compose.yml
+#   - like-service/docker-compose.yml
+#   - realtime-service/docker-compose.yml
+#   - frontend/docker-compose.yml

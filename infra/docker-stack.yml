@@ -1,0 +1,306 @@
+version: "3.9"
+
+# ============================================================================
+# PeriBook — Docker Stack (Swarm mode)
+# Despliegue: docker stack deploy -c infra/docker-stack.yml peribook
+# Requiere: swarm inicializado (bootstrap-swarm.sh) y secretos ya creados.
+# NOTA: este archivo NO construye imágenes (docker stack deploy no soporta
+# `build:`). Las imágenes deben existir localmente o en un registro antes
+# de desplegar — ver el paso de build+push en el pipeline de CI (sección 7
+# del plan de arquitectura).
+# ============================================================================
+
+networks:
+  peribook-net:
+    driver: overlay
+    driver_opts:
+      encrypted: "true"      # tráfico cifrado entre nodos del clúster
+
+secrets:
+  postgres_password:
+    external: true
+  jwt_private_key:
+    external: true
+  jwt_public_key:
+    external: true
+  rabbitmq_password:
+    external: true
+
+volumes:
+  auth-db-data:
+  user-db-data:
+  post-db-data:
+  like-db-data:
+
+services:
+
+  # ---------------------------------------------------------------------
+  # Infraestructura compartida
+  # ---------------------------------------------------------------------
+
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    secrets: [rabbitmq_password]
+    environment:
+      RABBITMQ_DEFAULT_USER: peribook
+      RABBITMQ_DEFAULT_PASS_FILE: /run/secrets/rabbitmq_password
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.labels.peribook-data == true]
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  # ---------------------------------------------------------------------
+  # Capa de entrada
+  # ---------------------------------------------------------------------
+
+  api-gateway:
+    image: peribook/api-gateway:1.0.0
+    secrets: [jwt_public_key]
+    environment:
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public_key
+      BFF_WEB_URI: http://bff-web:8086
+      AUTH_SERVICE_URI: http://auth-service:8081
+      USER_SERVICE_URI: http://user-service:8082
+      POST_SERVICE_URI: http://post-service:8083
+      LIKE_SERVICE_URI: http://like-service:8084
+      REALTIME_SERVICE_URI: http://realtime-service:8085
+    ports:
+      - "8080:8080"
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  bff-web:
+    image: peribook/bff-web:1.0.0
+    secrets: [jwt_public_key]
+    environment:
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public_key
+      POST_SERVICE_URI: http://post-service:8083
+      USER_SERVICE_URI: http://user-service:8082
+      LIKE_SERVICE_URI: http://like-service:8084
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  frontend:
+    image: peribook/frontend:1.0.0
+    ports:
+      - "4200:80"
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+      resources:
+        limits: { cpus: "0.25", memory: 128M }
+
+  # ---------------------------------------------------------------------
+  # auth-service
+  # ---------------------------------------------------------------------
+
+  auth-service:
+    image: peribook/auth-service:1.0.0
+    secrets: [postgres_password, jwt_private_key, jwt_public_key]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://auth-db:5432/peribook_auth
+      SPRING_DATASOURCE_USERNAME: peribook
+      SPRING_DATASOURCE_PASSWORD_FILE: /run/secrets/postgres_password
+      JWT_PRIVATE_KEY_PATH: /run/secrets/jwt_private_key
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public_key
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  auth-db:
+    image: postgres:16-alpine
+    secrets: [postgres_password]
+    environment:
+      POSTGRES_DB: peribook_auth
+      POSTGRES_USER: peribook
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.peribook-data == true]
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  # ---------------------------------------------------------------------
+  # user-service
+  # ---------------------------------------------------------------------
+
+  user-service:
+    image: peribook/user-service:1.0.0
+    secrets: [postgres_password, jwt_public_key]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://user-db:5432/peribook_user
+      SPRING_DATASOURCE_USERNAME: peribook
+      SPRING_DATASOURCE_PASSWORD_FILE: /run/secrets/postgres_password
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public_key
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  user-db:
+    image: postgres:16-alpine
+    secrets: [postgres_password]
+    environment:
+      POSTGRES_DB: peribook_user
+      POSTGRES_USER: peribook
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.peribook-data == true]
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  # ---------------------------------------------------------------------
+  # post-service
+  # ---------------------------------------------------------------------
+
+  post-service:
+    image: peribook/post-service:1.0.0
+    secrets: [postgres_password, jwt_public_key, rabbitmq_password]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://post-db:5432/peribook_post
+      SPRING_DATASOURCE_USERNAME: peribook
+      SPRING_DATASOURCE_PASSWORD_FILE: /run/secrets/postgres_password
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public_key
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: peribook
+      SPRING_RABBITMQ_PASSWORD_FILE: /run/secrets/rabbitmq_password
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  post-db:
+    image: postgres:16-alpine
+    secrets: [postgres_password]
+    environment:
+      POSTGRES_DB: peribook_post
+      POSTGRES_USER: peribook
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+      - post-db-data:/var/lib/postgresql/data
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.peribook-data == true]
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  # ---------------------------------------------------------------------
+  # like-service
+  # ---------------------------------------------------------------------
+
+  like-service:
+    image: peribook/like-service:1.0.0
+    secrets: [postgres_password, jwt_public_key, rabbitmq_password]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://like-db:5432/peribook_like
+      SPRING_DATASOURCE_USERNAME: peribook
+      SPRING_DATASOURCE_PASSWORD_FILE: /run/secrets/postgres_password
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public_key
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: peribook
+      SPRING_RABBITMQ_PASSWORD_FILE: /run/secrets/rabbitmq_password
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  like-db:
+    image: postgres:16-alpine
+    secrets: [postgres_password]
+    environment:
+      POSTGRES_DB: peribook_like
+      POSTGRES_USER: peribook
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_password
+    volumes:
+      - like-db-data:/var/lib/postgresql/data
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.labels.peribook-data == true]
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
+
+  # ---------------------------------------------------------------------
+  # realtime-service (consumer RabbitMQ + WebSocket) — sin base de datos
+  # ---------------------------------------------------------------------
+
+  realtime-service:
+    image: peribook/realtime-service:1.0.0
+    secrets: [jwt_public_key, rabbitmq_password]
+    environment:
+      JWT_PUBLIC_KEY_PATH: /run/secrets/jwt_public_key
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_USERNAME: peribook
+      SPRING_RABBITMQ_PASSWORD_FILE: /run/secrets/rabbitmq_password
+    networks: [peribook-net]
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: start-first
+        failure_action: rollback
+      resources:
+        limits: { cpus: "0.50", memory: 512M }
