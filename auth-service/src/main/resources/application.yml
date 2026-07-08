@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    url: jdbc:postgresql://${AUTH_DB_HOST:localhost}:5432/authdb
+    username: ${AUTH_DB_USER:authuser}
+    password: ${AUTH_DB_PASSWORD:authpass}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  issuer: peribook-auth-service
+  expiration: PT1H  # 1 hora
+  rsa:
+    public-key-path: keys/jwt-public.pem
+    private-key-path: keys/jwt-private.pem
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.peribook: DEBUG

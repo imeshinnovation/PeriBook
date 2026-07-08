@@ -1,0 +1,47 @@
+services:
+  auth-service:
+    build: .
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - AUTH_DB_HOST=auth-db
+      - AUTH_DB_USER=authuser
+      - AUTH_DB_PASSWORD=authpass
+      - JWT_RSA_PRIVATE_KEY_PATH=keys/jwt-private.pem
+      - JWT_RSA_PUBLIC_KEY_PATH=keys/jwt-public.pem
+    depends_on:
+      auth-db:
+        condition: service_healthy
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+  auth-db:
+    image: postgres:16-alpine
+    container_name: auth-db
+    environment:
+      POSTGRES_DB: authdb
+      POSTGRES_USER: authuser
+      POSTGRES_PASSWORD: authpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - auth-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authuser -d authdb"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+volumes:
+  auth-db-data:
+
+networks:
+  peribook-net:
+    name: peribook-net
+    driver: bridge
