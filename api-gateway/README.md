@@ -9,8 +9,8 @@
 Swagger agregado en `/docs`, proxy de WebSocket hacia realtime-service.
 
 ## Checklist de esta fase
-- [ ] `RouteLocator`: `/api/auth/**`, `/api/users/**`, `/api/posts/**`,
+- [x] `RouteLocator`: `/api/auth/**`, `/api/users/**`, `/api/posts/**`,
       `/api/likes/**`, `/bff/**`, `/ws/**`
-- [ ] Filtro de validación JWT (llave pública, sin volver a golpear auth-service)
-- [ ] Swagger agregado (`springdoc.swagger-ui.urls[]`) — ver plan sección 4.12
-- [ ] `Dockerfile` + `docker-compose.yml` propio
+- [x] Filtro de validación JWT (llave pública, sin volver a golpear auth-service)
+- [x] Swagger agregado (`springdoc.swagger-ui.urls[]`) — ver plan sección 4.12
+- [x] `Dockerfile` + `docker-compose.yml` propio

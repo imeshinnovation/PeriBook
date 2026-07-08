@@ -1,0 +1,21 @@
+server:
+  port: 8086
+
+spring:
+  application:
+    name: bff-web
+  # Sin datasource: bff-web es stateless y sin base de datos propia (ADR 0003)
+
+jwt:
+  issuer: peribook-auth-service
+  rsa:
+    public-key-path: keys/jwt-public.pem
+    private-key-path: keys/jwt-private.pem
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.peribook: DEBUG

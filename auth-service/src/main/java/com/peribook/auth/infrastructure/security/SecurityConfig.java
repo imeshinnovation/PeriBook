@@ -113,14 +113,27 @@ public class SecurityConfig {
      */
     private byte[] loadKeyBytes(String path) throws IOException {
         Path filePath = Path.of(path);
+        byte[] bytes;
         if (Files.exists(filePath)) {
             log.info("Cargando clave desde sistema de archivos: {}", path);
-            return Files.readAllBytes(filePath);
+            bytes = Files.readAllBytes(filePath);
+        } else {
+            log.info("Cargando clave desde classpath: {}", path);
+            ClassPathResource resource = new ClassPathResource(path);
+            try (InputStream in = resource.getInputStream()) {
+                bytes = in.readAllBytes();
+            }
         }
-        log.info("Cargando clave desde classpath: {}", path);
-        ClassPathResource resource = new ClassPathResource(path);
-        try (InputStream in = resource.getInputStream()) {
-            return in.readAllBytes();
-        }
+        // Parsear PEM: eliminar headers y decodificar Base64
+        String pem = new String(bytes);
+        String base64 = pem
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replace("-----BEGIN PRIVATE KEY-----", "")
+                .replace("-----END PRIVATE KEY-----", "")
+                .replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                .replace("-----END RSA PRIVATE KEY-----", "")
+                .replaceAll("\\s", "");
+        return java.util.Base64.getDecoder().decode(base64);
     }
 }
