@@ -1,0 +1,19 @@
+services:
+  realtime-service:
+    build: .
+    container_name: realtime-service
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - RABBITMQ_HOST=peribook-rabbitmq
+      - RABBITMQ_USER=guest
+      - RABBITMQ_PASSWORD=guest
+    networks:
+      - peribook-net
+    restart: unless-stopped
+
+networks:
+  peribook-net:
+    name: peribook-net
+    external: true

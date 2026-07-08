@@ -1,0 +1,21 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: realtime-service
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: 5672
+    username: ${RABBITMQ_USER:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+app:
+  rabbitmq:
+    queue:
+      feed: realtime.feed
+      likes: realtime.likes
+
+logging:
+  level:
+    com.peribook: DEBUG

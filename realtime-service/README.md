@@ -9,9 +9,9 @@ Consume `peribook.events` de RabbitMQ y reenvía por WebSocket (STOMP/SockJS) a
 los clientes conectados. Sin base de datos propia.
 
 ## Checklist de esta fase
-- [ ] Consumer de `PublicacionCreada` y `LikeRegistrado`
-- [ ] Canal `/topic/feed` y `/topic/publicacion.{id}.likes`
-- [ ] `Dockerfile` + `docker-compose.yml` propio (sin DB)
+- [x] Consumer de `PublicacionCreada` y `LikeRegistrado`
+- [x] Canal `/topic/feed` y `/topic/publicacion.{id}.likes`
+- [x] `Dockerfile` + `docker-compose.yml` propio (sin DB)
 
 ## Nota
 No escala horizontalmente sin backplane compartido — ver ADR 0004.
