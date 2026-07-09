@@ -33,6 +33,9 @@ Thumbs.db
 infra/secrets/*
 !infra/secrets/README.md
 
+# Docs (documentacion de arquitectura)
+docs/
+
 # Logs
 *.log
 

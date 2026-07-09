@@ -1,16 +1,46 @@
 # frontend
 
-**Fase:** 7
-**ADR relevantes:** ninguno específico — ver plan, sección 5
-**Puerto dev:** 4200
+**Puerto:** 4200 | **Tecnología:** Angular 20
 
 ## Responsabilidad
-SPA Angular 21, clon visual de Facebook en paleta verde oliva. Habla únicamente
-con `api-gateway` (REST y WebSocket).
 
-## Checklist de esta fase
-- [x] Standalone components + lazy loading por feature
-- [x] NgRx SignalStore (AuthStore, FeedStore)
-- [x] Pantallas: Login, Feed, Perfil
-- [x] `RealtimeService` conectado a `/ws` vía Gateway (SockJS + STOMP)
-- [x] `Dockerfile` + `docker-compose.yml` propio (nginx + Angular)
+Aplicación de una sola página (SPA) que proporciona la interfaz de usuario
+de PeriBook. Se comunica exclusivamente con el API Gateway (HTTP REST para
+datos y WebSocket para tiempo real).
+
+## Pantallas
+
+| Ruta | Componente | Funcionalidad |
+|---|---|---|
+| `/login` | `LoginComponent` | Formulario de inicio de sesión. Obtiene JWT y conecta WebSocket |
+| `/feed` | `FeedComponent` | Feed de publicaciones. Crear posts, dar likes, scroll infinito |
+| `/profile` | `ProfileComponent` | Perfil del usuario autenticado |
+
+## Stack interno
+
+- **Angular 20** con standalone components y lazy loading
+- **NgRx SignalStore** para estado reactivo (AuthStore, FeedStore)
+- **SockJS + STOMP** para WebSocket
+- **Interceptor HTTP** que agrega el token JWT a todas las peticiones
+- **Paleta verde olivo** personalizada (#556B2F primario, #6B7A4F secundario)
+
+## Tiempo real
+
+Al iniciar sesión, el `RealtimeService` establece una conexión WebSocket
+al Gateway (ruta `/ws`). Se suscribe al canal `/topic/feed` y ante cualquier
+evento (nueva publicación o like) refresca el feed automáticamente sin
+necesidad de recargar la página.
+
+## Docker
+
+La imagen de producción usa un build multi-stage:
+1. `node:24-alpine` compila la aplicación Angular
+2. `nginx:stable-alpine` sirve los archivos estáticos y proxypea `/api/`,
+   `/bff/` y `/ws` al API Gateway
+
+## Desarrollo
+
+```bash
+docker compose up          # Levanta el frontend (puerto 4200)
+npm start                  # Desarrollo local con hot reload
+```

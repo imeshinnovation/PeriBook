@@ -1,17 +1,42 @@
 # realtime-service
 
-**Fase:** 6 (depende de post-service y like-service ya publicando eventos)
-**ADR relevantes:** 0004 (Swarm — sin escalar réplicas por estado en memoria)
-**Puerto dev:** 8085
+**Puerto:** 8085 | **Base de datos:** No (sin estado) | **Mensajería:** RabbitMQ
 
 ## Responsabilidad
-Consume `peribook.events` de RabbitMQ y reenvía por WebSocket (STOMP/SockJS) a
-los clientes conectados. Sin base de datos propia.
 
-## Checklist de esta fase
-- [x] Consumer de `PublicacionCreada` y `LikeRegistrado`
-- [x] Canal `/topic/feed` y `/topic/publicacion.{id}.likes`
-- [x] `Dockerfile` + `docker-compose.yml` propio (sin DB)
+Escucha eventos de dominio desde RabbitMQ (`PublicacionCreada` y `LikeRegistrado`)
+y los retransmite en vivo a los navegadores conectados vía WebSocket usando
+el protocolo STOMP sobre SockJS.
 
-## Nota
-No escala horizontalmente sin backplane compartido — ver ADR 0004.
+## Canales WebSocket
+
+| Canal | Evento | Qué recibe el cliente |
+|---|---|---|
+| `/topic/feed` | `PublicacionCreada` y `LikeRegistrado` | Cualquier cambio en el feed |
+
+## Stack interno
+
+- **Spring Boot 3** con Spring MVC
+- **Spring WebSocket** con STOMP sobre SockJS
+- **Spring AMQP** (RabbitMQ) — consumidor de eventos
+- Broker de mensajes en memoria (no se usa broker externo para STOMP)
+
+## Flujo de tiempo real
+
+```
+post-service ──▶ RabbitMQ ──▶ realtime-service ──▶ WebSocket ──▶ navegador
+                  exchange          consumidor         STOMP         cliente
+like-service ──▶ peribook.events    @RabbitListener    /topic/feed   SockJS
+```
+
+Las colas `realtime.feed` y `realtime.likes` son durables (sobreviven
+reinicios de RabbitMQ). El servicio es consciente de que con réplica única
+las sesiones WebSocket viven en memoria (no escala horizontalmente sin un
+backplane compartido).
+
+## Desarrollo
+
+```bash
+docker compose up          # Levanta el servicio + RabbitMQ
+mvn test                   # 1 test de health check
+```
