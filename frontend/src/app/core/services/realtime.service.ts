@@ -39,7 +39,7 @@ export class RealtimeService implements OnDestroy {
 
       // ── Likes en tiempo real por publicación ──────────
       // Escuchar todas las publicaciones usando el wildcard del broker
-      this.stompClient.subscribe('/topic/publicacion.*.likes', (mensaje: any) => {
+      this.stompClient.subscribe('/topic/publicacion/*/likes', (mensaje: any) => {
         const event: LikeRegistradoEvent = JSON.parse(mensaje.body);
         console.log('[WebSocket] Like recibido:', event.publicacionId);
         // Refrescar el feed para actualizar contadores

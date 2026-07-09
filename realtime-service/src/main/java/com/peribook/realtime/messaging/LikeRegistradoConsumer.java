@@ -22,6 +22,6 @@ public class LikeRegistradoConsumer {
                 evento.publicacionId(), evento.usuarioId());
         // Enviar al canal específico de la publicación
         messagingTemplate.convertAndSend(
-                "/topic/publicacion." + evento.publicacionId() + ".likes", evento);
+                "/topic/publicacion/" + evento.publicacionId() + "/likes", evento);
     }
 }
