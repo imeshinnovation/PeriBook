@@ -52,10 +52,6 @@ java {
     }
 }
 
-serenity {
-    reportsDir = file("target/site/serenity")
-}
-
 test {
     useJUnitPlatform()
     systemProperty "serenity.outputDirectory", file("target/site/serenity").absolutePath
