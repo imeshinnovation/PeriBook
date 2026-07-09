@@ -2,6 +2,10 @@
 
 name: Trivy Container Scan
 
+permissions:
+  contents: read
+  security-events: write
+
 on:
   push:
     branches: [main]
@@ -43,7 +47,7 @@ jobs:
 
       - name: Upload SARIF report
         if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: trivy-results-${{ matrix.service }}.sarif
           category: trivy-${{ matrix.service }}
