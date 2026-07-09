@@ -5,9 +5,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - JWT_RSA_PUBLIC_KEY_PATH=keys/jwt-public.pem
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - JWT_RSA_PUBLIC_KEY_PATH=${JWT_RSA_PUBLIC_KEY_PATH:-keys/jwt-public.pem}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:4200}
     networks:
       - peribook-net
     restart: unless-stopped
-

@@ -5,13 +5,13 @@ services:
     ports:
       - "8084:8084"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - LIKE_DB_HOST=like-db
-      - LIKE_DB_USER=likeuser
-      - LIKE_DB_PASSWORD=likepass
-      - RABBITMQ_HOST=peribook-rabbitmq
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASSWORD=guest
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - LIKE_DB_HOST=${LIKE_DB_HOST:-like-db}
+      - LIKE_DB_USER=${LIKE_DB_USER:-likeuser}
+      - LIKE_DB_PASSWORD=${LIKE_DB_PASSWORD:-likepass}
+      - RABBITMQ_HOST=${RABBITMQ_HOST:-peribook-rabbitmq}
+      - RABBITMQ_USER=${RABBITMQ_USER:-guest}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-guest}
     depends_on:
       like-db:
         condition: service_healthy
@@ -23,15 +23,15 @@ services:
     image: postgres:16-alpine
     container_name: like-db
     environment:
-      POSTGRES_DB: likedb
-      POSTGRES_USER: likeuser
-      POSTGRES_PASSWORD: likepass
+      POSTGRES_DB: ${LIKE_DB_NAME:-likedb}
+      POSTGRES_USER: ${LIKE_DB_USER:-likeuser}
+      POSTGRES_PASSWORD: ${LIKE_DB_PASSWORD:-likepass}
     ports:
       - "5435:5432"
     volumes:
       - like-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U likeuser -d likedb"]
+      test: ["CMD-SHELL", "pg_isready -U ${LIKE_DB_USER:-likeuser} -d ${LIKE_DB_NAME:-likedb}"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -41,4 +41,3 @@ services:
 
 volumes:
   like-db-data:
-

@@ -7,4 +7,3 @@ services:
     networks:
       - peribook-net
     restart: unless-stopped
-

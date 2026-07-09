@@ -5,13 +5,13 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-      - POST_DB_HOST=post-db
-      - POST_DB_USER=postuser
-      - POST_DB_PASSWORD=postpass
-      - RABBITMQ_HOST=peribook-rabbitmq
-      - RABBITMQ_USER=guest
-      - RABBITMQ_PASSWORD=guest
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - POST_DB_HOST=${POST_DB_HOST:-post-db}
+      - POST_DB_USER=${POST_DB_USER:-postuser}
+      - POST_DB_PASSWORD=${POST_DB_PASSWORD:-postpass}
+      - RABBITMQ_HOST=${RABBITMQ_HOST:-peribook-rabbitmq}
+      - RABBITMQ_USER=${RABBITMQ_USER:-guest}
+      - RABBITMQ_PASSWORD=${RABBITMQ_PASSWORD:-guest}
     depends_on:
       post-db:
         condition: service_healthy
@@ -23,15 +23,15 @@ services:
     image: postgres:16-alpine
     container_name: post-db
     environment:
-      POSTGRES_DB: postdb
-      POSTGRES_USER: postuser
-      POSTGRES_PASSWORD: postpass
+      POSTGRES_DB: ${POST_DB_NAME:-postdb}
+      POSTGRES_USER: ${POST_DB_USER:-postuser}
+      POSTGRES_PASSWORD: ${POST_DB_PASSWORD:-postpass}
     ports:
       - "5434:5432"
     volumes:
       - post-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postuser -d postdb"]
+      test: ["CMD-SHELL", "pg_isready -U ${POST_DB_USER:-postuser} -d ${POST_DB_NAME:-postdb}"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -41,4 +41,3 @@ services:
 
 volumes:
   post-db-data:
-
