@@ -43,3 +43,4 @@ newman run infra/postman/peribook-collection.json \
   --reporters cli,html \
   --reporter-html-export target/newman-report.html
 ```
+<!-- 2026-07-09 -->

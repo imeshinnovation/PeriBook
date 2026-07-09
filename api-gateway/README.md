@@ -44,3 +44,4 @@ docker compose up          # Levanta el gateway (puerto 8080)
 mvn test                   # 3 tests con WebTestClient reactivo
 ```
 <!-- 2026-07-09 -->
+<!-- 2026-07-09 -->

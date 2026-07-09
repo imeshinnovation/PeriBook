@@ -45,3 +45,4 @@ docker compose up          # Levanta el servicio + Postgres + RabbitMQ
 mvn test                   # 6 tests unitarios + PL/pgSQL
 ```
 <!-- 2026-07-09 -->
+<!-- 2026-07-09 -->

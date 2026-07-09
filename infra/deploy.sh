@@ -82,3 +82,4 @@ echo "  RabbitMQ UI:  http://localhost:15672 (guest/guest)"
 echo ""
 echo "  Verificar:    ./infra/verify-deployment.sh"
 echo "  Logs:         docker service logs -f peribook_auth-service"
+<!-- 2026-07-09 -->

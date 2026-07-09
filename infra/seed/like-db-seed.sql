@@ -40,3 +40,4 @@ INSERT INTO likes (id, publicacion_id, usuario_id, creado_en) VALUES
     NOW() - INTERVAL '30 minutes'
 )
 ON CONFLICT (id) DO NOTHING;
+<!-- 2026-07-09 -->

@@ -40,3 +40,4 @@ public class DarLikeUseCase {
         return repository.contarPorPublicacion(publicacionId);
     }
 }
+<!-- 2026-07-09 -->

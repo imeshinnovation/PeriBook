@@ -27,3 +27,4 @@ public class CrearPublicacionUseCase {
         return guardada;
     }
 }
+<!-- 2026-07-09 -->

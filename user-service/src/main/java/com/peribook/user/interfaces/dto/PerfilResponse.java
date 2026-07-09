@@ -9,3 +9,4 @@ public record PerfilResponse(
         String apellidos,
         LocalDate fechaNacimiento
 ) {}
+<!-- 2026-07-09 -->

@@ -81,3 +81,4 @@ jobs:
           else
             echo "⚠️  Pipeline con advertencias (trivy=$TRIVY)"
           fi
+<!-- 2026-07-09 -->

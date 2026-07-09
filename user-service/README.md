@@ -36,3 +36,4 @@ docker compose up          # Levanta el servicio + su Postgres (puerto 5433 en h
 mvn test                   # 6 tests unitarios
 ```
 <!-- 2026-07-09 -->
+<!-- 2026-07-09 -->

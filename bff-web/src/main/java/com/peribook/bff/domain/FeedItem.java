@@ -12,3 +12,4 @@ public record FeedItem(
         String autorAlias,
         long totalLikes
 ) {}
+<!-- 2026-07-09 -->

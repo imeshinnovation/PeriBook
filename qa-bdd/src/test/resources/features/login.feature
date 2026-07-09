@@ -30,3 +30,4 @@ Feature: Autenticación de usuarios
   Scenario: Login con email en formato inválido
     When intento iniciar sesión con email "no-es-un-email" y contraseña "secreto123"
     Then el servicio responde con código 400
+<!-- 2026-07-09 -->

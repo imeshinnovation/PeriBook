@@ -30,3 +30,4 @@ public class UserClient {
                 .doOnError(e -> log.error("Error al llamar a user-service para {}", userId, e));
     }
 }
+<!-- 2026-07-09 -->

@@ -120,3 +120,4 @@ else
   echo ""
   echo "✅ El flujo completo (login → feed → API) funciona contra el stack Swarm."
 fi
+<!-- 2026-07-09 -->

@@ -89,3 +89,4 @@ class LoginUseCaseTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }
+<!-- 2026-07-09 -->

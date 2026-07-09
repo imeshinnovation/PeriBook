@@ -46,3 +46,4 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 }
+<!-- 2026-07-09 -->

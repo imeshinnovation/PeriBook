@@ -53,3 +53,4 @@ log "Usuarios de prueba:"
 echo "  ana@peribook.com      / secreto123   (ana_writer)"
 echo "  carlos@peribook.com   / secreto123   (carlos_reader)"
 echo "  admin@peribook.com    / admin1234    (admin_root)"
+<!-- 2026-07-09 -->

@@ -51,3 +51,4 @@ public class DevDataSeeder implements CommandLineRunner {
         log.info("Seed completado: 3 usuarios de prueba insertados.");
     }
 }
+<!-- 2026-07-09 -->

@@ -38,3 +38,4 @@ Feature: Likes en tiempo real
     And en la pestaña 2 estoy autenticado como "carlos@peribook.com"
     When "carlos@peribook.com" da like a una publicación de "ana@peribook.com" desde la pestaña 2
     Then en la pestaña 1 el contador de likes se incrementa automáticamente sin recargar
+<!-- 2026-07-09 -->

@@ -21,3 +21,4 @@ public class ListarPublicacionesUseCase {
         return repository.listarRecientes(max);
     }
 }
+<!-- 2026-07-09 -->

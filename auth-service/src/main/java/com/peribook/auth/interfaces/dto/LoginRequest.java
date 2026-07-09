@@ -8,3 +8,4 @@ public record LoginRequest(
         @NotBlank @Email String email,
         @NotBlank @Size(min = 8) String password
 ) {}
+<!-- 2026-07-09 -->

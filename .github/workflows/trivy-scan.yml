@@ -47,3 +47,4 @@ jobs:
         with:
           sarif_file: trivy-results-${{ matrix.service }}.sarif
           category: trivy-${{ matrix.service }}
+<!-- 2026-07-09 -->

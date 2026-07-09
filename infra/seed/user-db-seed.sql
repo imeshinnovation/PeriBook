@@ -34,3 +34,4 @@ INSERT INTO perfiles (id, usuario_id, email, alias, nombres, apellidos, fecha_na
     '1990-08-22'
 )
 ON CONFLICT (id) DO NOTHING;
+<!-- 2026-07-09 -->

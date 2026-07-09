@@ -15,3 +15,4 @@ public record JwtConfig(
             String privateKeyPath
     ) {}
 }
+<!-- 2026-07-09 -->

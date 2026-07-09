@@ -18,3 +18,4 @@ Feature: Perfil de usuario
     Given que estoy autenticado como "ana@peribook.com"
     When consulto el perfil con ID "00000000-0000-0000-0000-000000000000"
     Then el servicio responde con código 404
+<!-- 2026-07-09 -->

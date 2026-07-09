@@ -13,3 +13,4 @@ public record PublicacionCreadaEvent(
         String contenido,
         Instant creadaEn
 ) {}
+<!-- 2026-07-09 -->

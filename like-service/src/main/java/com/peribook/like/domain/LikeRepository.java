@@ -8,3 +8,4 @@ public interface LikeRepository {
     Optional<Like> buscarPorPublicacionYUsuario(UUID publicacionId, UUID usuarioId);
     long contarPorPublicacion(UUID publicacionId);
 }
+<!-- 2026-07-09 -->

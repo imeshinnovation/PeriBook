@@ -116,3 +116,4 @@ class AuthIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 }
+<!-- 2026-07-09 -->

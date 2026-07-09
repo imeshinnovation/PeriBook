@@ -13,3 +13,4 @@ public record LikeRegistradoEvent(
         UUID usuarioId,
         Instant creadoEn
 ) {}
+<!-- 2026-07-09 -->

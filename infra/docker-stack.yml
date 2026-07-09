@@ -304,3 +304,4 @@ services:
         failure_action: rollback
       resources:
         limits: { cpus: "0.50", memory: 512M }
+<!-- 2026-07-09 -->

@@ -11,3 +11,4 @@ logging:
     com.peribook: DEBUG
     org.springframework.security: DEBUG
     org.hibernate.SQL: DEBUG
+<!-- 2026-07-09 -->

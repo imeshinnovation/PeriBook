@@ -35,3 +35,4 @@ public class LikeEntity {
     public UUID getUsuarioId() { return usuarioId; }
     public Instant getCreadoEn() { return creadoEn; }
 }
+<!-- 2026-07-09 -->

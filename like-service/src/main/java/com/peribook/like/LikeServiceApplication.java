@@ -9,3 +9,4 @@ public class LikeServiceApplication {
         SpringApplication.run(LikeServiceApplication.class, args);
     }
 }
+<!-- 2026-07-09 -->

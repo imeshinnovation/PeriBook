@@ -10,3 +10,4 @@ public class AutenticacionFallidaException extends RuntimeException {
         super(message);
     }
 }
+<!-- 2026-07-09 -->

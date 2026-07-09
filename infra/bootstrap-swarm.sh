@@ -102,3 +102,4 @@ Siguiente paso — construir las imágenes y desplegar el stack:
   docker stack services peribook
 
 EOF
+<!-- 2026-07-09 -->

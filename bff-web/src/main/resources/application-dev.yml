@@ -9,3 +9,4 @@ logging:
     com.peribook: DEBUG
     org.springframework.security: DEBUG
     io.github.resilience4j: DEBUG
+<!-- 2026-07-09 -->

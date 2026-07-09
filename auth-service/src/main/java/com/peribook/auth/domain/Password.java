@@ -39,3 +39,4 @@ public record Password(String hash) {
         return ENCODER.matches(rawPassword, this.hash);
     }
 }
+<!-- 2026-07-09 -->

@@ -54,3 +54,4 @@ open target/site/serenity/index.html
 - **Screenplay** para pruebas de UI con Selenium WebDriver
 - **JUnit 5** con Cucumber Platform Engine
 <!-- 2026-07-09 -->
+<!-- 2026-07-09 -->

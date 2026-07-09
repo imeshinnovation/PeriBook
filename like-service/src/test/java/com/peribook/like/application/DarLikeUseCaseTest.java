@@ -57,3 +57,4 @@ class DarLikeUseCaseTest {
         verify(repository, never()).save(any());
     }
 }
+<!-- 2026-07-09 -->

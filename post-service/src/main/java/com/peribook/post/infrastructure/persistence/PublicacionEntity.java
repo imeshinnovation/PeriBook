@@ -37,3 +37,4 @@ public class PublicacionEntity {
     public String getContenido() { return contenido; }
     public Instant getCreadaEn() { return creadaEn; }
 }
+<!-- 2026-07-09 -->

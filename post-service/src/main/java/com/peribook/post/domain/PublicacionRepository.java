@@ -9,3 +9,4 @@ public interface PublicacionRepository {
     Optional<Publicacion> buscarPorId(UUID id);
     List<Publicacion> listarRecientes(int limite);
 }
+<!-- 2026-07-09 -->

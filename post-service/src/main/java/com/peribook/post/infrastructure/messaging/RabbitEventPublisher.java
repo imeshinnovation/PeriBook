@@ -36,3 +36,4 @@ public class RabbitEventPublisher implements EventPublisher {
         }
     }
 }
+<!-- 2026-07-09 -->

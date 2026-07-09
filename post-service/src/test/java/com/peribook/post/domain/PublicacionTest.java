@@ -42,3 +42,4 @@ class PublicacionTest {
         assertThat(evento.contenido()).isEqualTo("Test");
     }
 }
+<!-- 2026-07-09 -->

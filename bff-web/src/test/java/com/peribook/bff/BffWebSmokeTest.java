@@ -28,3 +28,4 @@ class BffWebSmokeTest {
                 .jsonPath("$.status").isEqualTo("running");
     }
 }
+<!-- 2026-07-09 -->

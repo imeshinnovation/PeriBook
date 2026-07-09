@@ -84,3 +84,4 @@ para mantener la independencia entre servicios.
 **Idempotencia:** dar like dos veces a la misma publicación no genera error
 ni duplica el registro — simplemente devuelve el like existente.
 <!-- 2026-07-09 -->
+<!-- 2026-07-09 -->

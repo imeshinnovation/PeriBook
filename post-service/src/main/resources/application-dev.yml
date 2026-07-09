@@ -10,3 +10,4 @@ logging:
   level:
     com.peribook: DEBUG
     org.springframework.security: DEBUG
+<!-- 2026-07-09 -->

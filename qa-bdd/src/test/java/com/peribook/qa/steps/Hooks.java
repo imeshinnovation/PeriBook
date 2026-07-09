@@ -18,3 +18,4 @@ public class Hooks {
         System.out.println("[QA] API base URL: " + apiBaseUrl);
     }
 }
+<!-- 2026-07-09 -->

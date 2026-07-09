@@ -45,3 +45,4 @@ docker compose up          # Levanta el frontend (puerto 4200)
 npm start                  # Desarrollo local con hot reload
 ```
 <!-- 2026-07-09 -->
+<!-- 2026-07-09 -->

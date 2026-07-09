@@ -53,3 +53,4 @@ public class ProfileSteps {
         TestContext.setUserId(response.jsonPath().getString("userId"));
     }
 }
+<!-- 2026-07-09 -->

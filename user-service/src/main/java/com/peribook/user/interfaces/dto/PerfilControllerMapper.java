@@ -17,3 +17,4 @@ public interface PerfilControllerMapper {
         );
     }
 }
+<!-- 2026-07-09 -->
