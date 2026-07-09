@@ -20,6 +20,7 @@
   <properties>
     <java.version>21</java.version>
     <maven.compiler.release>21</maven.compiler.release>
+      <commons-lang3.version>3.18.0</commons-lang3.version>
   </properties>
 
   <dependencies>
