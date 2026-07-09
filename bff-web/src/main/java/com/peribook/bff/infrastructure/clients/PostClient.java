@@ -20,9 +20,10 @@ public class PostClient {
     }
 
     @SuppressWarnings("unchecked")
-    public Mono<List<Map<String, Object>>> listarPublicaciones(int limite) {
+    public Mono<List<Map<String, Object>>> listarPublicaciones(int limite, String bearerToken) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/api/posts").queryParam("limite", limite).build())
+                .header("Authorization", bearerToken)
                 .retrieve()
                 .bodyToMono(List.class)
                 .map(list -> (List<Map<String, Object>>) list)

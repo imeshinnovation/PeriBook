@@ -19,9 +19,10 @@ public class UserClient {
     }
 
     @SuppressWarnings("unchecked")
-    public Mono<Map<String, Object>> obtenerPerfil(String userId) {
+    public Mono<Map<String, Object>> obtenerPerfil(String userId, String bearerToken) {
         return webClient.get()
                 .uri("/api/users/{id}", userId)
+                .header("Authorization", bearerToken)
                 .retrieve()
                 .bodyToMono(Map.class)
                 .map(body -> (Map<String, Object>) body)

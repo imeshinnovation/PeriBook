@@ -27,35 +27,28 @@ public class ObtenerFeedEnriquecidoUseCase {
         this.likeClient = likeClient;
     }
 
-    /**
-     * Orquesta en paralelo las llamadas a post-service, user-service y like-service
-     * para componer un feed enriquecido en una sola respuesta.
-     */
-    public Flux<FeedItem> ejecutar(int limite) {
-        log.info("Construyendo feed enriquecido (límite={})", limite);
+    public Flux<FeedItem> ejecutar(int limite, String bearerToken) {
+        log.info("Construyendo feed enriquecido (limite={})", limite);
 
-        return postClient.listarPublicaciones(limite)
+        return postClient.listarPublicaciones(limite, bearerToken)
                 .flatMapMany(Flux::fromIterable)
-                .flatMap(post -> enriquecerPublicacion(post));
+                .flatMap(post -> enriquecerPublicacion(post, bearerToken));
     }
 
-    /**
-     * Para cada publicación, obtiene en paralelo el alias del autor y el contador de likes.
-     */
-    private Mono<FeedItem> enriquecerPublicacion(Map<String, Object> post) {
+    private Mono<FeedItem> enriquecerPublicacion(Map<String, Object> post, String bearerToken) {
         String publicacionId = (String) post.get("id");
         String autorId = (String) post.get("autorId");
         String contenido = (String) post.get("contenido");
         String creadaEn = post.get("creadaEn") != null ? post.get("creadaEn").toString() : "";
 
-        Mono<String> aliasMono = userClient.obtenerPerfil(autorId)
+        Mono<String> aliasMono = userClient.obtenerPerfil(autorId, bearerToken)
                 .map(perfil -> (String) perfil.getOrDefault("alias", "desconocido"))
                 .onErrorResume(e -> {
                     log.warn("No se pudo obtener perfil de {}: {}", autorId, e.getMessage());
                     return Mono.just("desconocido");
                 });
 
-        Mono<Long> likesMono = likeClient.contarLikes(publicacionId);
+        Mono<Long> likesMono = likeClient.contarLikes(publicacionId, bearerToken);
 
         return Mono.zip(aliasMono, likesMono)
                 .map(tuple -> new FeedItem(

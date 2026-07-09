@@ -22,9 +22,10 @@ public class LikeClient {
 
     @CircuitBreaker(name = "likeService", fallbackMethod = "contarLikesFallback")
     @SuppressWarnings("unchecked")
-    public Mono<Long> contarLikes(String publicacionId) {
+    public Mono<Long> contarLikes(String publicacionId, String bearerToken) {
         return webClient.get()
                 .uri("/api/likes/{publicacionId}/count", publicacionId)
+                .header("Authorization", bearerToken)
                 .retrieve()
                 .bodyToMono(Map.class)
                 .map(body -> {

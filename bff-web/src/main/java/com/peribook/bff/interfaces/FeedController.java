@@ -19,8 +19,9 @@ public class FeedController {
     }
 
     @GetMapping("/feed")
-    public Flux<FeedItem> obtenerFeed(@RequestParam(defaultValue = "20") int limite) {
+    public Flux<FeedItem> obtenerFeed(@RequestParam(defaultValue = "20") int limite,
+                                       @RequestHeader("Authorization") String authHeader) {
         log.info("GET /bff/feed (límite={})", limite);
-        return useCase.ejecutar(Math.min(limite, 50));
+        return useCase.ejecutar(Math.min(limite, 50), authHeader);
     }
 }
