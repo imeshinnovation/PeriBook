@@ -12,8 +12,13 @@ public class GatewayRoutes {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 // ── Swagger UI (servido desde auth-service) ──
-                .route("swagger", r -> r
-                        .path("/docs", "/swagger-ui/**", "/webjars/**", "/v3/api-docs/**")
+                .route("swagger-docs", r -> r
+                        .path("/docs")
+                        .filters(f -> f.rewritePath("/docs", "/swagger-ui/index.html"))
+                        .uri("http://auth-service:8081"))
+
+                .route("swagger-ui", r -> r
+                        .path("/swagger-ui/**", "/webjars/**", "/v3/api-docs/**")
                         .uri("http://auth-service:8081"))
 
                 // ── Microservicios ──────────────────────────
