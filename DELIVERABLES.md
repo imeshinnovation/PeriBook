@@ -83,3 +83,4 @@ versión exacta de Angular, o detalles concretos de la configuración de Resilie
 actualiza ese documento para reflejar lo realmente construido.
 
 <!-- Last preview delivery: 2026-07-09 -->
+<!-- 2026-07-09 -->

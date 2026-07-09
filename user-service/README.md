@@ -35,3 +35,4 @@ servicio de autenticación.
 docker compose up          # Levanta el servicio + su Postgres (puerto 5433 en host)
 mvn test                   # 6 tests unitarios
 ```
+<!-- 2026-07-09 -->

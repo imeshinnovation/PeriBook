@@ -43,3 +43,4 @@ Swagger y sirve como proxy WebSocket para el servicio de tiempo real.
 docker compose up          # Levanta el gateway (puerto 8080)
 mvn test                   # 3 tests con WebTestClient reactivo
 ```
+<!-- 2026-07-09 -->
