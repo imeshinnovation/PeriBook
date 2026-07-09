@@ -80,7 +80,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Compile QA project
-        run: gradle -b qa-bdd/build.gradle compileJava
+        run: gradle -p qa-bdd compileJava
 
   # ── Consolidar ──────────────────────────────────────
   ci-status:
