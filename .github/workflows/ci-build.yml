@@ -13,6 +13,7 @@ jobs:
   # ── Backend services (Java 21 + Maven) ──────────────
   backend:
     strategy:
+      fail-fast: false
       matrix:
         service:
           - auth-service
@@ -31,11 +32,10 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
-          cache: maven
+          # Sin cache: maven — cada servicio tiene su pom.xml en subdirectorio
 
       - name: Build & Test ${{ matrix.service }}
-        working-directory: ${{ matrix.service }}
-        run: mvn clean test -B
+        run: mvn -f ${{ matrix.service }}/pom.xml clean test -B
 
       - name: Upload test results
         if: always()
@@ -58,14 +58,12 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
 
       - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
+        run: npm ci --prefix frontend
 
       - name: Build
-        working-directory: frontend
-        run: npm run build
+        run: npm run build --prefix frontend
 
-  # ── QA-BDD (Gradle + Serenity) ──────────────────────
+  # ── QA-BDD (Gradle + Serenity) — solo compila, no ejecuta tests ──
   qa-bdd:
     runs-on: ubuntu-latest
     steps:
@@ -78,21 +76,25 @@ jobs:
           distribution: 'temurin'
 
       - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v3
+        uses: gradle/actions/setup-gradle@v4
 
-      - name: Build QA project
-        working-directory: qa-bdd
-        run: ./gradlew build -x test
+      - name: Compile QA project
+        run: gradle -b qa-bdd/build.gradle compileJava
 
-  # ── Consolidar resultados ───────────────────────────
+  # ── Consolidar ──────────────────────────────────────
   ci-status:
     needs: [backend, frontend, qa-bdd]
     runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Check results
+        env:
+          BACKEND: ${{ needs.backend.result }}
+          FRONTEND: ${{ needs.frontend.result }}
+          QA: ${{ needs.qa-bdd.result }}
         run: |
-          if [ "${{ contains(needs.*.result, 'failure') }}" = "true" ]; then
+          echo "backend=$BACKEND frontend=$FRONTEND qa=$QA"
+          if [ "$BACKEND" != "success" ] || [ "$FRONTEND" != "success" ] || [ "$QA" != "success" ]; then
             echo "❌ CI failed"
             exit 1
           fi

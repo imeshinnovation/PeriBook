@@ -1,5 +1,5 @@
-# Pipeline completo — Build → Test → Snyk → Trivy → Deploy (Docker Swarm)
-# Se ejecuta en push a main después de pasar CI básico
+# Pipeline completo — Build → Test → Snyk → Docker → Trivy
+# Se ejecuta manualmente (workflow_dispatch) o en push a main
 
 name: Full CI/CD Pipeline
 
@@ -10,7 +10,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_PREFIX: ${{ github.repository_owner }}/peribook
+  IMAGE_PREFIX: peribook
 
 jobs:
   # ── Build & Test ────────────────────────────────────
@@ -28,6 +28,7 @@ jobs:
     needs: security
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         service:
           - auth-service
@@ -41,7 +42,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to Container Registry
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -53,9 +54,9 @@ jobs:
         with:
           context: ${{ matrix.service }}
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}-${{ matrix.service }}:${{ github.sha }}
+          tags: ${{ env.REGISTRY }}/${{ github.repository_owner }}/${{ env.IMAGE_PREFIX }}-${{ matrix.service }}:${{ github.sha }}
 
-  # ── Trivy Scan on pushed images ─────────────────────
+  # ── Trivy Scan ──────────────────────────────────────
   trivy:
     needs: docker
     uses: ./.github/workflows/trivy-scan.yml
@@ -67,9 +68,11 @@ jobs:
     if: always()
     steps:
       - name: Pipeline status
+        env:
+          TRIVY: ${{ needs.trivy.result }}
         run: |
-          if [ "${{ needs.trivy.result }}" = "success" ]; then
-            echo "✅ Pipeline completo — imágenes listas para deploy"
+          if [ "$TRIVY" = "success" ]; then
+            echo "✅ Pipeline completo"
           else
-            echo "⚠️  Pipeline completado con advertencias"
+            echo "⚠️  Pipeline con advertencias (trivy=$TRIVY)"
           fi

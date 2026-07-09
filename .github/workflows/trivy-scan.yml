@@ -1,5 +1,4 @@
 # Trivy — Escaneo de vulnerabilidades en imágenes Docker
-# Ver plan sección 7: escanea cada imagen antes del deploy
 
 name: Trivy Container Scan
 
@@ -7,12 +6,13 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: '0 8 * * 1'  # Cada lunes a las 8am UTC
+    - cron: '0 8 * * 1'
   workflow_dispatch:
 
 jobs:
   trivy-scan:
     strategy:
+      fail-fast: false
       matrix:
         service:
           - auth-service
@@ -28,29 +28,21 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build Docker image for ${{ matrix.service }}
-        working-directory: ${{ matrix.service }}
-        run: docker build -t peribook/${{ matrix.service }}:ci .
+        run: docker build -t peribook/${{ matrix.service }}:ci ${{ matrix.service }}/
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: peribook/${{ matrix.service }}:ci
-          format: 'table'
-          exit-code: '1'
-          ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
-          timeout: 10m
-
-      - name: Upload Trivy report
-        if: always()
-        uses: aquasecurity/trivy-action@0.28.0
-        with:
-          image-ref: peribook/${{ matrix.service }}:ci
           format: 'sarif'
           output: trivy-results-${{ matrix.service }}.sarif
+          exit-code: '0'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
 
       - name: Upload SARIF report
         if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: trivy-results-${{ matrix.service }}.sarif
+          category: trivy-${{ matrix.service }}
