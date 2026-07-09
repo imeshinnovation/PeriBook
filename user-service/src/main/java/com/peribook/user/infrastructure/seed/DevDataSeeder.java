@@ -25,21 +25,22 @@ public class DevDataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // IDs fijos para que coincidan con el seeder de auth-service
+        // IDs de perfil = IDs de usuario (auth-service) para que GET /api/users/{id} funcione
         UUID anaUserId = UUID.fromString("11111111-1111-1111-1111-111111111111");
         UUID carlosUserId = UUID.fromString("22222222-2222-2222-2222-222222222222");
 
-        if (perfilRepository.buscarPorId(UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")).isPresent()) {
+        if (perfilRepository.buscarPorId(anaUserId).isPresent()) {
             log.info("Seed ya ejecutado. Saltando.");
             return;
         }
 
-        perfilRepository.save(Perfil.crear(
-                anaUserId, new Email("ana@peribook.com"), "ana_writer",
+        // Perfil.id == usuarioId para que el frontend pueda buscar con el userId del JWT
+        perfilRepository.save(Perfil.reconstituir(
+                anaUserId, anaUserId, new Email("ana@peribook.com"), "ana_writer",
                 "Ana", "García", LocalDate.of(1995, 3, 15)));
 
-        perfilRepository.save(Perfil.crear(
-                carlosUserId, new Email("carlos@peribook.com"), "carlos_reader",
+        perfilRepository.save(Perfil.reconstituir(
+                carlosUserId, carlosUserId, new Email("carlos@peribook.com"), "carlos_reader",
                 "Carlos", "López", LocalDate.of(1990, 8, 22)));
 
         log.info("Seed completado: 2 perfiles de prueba insertados.");
