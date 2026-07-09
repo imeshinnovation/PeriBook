@@ -30,17 +30,20 @@ public class DevDataSeeder implements CommandLineRunner {
 
         log.info("Insertando usuarios de prueba (profile dev)...");
 
-        usuarioRepository.save(Usuario.registrar(
+        usuarioRepository.save(Usuario.reconstituir(
+                java.util.UUID.fromString("11111111-1111-1111-1111-111111111111"),
                 new Email("ana@peribook.com"),
                 Password.fromRaw("secreto123"),
                 "ana_writer"));
 
-        usuarioRepository.save(Usuario.registrar(
+        usuarioRepository.save(Usuario.reconstituir(
+                java.util.UUID.fromString("22222222-2222-2222-2222-222222222222"),
                 new Email("carlos@peribook.com"),
                 Password.fromRaw("secreto123"),
                 "carlos_reader"));
 
-        usuarioRepository.save(Usuario.registrar(
+        usuarioRepository.save(Usuario.reconstituir(
+                java.util.UUID.fromString("33333333-3333-3333-3333-333333333333"),
                 new Email("admin@peribook.com"),
                 Password.fromRaw("admin1234"),
                 "admin_root"));

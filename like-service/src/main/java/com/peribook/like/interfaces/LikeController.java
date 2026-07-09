@@ -23,6 +23,12 @@ public class LikeController {
         this.darLikeUseCase = darLikeUseCase;
     }
 
+    @GetMapping("/{publicacionId}/count")
+    public ResponseEntity<java.util.Map<String, Long>> contarLikes(@PathVariable UUID publicacionId) {
+        long total = darLikeUseCase.contarPorPublicacion(publicacionId);
+        return ResponseEntity.ok(java.util.Map.of("total", total));
+    }
+
     @PostMapping
     public ResponseEntity<LikeResponse> darLike(
             @RequestParam UUID publicacionId,

@@ -35,4 +35,8 @@ public class DarLikeUseCase {
     }
 
     public record Resultado(Like like, boolean esNuevo) {}
+
+    public long contarPorPublicacion(UUID publicacionId) {
+        return repository.contarPorPublicacion(publicacionId);
+    }
 }
