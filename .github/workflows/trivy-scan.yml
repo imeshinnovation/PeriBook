@@ -32,7 +32,7 @@ jobs:
         run: docker build -t peribook/${{ matrix.service }}:ci .
 
       - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: peribook/${{ matrix.service }}:ci
           format: 'table'
@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload Trivy report
         if: always()
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.28.0
         with:
           image-ref: peribook/${{ matrix.service }}:ci
           format: 'sarif'
