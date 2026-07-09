@@ -71,11 +71,6 @@
       <artifactId>resilience4j-reactor</artifactId>
       <version>${resilience4j.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.cloud</groupId>
-      <artifactId>spring-cloud-starter-circuitbreaker-reactor-resilience4j</artifactId>
-      <version>3.1.2</version>
-    </dependency>
 
     <!-- Testing -->
     <dependency>
