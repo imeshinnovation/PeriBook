@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.Map;
 
 @Component
@@ -32,7 +31,8 @@ public class ObtenerFeedEnriquecidoUseCase {
 
         return postClient.listarPublicaciones(limite, bearerToken)
                 .flatMapMany(Flux::fromIterable)
-                .flatMap(post -> enriquecerPublicacion(post, bearerToken));
+                // flatMapSequential: procesa en paralelo pero emite en orden de entrada
+                .flatMapSequential(post -> enriquecerPublicacion(post, bearerToken));
     }
 
     private Mono<FeedItem> enriquecerPublicacion(Map<String, Object> post, String bearerToken) {
