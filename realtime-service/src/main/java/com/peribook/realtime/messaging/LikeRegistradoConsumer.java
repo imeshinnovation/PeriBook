@@ -27,8 +27,8 @@ public class LikeRegistradoConsumer {
             LikeRegistradoEvent evento = objectMapper.readValue(mensaje, LikeRegistradoEvent.class);
             log.info("Recibido LikeRegistrado: publicacion={}, usuario={}",
                     evento.publicacionId(), evento.usuarioId());
-            messagingTemplate.convertAndSend(
-                    "/topic/publicacion/" + evento.publicacionId() + "/likes", evento);
+            // Enviar también a /topic/feed para que todos los clientes reciban la actualización
+            messagingTemplate.convertAndSend("/topic/feed", evento);
         } catch (Exception e) {
             log.error("Error al procesar LikeRegistrado", e);
         }

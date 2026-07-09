@@ -2,7 +2,7 @@ import { Injectable, inject, OnDestroy } from '@angular/core';
 import { AuthStore } from '../stores/auth.store';
 import { FeedStore } from '../stores/feed.store';
 import { FeedService } from './feed.service';
-import { PublicacionCreadaEvent, LikeRegistradoEvent } from '../models/user.model';
+import { PublicacionCreadaEvent } from '../models/user.model';
 
 // Cargados como scripts globales en angular.json (sockjs-client + stompjs)
 declare var SockJS: any;
@@ -29,20 +29,15 @@ export class RealtimeService implements OnDestroy {
       this.conectado = true;
       console.log('[WebSocket] Conectado');
 
-      // ── Nueva publicación en el feed ──────────────────
+      // ── Feed en tiempo real ───────────────────────────
+      // Cualquier evento (nueva publicación o like) refresca el feed
       this.stompClient.subscribe('/topic/feed', (mensaje: any) => {
-        const event: PublicacionCreadaEvent = JSON.parse(mensaje.body);
-        console.log('[WebSocket] Nueva publicacion:', event.publicacionId);
-        // Refrescar el feed completo para obtener alias y datos enriquecidos
-        this.refrescarFeed();
-      });
-
-      // ── Likes en tiempo real por publicación ──────────
-      // Escuchar todas las publicaciones usando el wildcard del broker
-      this.stompClient.subscribe('/topic/publicacion/*/likes', (mensaje: any) => {
-        const event: LikeRegistradoEvent = JSON.parse(mensaje.body);
-        console.log('[WebSocket] Like recibido:', event.publicacionId);
-        // Refrescar el feed para actualizar contadores
+        try {
+          const data = JSON.parse(mensaje.body);
+          console.log('[WebSocket] Evento recibido:', data);
+        } catch (e) {
+          console.log('[WebSocket] Evento recibido (raw)');
+        }
         this.refrescarFeed();
       });
     }, () => {
