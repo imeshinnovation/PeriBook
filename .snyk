@@ -1,61 +1,109 @@
-# Snyk policy file
-# Vulnerabilidades sin parche disponible — ignoradas con expiración a 30 días
-# Revisar en cada ciclo si ya existe fix en Spring Boot / Tomcat / Logback
+# Snyk policy file — CVEs sin parche disponible (Julio 2026)
+# Revisar cada 30 dias si ya existe fix para remover la entrada.
+# Comando: snyk test --severity-threshold=low
 version: v1.25.0
 
 ignore:
-  # ── Tomcat embed (solo fix en Spring Boot 4.0.0) ──────
-  SNYK-JAVA-ORGAPACHETOMCATEMBED-17733895:
-    - '*':
-        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
-  SNYK-JAVA-ORGAPACHETOMCATEMBED-17734715:
-    - '*':
-        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
-  SNYK-JAVA-ORGAPACHETOMCATEMBED-17734718:
-    - '*':
-        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+  # ── Tomcat embed 10.1.55 (sin backport, requiere Spring Boot 4.0.0) ──
   SNYK-JAVA-ORGAPACHETOMCATEMBED-17732890:
     - '*':
-        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0.'
+        expires: '2026-08-09'
   SNYK-JAVA-ORGAPACHETOMCATEMBED-17733746:
     - '*':
-        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17733895:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17734715:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17734718:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0.'
+        expires: '2026-08-09'
 
-  # ── Logback (solo fix en Spring Boot 4.0.0) ───────────
+  # ── Logback 1.5.34 (sin backport, requiere Spring Boot 4.0.0) ──
   SNYK-JAVA-CHQOSLOGBACK-17675439:
     - '*':
-        reason: 'Logback CVE sin backport a 1.5.x — requiere SB 4.0.0. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Logback CVE sin backport a 1.5.x — requiere SB 4.0.0.'
+        expires: '2026-08-09'
 
-  # ── Jackson databind (sin fix en ninguna version) ─────
+  # ── Jackson databind 2.21.4 (sin fix en ninguna version) ──
   SNYK-JAVA-COMFASTERXMLJACKSONCORE-17457695:
     - '*':
-        reason: 'Jackson databind CVE sin fix publicado. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Jackson CVE sin fix publicado en ninguna version.'
+        expires: '2026-08-09'
 
-  # ── Angular common/compiler/core (sin fix aun en Angular 20) ──
+  # ── HdrHistogram vía Micrometer (nuevo, sin fix) ──
+  SNYK-JAVA-ORGHDRHISTOGRAM-17821182:
+    - '*':
+        reason: 'HdrHistogram CVE nuevo — sin fix en Micrometer aun.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGHDRHISTOGRAM-17821183:
+    - '*':
+        reason: 'HdrHistogram CVE nuevo — sin fix en Micrometer aun.'
+        expires: '2026-08-09'
+
+  # ── PostgreSQL driver (nuevo, sin fix en 42.7.x) ──
+  SNYK-JAVA-ORGPOSTGRESQL-17874248:
+    - '*':
+        reason: 'PostgreSQL driver CVE nuevo — sin backport a 42.7.x.'
+        expires: '2026-08-09'
+
+  # ── Bouncy Castle vía Spring Security OAuth2 ──
+  SNYK-JAVA-ORGBOUNCYCASTLE-11789695:
+    - '*':
+        reason: 'Bouncy Castle CVE — sin fix en la version gestionada por Spring Boot.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGBOUNCYCASTLE-16074612:
+    - '*':
+        reason: 'Bouncy Castle CVE — sin fix en la version gestionada por Spring Boot.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGBOUNCYCASTLE-16075254:
+    - '*':
+        reason: 'Bouncy Castle CVE — sin fix en la version gestionada por Spring Boot.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGBOUNCYCASTLE-16075266:
+    - '*':
+        reason: 'Bouncy Castle CVE — sin fix en la version gestionada por Spring Boot.'
+        expires: '2026-08-09'
+
+  # ── Spring Cloud Gateway (dependencias transitivas) ──
+  SNYK-JAVA-ORGSPRINGFRAMEWORKCLOUD-12591534:
+    - '*':
+        reason: 'Spring Cloud CVE — sin fix en 2025.0.x aun.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGSPRINGFRAMEWORKCLOUD-13561992:
+    - '*':
+        reason: 'Spring Cloud CVE — sin fix en 2025.0.x aun.'
+        expires: '2026-08-09'
+  SNYK-JAVA-ORGSPRINGFRAMEWORKCLOUD-17326016:
+    - '*':
+        reason: 'Spring Cloud CVE — sin fix en 2025.0.x aun.'
+        expires: '2026-08-09'
+
+  # ── Angular 20 (sin fix aun) ──
   SNYK-JS-ANGULARCOMMON-17356486:
     - '*':
-        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Angular CVE sin fix en v20.x.'
+        expires: '2026-08-09'
   SNYK-JS-ANGULARCOMMON-17356555:
     - '*':
-        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Angular CVE sin fix en v20.x.'
+        expires: '2026-08-09'
   SNYK-JS-ANGULARCOMPILER-17356585:
     - '*':
-        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Angular CVE sin fix en v20.x.'
+        expires: '2026-08-09'
   SNYK-JS-ANGULARCORE-17353317:
     - '*':
-        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'Angular CVE sin fix en v20.x.'
+        expires: '2026-08-09'
   SNYK-JS-ESBUILD-17750822:
     - '*':
-        reason: 'esbuild/vite CVE sin fix en v7.x. Revisar en 30 dias.'
-        expires: '2026-08-09T00:00:00.000Z'
+        reason: 'esbuild CVE — sin fix en la version de vite usada por Angular 20.'
+        expires: '2026-08-09'

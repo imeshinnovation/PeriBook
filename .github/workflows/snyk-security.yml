@@ -33,7 +33,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --file=${{ matrix.service }}/pom.xml --severity-threshold=medium
+          args: --file=${{ matrix.service }}/pom.xml --severity-threshold=low --policy-path=.
 
   snyk-npm:
     runs-on: ubuntu-latest
@@ -48,4 +48,4 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --file=frontend/package.json --severity-threshold=medium
+          args: --file=frontend/package.json --severity-threshold=low --policy-path=.
