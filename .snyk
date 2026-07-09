@@ -1,0 +1,61 @@
+# Snyk policy file
+# Vulnerabilidades sin parche disponible — ignoradas con expiración a 30 días
+# Revisar en cada ciclo si ya existe fix en Spring Boot / Tomcat / Logback
+version: v1.25.0
+
+ignore:
+  # ── Tomcat embed (solo fix en Spring Boot 4.0.0) ──────
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17733895:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17734715:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17734718:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17732890:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JAVA-ORGAPACHETOMCATEMBED-17733746:
+    - '*':
+        reason: 'Tomcat CVE sin backport a 10.1.x — requiere SB 4.0.0. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+
+  # ── Logback (solo fix en Spring Boot 4.0.0) ───────────
+  SNYK-JAVA-CHQOSLOGBACK-17675439:
+    - '*':
+        reason: 'Logback CVE sin backport a 1.5.x — requiere SB 4.0.0. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+
+  # ── Jackson databind (sin fix en ninguna version) ─────
+  SNYK-JAVA-COMFASTERXMLJACKSONCORE-17457695:
+    - '*':
+        reason: 'Jackson databind CVE sin fix publicado. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+
+  # ── Angular common/compiler/core (sin fix aun en Angular 20) ──
+  SNYK-JS-ANGULARCOMMON-17356486:
+    - '*':
+        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JS-ANGULARCOMMON-17356555:
+    - '*':
+        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JS-ANGULARCOMPILER-17356585:
+    - '*':
+        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JS-ANGULARCORE-17353317:
+    - '*':
+        reason: 'Angular CVE sin fix en v20.x. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
+  SNYK-JS-ESBUILD-17750822:
+    - '*':
+        reason: 'esbuild/vite CVE sin fix en v7.x. Revisar en 30 dias.'
+        expires: '2026-08-09T00:00:00.000Z'
