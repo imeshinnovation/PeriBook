@@ -9,6 +9,7 @@ on:
   schedule:
     - cron: '0 7 * * 1'
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   snyk-maven:
