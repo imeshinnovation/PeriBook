@@ -81,3 +81,5 @@
 significativamente durante el desarrollo (por ejemplo, el número final de fases, la
 versión exacta de Angular, o detalles concretos de la configuración de Resilience4j),
 actualiza ese documento para reflejar lo realmente construido.
+
+<!-- Last preview delivery: 2026-07-09 -->
