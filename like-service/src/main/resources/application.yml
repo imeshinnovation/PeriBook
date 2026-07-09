@@ -5,7 +5,7 @@ spring:
   application:
     name: like-service
   datasource:
-    url: jdbc:postgresql://${LIKE_DB_HOST:localhost}:5435/likedb
+    url: jdbc:postgresql://${LIKE_DB_HOST:localhost}:${LIKE_DB_PORT:5432}/likedb
     username: ${LIKE_DB_USER:likeuser}
     password: ${LIKE_DB_PASSWORD:likepass}
   jpa:

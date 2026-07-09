@@ -5,7 +5,7 @@ spring:
   application:
     name: post-service
   datasource:
-    url: jdbc:postgresql://${POST_DB_HOST:localhost}:5434/postdb
+    url: jdbc:postgresql://${POST_DB_HOST:localhost}:${POST_DB_PORT:5432}/postdb
     username: ${POST_DB_USER:postuser}
     password: ${POST_DB_PASSWORD:postpass}
   jpa:
