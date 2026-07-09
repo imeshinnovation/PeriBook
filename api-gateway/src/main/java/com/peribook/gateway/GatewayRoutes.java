@@ -11,6 +11,11 @@ public class GatewayRoutes {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
+                // ── Swagger UI (servido desde auth-service) ──
+                .route("swagger", r -> r
+                        .path("/docs", "/swagger-ui/**", "/webjars/**", "/v3/api-docs/**")
+                        .uri("http://auth-service:8081"))
+
                 // ── Microservicios ──────────────────────────
                 .route("auth-service", r -> r
                         .path("/api/auth/**")
@@ -34,37 +39,6 @@ public class GatewayRoutes {
 
                 .route("bff-web", r -> r
                         .path("/bff/**")
-                        .uri("http://bff-web:8086"))
-
-                // ── Swagger / OpenAPI docs de cada servicio ──
-                .route("auth-service-docs", r -> r
-                        .path("/v3/api-docs/auth-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/auth-service", "/v3/api-docs"))
-                        .uri("http://auth-service:8081"))
-
-                .route("user-service-docs", r -> r
-                        .path("/v3/api-docs/user-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/user-service", "/v3/api-docs"))
-                        .uri("http://user-service:8082"))
-
-                .route("post-service-docs", r -> r
-                        .path("/v3/api-docs/post-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/post-service", "/v3/api-docs"))
-                        .uri("http://post-service:8083"))
-
-                .route("like-service-docs", r -> r
-                        .path("/v3/api-docs/like-service")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/like-service", "/v3/api-docs"))
-                        .uri("http://like-service:8084"))
-
-                .route("bff-web-docs", r -> r
-                        .path("/v3/api-docs/bff-web")
-                        .filters(f -> f.rewritePath(
-                                "/v3/api-docs/bff-web", "/v3/api-docs"))
                         .uri("http://bff-web:8086"))
 
                 .build();
