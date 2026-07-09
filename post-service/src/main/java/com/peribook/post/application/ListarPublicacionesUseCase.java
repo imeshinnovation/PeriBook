@@ -5,6 +5,9 @@ import com.peribook.post.domain.PublicacionRepository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ListarPublicacionesUseCase {
 
     private final PublicacionRepository repository;

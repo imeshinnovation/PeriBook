@@ -5,6 +5,9 @@ import com.peribook.user.domain.PerfilRepository;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ObtenerPerfilUseCase {
 
     private final PerfilRepository perfilRepository;

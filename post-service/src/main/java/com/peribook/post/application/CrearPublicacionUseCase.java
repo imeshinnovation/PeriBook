@@ -7,6 +7,9 @@ import com.peribook.post.domain.PublicacionRepository;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class CrearPublicacionUseCase {
 
     private final PublicacionRepository repository;

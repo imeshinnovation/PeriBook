@@ -11,6 +11,9 @@ import com.peribook.auth.domain.UsuarioRepository;
  * SRP: esta clase solo orquesta la autenticación. La firma del JWT
  * se delega en {@link JwtService} y el hashing en {@link Password}.
  */
+import org.springframework.stereotype.Service;
+
+@Service
 public class LoginUseCase {
 
     private final UsuarioRepository usuarioRepository;

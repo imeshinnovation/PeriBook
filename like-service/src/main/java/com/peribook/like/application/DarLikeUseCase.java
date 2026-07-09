@@ -7,6 +7,9 @@ import com.peribook.like.domain.LikeRepository;
 
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class DarLikeUseCase {
 
     private final LikeRepository repository;
