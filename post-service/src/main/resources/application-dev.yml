@@ -4,8 +4,7 @@ spring:
       ddl-auto: create-drop
   sql:
     init:
-      mode: always
-      schema-locations: classpath:db/schema.sql
+      mode: never  # schema.sql tiene PL/pgSQL con $$ — se ejecuta manualmente
 
 logging:
   level:
