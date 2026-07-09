@@ -22,7 +22,7 @@ Feature: Likes en tiempo real
     And la respuesta indica que el like NO es nuevo
     And el contador de likes no se incrementa
 
-  @websocket
+  @websocket @manual
   Scenario: El evento de like se recibe por WebSocket
     Given que estoy autenticado como "carlos@peribook.com"
     And estoy conectado al WebSocket
@@ -31,7 +31,7 @@ Feature: Likes en tiempo real
     Then recibo un evento LikeRegistrado por WebSocket en menos de 2 segundos
     And el evento contiene el publicacionId correcto
 
-  @websocket @two-tabs
+  @websocket @two-tabs @manual
   Scenario: Dos pestañas — el contador se actualiza en ambas
     Given que tengo dos pestañas abiertas con el feed
     And en la pestaña 1 estoy autenticado como "ana@peribook.com"

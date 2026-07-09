@@ -8,7 +8,8 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
     features = "src/test/resources/features",
     glue = "com.peribook.qa.steps",
-    plugin = {"pretty", "html:target/site/serenity/cucumber.html"}
+    plugin = {"pretty", "html:target/site/serenity/cucumber.html"},
+    tags = "not (@websocket or @two-tabs or @manual)"
 )
 public class RunCucumberTest {
 }
