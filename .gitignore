@@ -40,3 +40,4 @@ infra/secrets/*
 .env
 .env.local
 node_modules/
+!qa-bdd/gradle/wrapper/gradle-wrapper.jar
