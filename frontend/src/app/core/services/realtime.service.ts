@@ -3,6 +3,7 @@ import { AuthStore } from '../stores/auth.store';
 import { FeedStore } from '../stores/feed.store';
 import { PublicacionCreadaEvent, LikeRegistradoEvent } from '../models/user.model';
 
+// Cargados como scripts globales en angular.json (sockjs-client + stompjs)
 declare var SockJS: any;
 declare var Stomp: any;
 
@@ -18,13 +19,12 @@ export class RealtimeService implements OnDestroy {
 
     const socket = new SockJS('/ws');
     this.stompClient = Stomp.over(socket);
-    this.stompClient.debug = () => {}; // silenciar logs
+    this.stompClient.debug = () => {};
 
     this.stompClient.connect({}, () => {
       this.conectado = true;
       console.log('WebSocket conectado');
 
-      // Suscribirse al feed global
       this.stompClient.subscribe('/topic/feed', (mensaje: any) => {
         const event: PublicacionCreadaEvent = JSON.parse(mensaje.body);
         this.feedStore.agregarAlInicio({
@@ -37,10 +37,8 @@ export class RealtimeService implements OnDestroy {
         });
       });
 
-      // Suscribirse a likes por publicación
       this.stompClient.subscribe('/topic/publicacion.*.likes', (mensaje: any) => {
         const event: LikeRegistradoEvent = JSON.parse(mensaje.body);
-        // El contador real se obtiene del evento o se refresca
         console.log('Like recibido:', event);
       });
     }, () => {
