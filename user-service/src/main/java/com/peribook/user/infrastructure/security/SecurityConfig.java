@@ -76,4 +76,3 @@ public class SecurityConfig {
         return Base64.getDecoder().decode(b64);
     }
 }
-<!-- 2026-07-09 -->

@@ -53,4 +53,3 @@ Los seeds de desarrollo (perfil `dev`) los inserta automáticamente cada
 microservicio vía `CommandLineRunner` (ver `DevDataSeeder.java` en cada servicio).
 Estos scripts SQL son una alternativa directa para entornos donde el perfil `dev`
 no está activo.
-<!-- 2026-07-09 -->

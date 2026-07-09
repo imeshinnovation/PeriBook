@@ -49,4 +49,3 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --file=frontend/package.json --severity-threshold=low --policy-path=.
-<!-- 2026-07-09 -->

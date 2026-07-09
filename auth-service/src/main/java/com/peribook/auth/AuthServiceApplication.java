@@ -13,4 +13,3 @@ public class AuthServiceApplication {
         SpringApplication.run(AuthServiceApplication.class, args);
     }
 }
-<!-- 2026-07-09 -->

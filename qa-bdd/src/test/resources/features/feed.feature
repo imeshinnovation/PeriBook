@@ -37,4 +37,3 @@ Feature: Feed de publicaciones
   Scenario: Consultar feed sin autenticación
     When consulto el feed sin token
     Then el servicio responde con código 401
-<!-- 2026-07-09 -->

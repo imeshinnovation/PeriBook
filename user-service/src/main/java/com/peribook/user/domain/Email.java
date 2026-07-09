@@ -14,4 +14,3 @@ public record Email(String value) {
             throw new IllegalArgumentException("Formato de email inválido: " + value);
     }
 }
-<!-- 2026-07-09 -->

@@ -135,4 +135,3 @@ class EmailTest {
                 .isInstanceOf(NullPointerException.class);
     }
 }
-<!-- 2026-07-09 -->

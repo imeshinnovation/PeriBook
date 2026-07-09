@@ -56,4 +56,3 @@ public class ObtenerFeedEnriquecidoUseCase {
                         tuple.getT1(), tuple.getT2()));
     }
 }
-<!-- 2026-07-09 -->

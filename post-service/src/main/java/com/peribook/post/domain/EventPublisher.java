@@ -7,4 +7,3 @@ package com.peribook.post.domain;
 public interface EventPublisher {
     void publish(PublicacionCreada evento);
 }
-<!-- 2026-07-09 -->

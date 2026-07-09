@@ -15,4 +15,3 @@ public interface JwtService {
      */
     String generate(String userId, String email);
 }
-<!-- 2026-07-09 -->

@@ -34,4 +34,3 @@ public class LikeRegistradoConsumer {
         }
     }
 }
-<!-- 2026-07-09 -->

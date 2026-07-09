@@ -60,4 +60,3 @@ test {
     // No fallar si no hay backend corriendo (para CI)
     ignoreFailures = true
 }
-<!-- 2026-07-09 -->

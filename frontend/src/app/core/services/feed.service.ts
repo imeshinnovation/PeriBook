@@ -23,4 +23,3 @@ export class FeedService {
     return this.http.post(`/api/likes?publicacionId=${publicacionId}`, {});
   }
 }
-<!-- 2026-07-09 -->

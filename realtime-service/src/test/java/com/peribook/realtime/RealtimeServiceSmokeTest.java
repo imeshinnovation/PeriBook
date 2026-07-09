@@ -27,4 +27,3 @@ class RealtimeServiceSmokeTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }
-<!-- 2026-07-09 -->

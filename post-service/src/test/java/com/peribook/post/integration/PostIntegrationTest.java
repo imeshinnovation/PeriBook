@@ -47,4 +47,3 @@ class PostIntegrationTest {
         assertThat(repository.buscarPorId(p.id())).isPresent();
     }
 }
-<!-- 2026-07-09 -->

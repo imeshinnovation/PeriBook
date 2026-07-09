@@ -65,4 +65,3 @@ class ListarPublicacionesUseCaseTest {
         verify(repository).listarRecientes(50);
     }
 }
-<!-- 2026-07-09 -->

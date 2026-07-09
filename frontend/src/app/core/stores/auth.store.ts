@@ -35,4 +35,3 @@ export class AuthStore {
     this.state.set({ token: null, userId: null, alias: null });
   }
 }
-<!-- 2026-07-09 -->

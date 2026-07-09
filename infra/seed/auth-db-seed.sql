@@ -35,4 +35,3 @@ INSERT INTO usuarios (id, email, password_hash, alias) VALUES
     'admin_root'
 )
 ON CONFLICT (id) DO NOTHING;
-<!-- 2026-07-09 -->

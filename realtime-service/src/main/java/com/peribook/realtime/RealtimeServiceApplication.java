@@ -9,4 +9,3 @@ public class RealtimeServiceApplication {
         SpringApplication.run(RealtimeServiceApplication.class, args);
     }
 }
-<!-- 2026-07-09 -->

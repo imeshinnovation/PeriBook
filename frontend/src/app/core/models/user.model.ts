@@ -39,4 +39,3 @@ export interface LikeRegistradoEvent {
   usuarioId: string;
   creadoEn: string;
 }
-<!-- 2026-07-09 -->

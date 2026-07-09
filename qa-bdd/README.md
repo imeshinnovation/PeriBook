@@ -53,5 +53,3 @@ open target/site/serenity/index.html
 - **REST Assured** para pruebas de API (caja negra, sin mocks)
 - **Screenplay** para pruebas de UI con Selenium WebDriver
 - **JUnit 5** con Cucumber Platform Engine
-<!-- 2026-07-09 -->
-<!-- 2026-07-09 -->

@@ -18,4 +18,3 @@ BEGIN
     );
 END;
 $$ LANGUAGE plpgsql;
-<!-- 2026-07-09 -->

@@ -51,4 +51,3 @@ class ObtenerPerfilUseCaseTest {
                 .isInstanceOf(PerfilNoEncontradoException.class);
     }
 }
-<!-- 2026-07-09 -->

@@ -25,4 +25,3 @@ public class FeedController {
         return useCase.ejecutar(Math.min(limite, 50), authHeader);
     }
 }
-<!-- 2026-07-09 -->

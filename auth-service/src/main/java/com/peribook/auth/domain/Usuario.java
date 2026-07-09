@@ -77,4 +77,3 @@ public class Usuario {
         return id.hashCode();
     }
 }
-<!-- 2026-07-09 -->

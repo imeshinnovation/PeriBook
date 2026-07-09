@@ -11,4 +11,3 @@ logging:
     com.peribook: DEBUG
     org.springframework.cloud.gateway: TRACE
     org.springframework.security: DEBUG
-<!-- 2026-07-09 -->

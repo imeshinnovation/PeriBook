@@ -27,4 +27,3 @@ class LikeTest {
         assertThat(evento.publicacionId()).isEqualTo(like.publicacionId());
     }
 }
-<!-- 2026-07-09 -->

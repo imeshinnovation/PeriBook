@@ -17,4 +17,3 @@ public record PublicacionCreada(
         return new PublicacionCreada(p.id(), p.autorId(), p.contenido(), p.creadaEn());
     }
 }
-<!-- 2026-07-09 -->

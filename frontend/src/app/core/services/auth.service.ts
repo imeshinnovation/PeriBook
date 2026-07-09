@@ -12,4 +12,3 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request);
   }
 }
-<!-- 2026-07-09 -->

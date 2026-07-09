@@ -46,4 +46,3 @@ public class DevDataSeeder implements CommandLineRunner {
         log.info("Seed completado: 2 perfiles de prueba insertados.");
     }
 }
-<!-- 2026-07-09 -->

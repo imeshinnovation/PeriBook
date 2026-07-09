@@ -32,4 +32,3 @@ public class RabbitConfig {
         return BindingBuilder.bind(likesQueue).to(exchange).with("like.registrado");
     }
 }
-<!-- 2026-07-09 -->

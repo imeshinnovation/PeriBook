@@ -55,4 +55,3 @@ public class TestContext {
         net.serenitybdd.core.Serenity.getCurrentSession().put(KEY_PUBLICACION_ID, id);
     }
 }
-<!-- 2026-07-09 -->

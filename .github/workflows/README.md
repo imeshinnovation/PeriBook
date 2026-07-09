@@ -37,4 +37,3 @@ Push a main
 Los escaneos de Snyk y Trivy se ejecutan sobre cada servicio usando una matriz
 de GitHub Actions, permitiendo que cada microservicio sea analizado
 de forma independiente en paralelo.
-<!-- 2026-07-09 -->

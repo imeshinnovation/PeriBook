@@ -27,4 +27,3 @@ public interface JpaUsuarioRepository extends UsuarioRepository, JpaRepository<U
         return saved.toDomain();
     }
 }
-<!-- 2026-07-09 -->

@@ -21,4 +21,3 @@ public interface JpaPerfilRepository extends PerfilRepository, JpaRepository<Per
         return this.saveAndFlush(PerfilEntity.fromDomain(perfil)).toDomain();
     }
 }
-<!-- 2026-07-09 -->

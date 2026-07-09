@@ -13,4 +13,3 @@ public record LikeRegistrado(
         return new LikeRegistrado(like.id(), like.publicacionId(), like.usuarioId(), like.creadoEn());
     }
 }
-<!-- 2026-07-09 -->

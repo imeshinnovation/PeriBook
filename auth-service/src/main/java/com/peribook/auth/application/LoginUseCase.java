@@ -52,4 +52,3 @@ public class LoginUseCase {
      */
     public record LoginResult(String token, String userId, String alias) {}
 }
-<!-- 2026-07-09 -->

@@ -29,4 +29,3 @@ class BffSecurityTest {
                 .expectStatus().isUnauthorized();
     }
 }
-<!-- 2026-07-09 -->

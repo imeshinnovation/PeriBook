@@ -12,4 +12,3 @@ public class ApiGatewayApplication {
         SpringApplication.run(ApiGatewayApplication.class, args);
     }
 }
-<!-- 2026-07-09 -->

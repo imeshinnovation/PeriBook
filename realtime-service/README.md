@@ -40,5 +40,3 @@ backplane compartido).
 docker compose up          # Levanta el servicio + RabbitMQ
 mvn test                   # 1 test de health check
 ```
-<!-- 2026-07-09 -->
-<!-- 2026-07-09 -->

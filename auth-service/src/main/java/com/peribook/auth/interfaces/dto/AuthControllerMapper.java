@@ -14,4 +14,3 @@ public interface AuthControllerMapper {
     @Mapping(source = "alias", target = "alias")
     LoginResponse toResponse(LoginUseCase.LoginResult result);
 }
-<!-- 2026-07-09 -->

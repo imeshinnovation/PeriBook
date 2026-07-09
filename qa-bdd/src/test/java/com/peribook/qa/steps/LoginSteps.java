@@ -61,4 +61,3 @@ public class LoginSteps {
         assertThat(detail).contains(mensaje);
     }
 }
-<!-- 2026-07-09 -->

@@ -13,4 +13,3 @@ public interface PostControllerMapper {
                 p.contenido(), p.creadaEn());
     }
 }
-<!-- 2026-07-09 -->

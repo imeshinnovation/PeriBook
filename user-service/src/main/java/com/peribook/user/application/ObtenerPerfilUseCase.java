@@ -21,4 +21,3 @@ public class ObtenerPerfilUseCase {
                 .orElseThrow(() -> new PerfilNoEncontradoException(id));
     }
 }
-<!-- 2026-07-09 -->

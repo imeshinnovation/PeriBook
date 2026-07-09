@@ -52,4 +52,3 @@ class LikeIntegrationTest {
         // El segundo like no debería lanzar excepción si el caso de uso lo maneja
     }
 }
-<!-- 2026-07-09 -->

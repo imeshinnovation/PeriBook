@@ -12,4 +12,3 @@ public interface UsuarioRepository {
 
     Usuario save(Usuario usuario);
 }
-<!-- 2026-07-09 -->

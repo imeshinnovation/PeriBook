@@ -31,4 +31,3 @@ public class PostClient {
                 .doOnError(e -> log.error("Error al llamar a post-service", e));
     }
 }
-<!-- 2026-07-09 -->

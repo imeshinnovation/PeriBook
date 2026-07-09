@@ -27,4 +27,3 @@ public class WebClientConfig {
                 .clientConnector(new ReactorClientHttpConnector(httpClient));
     }
 }
-<!-- 2026-07-09 -->

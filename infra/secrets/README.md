@@ -32,4 +32,3 @@ docker stack deploy -c infra/docker-stack.yml peribook
 Ver la sección 2.4 del plan de arquitectura (`PeriBook-Plan-Arquitectura.md`) para el
 detalle completo de por qué se usa Docker Swarm y `docker secret` en vez de variables
 de entorno planas.
-<!-- 2026-07-09 -->

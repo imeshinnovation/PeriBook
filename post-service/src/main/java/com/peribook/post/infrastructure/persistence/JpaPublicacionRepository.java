@@ -34,4 +34,3 @@ public interface JpaPublicacionRepository
 
     List<PublicacionEntity> findAllByOrderByCreadaEnDesc();
 }
-<!-- 2026-07-09 -->

@@ -22,4 +22,3 @@ public class HealthController {
         ));
     }
 }
-<!-- 2026-07-09 -->

@@ -30,4 +30,3 @@ public interface JpaLikeRepository extends LikeRepository, JpaRepository<LikeEnt
         return this.saveAndFlush(LikeEntity.fromDomain(like)).toDomain();
     }
 }
-<!-- 2026-07-09 -->

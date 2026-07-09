@@ -16,4 +16,3 @@ export const routes: Routes = [
   },
   { path: '**', redirectTo: '/login' },
 ];
-<!-- 2026-07-09 -->

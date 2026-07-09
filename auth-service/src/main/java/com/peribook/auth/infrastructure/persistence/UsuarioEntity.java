@@ -77,4 +77,3 @@ public class UsuarioEntity {
         return alias;
     }
 }
-<!-- 2026-07-09 -->

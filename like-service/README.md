@@ -38,5 +38,3 @@ Si un usuario ya dio like a una publicación, una segunda petición:
 docker compose up          # Levanta el servicio + Postgres + RabbitMQ
 mvn test                   # 4 tests unitarios (incluye caso de like duplicado)
 ```
-<!-- 2026-07-09 -->
-<!-- 2026-07-09 -->

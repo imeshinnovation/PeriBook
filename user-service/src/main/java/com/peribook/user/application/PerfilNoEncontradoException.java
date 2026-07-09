@@ -7,4 +7,3 @@ public class PerfilNoEncontradoException extends RuntimeException {
         super("Perfil no encontrado: " + id);
     }
 }
-<!-- 2026-07-09 -->

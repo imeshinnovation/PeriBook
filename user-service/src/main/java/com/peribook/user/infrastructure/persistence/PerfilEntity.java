@@ -49,4 +49,3 @@ public class PerfilEntity {
     public String getApellidos() { return apellidos; }
     public LocalDate getFechaNacimiento() { return fechaNacimiento; }
 }
-<!-- 2026-07-09 -->

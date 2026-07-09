@@ -41,5 +41,3 @@ El servicio sigue una arquitectura de capas con dominio aislado:
 docker compose up          # Levanta el servicio + su Postgres
 mvn test                   # 22 tests unitarios (mocks sin Spring)
 ```
-<!-- 2026-07-09 -->
-<!-- 2026-07-09 -->

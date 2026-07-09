@@ -38,5 +38,3 @@ frontend tendría que hacer tres llamadas HTTP y ensamblar el resultado.
 docker compose up          # Levanta el BFF (puerto 8086)
 mvn test                   # 2 tests con WebTestClient reactivo
 ```
-<!-- 2026-07-09 -->
-<!-- 2026-07-09 -->

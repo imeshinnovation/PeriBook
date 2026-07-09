@@ -50,4 +50,3 @@ public class Publicacion {
     @Override
     public int hashCode() { return id.hashCode(); }
 }
-<!-- 2026-07-09 -->

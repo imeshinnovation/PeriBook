@@ -43,4 +43,3 @@ public class UserController {
                 .contentType(MediaType.APPLICATION_PROBLEM_JSON).body(problem);
     }
 }
-<!-- 2026-07-09 -->

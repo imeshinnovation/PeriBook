@@ -6,4 +6,3 @@ management:
 logging:
   level:
     com.peribook: DEBUG
-<!-- 2026-07-09 -->

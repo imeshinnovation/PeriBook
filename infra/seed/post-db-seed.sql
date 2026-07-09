@@ -45,4 +45,3 @@ INSERT INTO publicaciones (id, autor_id, contenido, creada_en) VALUES
     NOW() - INTERVAL '1 hour'
 )
 ON CONFLICT (id) DO NOTHING;
-<!-- 2026-07-09 -->

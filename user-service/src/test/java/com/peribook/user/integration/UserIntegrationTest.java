@@ -67,4 +67,3 @@ class UserIntegrationTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
-<!-- 2026-07-09 -->

@@ -46,4 +46,3 @@ logging:
   level:
     com.peribook: DEBUG
     org.springframework.cloud.gateway: DEBUG
-<!-- 2026-07-09 -->

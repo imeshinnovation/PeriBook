@@ -13,4 +13,3 @@ import org.junit.runner.RunWith;
 )
 public class RunCucumberTest {
 }
-<!-- 2026-07-09 -->
