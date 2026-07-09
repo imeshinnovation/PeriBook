@@ -34,9 +34,7 @@ Push a main
         └─ Notify
 ```
 
-## Nota Fase 10
-
-En la práctica, Snyk + Trivy se agregan **al cerrar cada fase de servicio** (1 a 7),
-no como paso separado al final. Este directorio contiene los workflows tal como
-se habrían creado incrementalmente por cada servicio nuevo.
+Los escaneos de Snyk y Trivy se ejecutan sobre cada servicio usando una matriz
+de GitHub Actions, permitiendo que cada microservicio sea analizado
+de forma independiente en paralelo.
 <!-- 2026-07-09 -->

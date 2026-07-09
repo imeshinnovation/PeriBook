@@ -69,7 +69,7 @@ PeriBook/
 ├── infra/                   ← Scripts de infraestructura y despliegue
 ├── build-templates/         ← Plantillas de configuración Maven
 ├── docker-compose.yml       ← Orquestador de desarrollo local
-├── PHASES.md                ← Bitácora de desarrollo
+└── .env.example             ← Plantilla de variables de entorno
 └── DELIVERABLES.md          ← Checklist de entregables
 ```
 
