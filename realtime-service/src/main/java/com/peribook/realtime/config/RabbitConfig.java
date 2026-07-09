@@ -1,16 +1,9 @@
 package com.peribook.realtime.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -44,27 +37,5 @@ public class RabbitConfig {
     @Bean
     public Binding likesBinding(Queue likesQueue, TopicExchange exchange) {
         return BindingBuilder.bind(likesQueue).to(exchange).with("like.registrado");
-    }
-
-    @Bean
-    public Jackson2JsonMessageConverter messageConverter() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter(mapper);
-        // Inferir tipo desde el parametro del metodo, no desde __TypeId__ header
-        // (los DTOs del publicador y consumidor estan en paquetes distintos)
-        DefaultJackson2JavaTypeMapper typeMapper = new DefaultJackson2JavaTypeMapper();
-        typeMapper.setTypeIdPropertyName(null);
-        converter.setJavaTypeMapper(typeMapper);
-        return converter;
-    }
-
-    @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory,
-                                         Jackson2JsonMessageConverter converter) {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory);
-        template.setMessageConverter(converter);
-        return template;
     }
 }

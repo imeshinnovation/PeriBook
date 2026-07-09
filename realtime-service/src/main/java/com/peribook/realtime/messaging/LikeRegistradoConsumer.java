@@ -1,5 +1,7 @@
 package com.peribook.realtime.messaging;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -11,17 +13,24 @@ public class LikeRegistradoConsumer {
 
     private static final Logger log = LoggerFactory.getLogger(LikeRegistradoConsumer.class);
     private final SimpMessagingTemplate messagingTemplate;
+    private final ObjectMapper objectMapper;
 
     public LikeRegistradoConsumer(SimpMessagingTemplate messagingTemplate) {
         this.messagingTemplate = messagingTemplate;
+        this.objectMapper = new ObjectMapper();
+        this.objectMapper.registerModule(new JavaTimeModule());
     }
 
     @RabbitListener(queues = "${app.rabbitmq.queue.likes}")
-    public void onLikeRegistrado(LikeRegistradoEvent evento) {
-        log.info("Recibido LikeRegistrado: publicacion={}, usuario={}",
-                evento.publicacionId(), evento.usuarioId());
-        // Enviar al canal específico de la publicación
-        messagingTemplate.convertAndSend(
-                "/topic/publicacion/" + evento.publicacionId() + "/likes", evento);
+    public void onLikeRegistrado(String mensaje) {
+        try {
+            LikeRegistradoEvent evento = objectMapper.readValue(mensaje, LikeRegistradoEvent.class);
+            log.info("Recibido LikeRegistrado: publicacion={}, usuario={}",
+                    evento.publicacionId(), evento.usuarioId());
+            messagingTemplate.convertAndSend(
+                    "/topic/publicacion/" + evento.publicacionId() + "/likes", evento);
+        } catch (Exception e) {
+            log.error("Error al procesar LikeRegistrado", e);
+        }
     }
 }
