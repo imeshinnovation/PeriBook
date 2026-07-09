@@ -40,6 +40,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: npm install --prefix frontend
+
       - name: Run Snyk on frontend
         uses: snyk/actions/node@0.4.0
         env:
