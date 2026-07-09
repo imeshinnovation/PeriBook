@@ -107,3 +107,4 @@ ignore:
     - '*':
         reason: 'esbuild CVE — sin fix en la version de vite usada por Angular 20.'
         expires: '2026-08-09'
+# 2026-07-09
