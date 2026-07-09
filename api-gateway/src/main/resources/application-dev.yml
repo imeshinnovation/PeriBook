@@ -4,7 +4,7 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "*"
+            allowedOriginPatterns: "*"
 
 logging:
   level:
