@@ -40,6 +40,8 @@ public class SecurityConfig {
                 .pathMatchers("/actuator/health").permitAll()
                 .pathMatchers("/docs/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .pathMatchers("/webjars/**").permitAll()
+                // WebSocket handshake — la autenticación se delega al realtime-service
+                .pathMatchers("/ws/**").permitAll()
                 // Todo lo demás requiere JWT
                 .anyExchange().authenticated()
             )

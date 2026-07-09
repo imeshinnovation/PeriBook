@@ -16,8 +16,9 @@ export class RealtimeService implements OnDestroy {
 
   conectar() {
     if (this.conectado) return;
-
-    const socket = new SockJS('/ws');
+    // Pasar el token JWT como query param para que el Gateway valide el handshake SockJS
+    const token = this.authStore.token();
+    const socket = new SockJS(`/ws?token=${token}`);
     this.stompClient = Stomp.over(socket);
     this.stompClient.debug = () => {};
 
