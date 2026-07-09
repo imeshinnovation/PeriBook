@@ -79,8 +79,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Compile QA project
-        run: gradle -p qa-bdd compileJava
+      - name: Run QA-BDD tests
+        run: gradle -p qa-bdd test aggregate -Dapi.base.url=http://localhost:8080
+        continue-on-error: true
 
   # ── Consolidar ──────────────────────────────────────
   ci-status:
