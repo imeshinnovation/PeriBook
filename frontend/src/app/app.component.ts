@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { AuthStore } from './core/stores/auth.store';
-import { NgIf, AsyncPipe } from '@angular/common';
+import { RealtimeService } from './core/services/realtime.service';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -20,9 +21,16 @@ import { NgIf, AsyncPipe } from '@angular/common';
     <router-outlet />
   `,
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   authStore = inject(AuthStore);
   private router = inject(Router);
+  private realtimeService = inject(RealtimeService);
+
+  ngOnInit() {
+    if (this.authStore.estaAutenticado()) {
+      this.realtimeService.conectar();
+    }
+  }
 
   irAFeed() {
     this.router.navigate(['/feed']);
@@ -33,6 +41,7 @@ export class AppComponent {
   }
 
   logout() {
+    this.realtimeService.desconectar();
     this.authStore.logout();
     this.router.navigate(['/login']);
   }
