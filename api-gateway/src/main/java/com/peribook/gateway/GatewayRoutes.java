@@ -52,26 +52,12 @@ public class GatewayRoutes {
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                // ── Documentacion Swagger ──────────────────────────
-                // Decidi servir la documentacion interactiva redirigiendo
-                // /docs al auth-service. Todos los servicios registran sus
-                // endpoints en /v3/api-docs, y el SwaggerAggregator los
-                // agrupa por nombre. Asi el frontend y los desarrolladores
-                // tienen un solo URL para consultar toda la API.
-                .route("swagger-docs", r -> r
-                        .path("/docs")
-                        .filters(f -> f.rewritePath("/docs", "/swagger-ui/index.html"))
-                        .uri("http://auth-service:8081"))
+                // ── Documentacion Swagger unificada ───────────────
+                // El gateway sirve Swagger UI en /docs usando springdoc.
+                // Cada /v3/api-docs/{servicio} se reescribe al /v3/api-docs
+                // del microservicio correspondiente, y springdoc los agrupa
+                // en un solo Swagger UI via urls[] en application.yml.
 
-                // Recursos de Swagger UI (CSS, JS, webjars) se sirven desde
-                // auth-service para no recargar al gateway.
-                .route("swagger-ui", r -> r
-                        .path("/swagger-ui/**", "/webjars/**")
-                        .uri("http://auth-service:8081"))
-
-                // Cada servicio tiene su propia ruta de documentacion OpenAPI.
-                // Swagger UI carga /v3/api-docs/{nombre} y el gateway reescribe
-                // el path a /v3/api-docs antes de enviarlo al servicio correspondiente.
                 .route("auth-service-docs", r -> r
                         .path("/v3/api-docs/auth-service")
                         .filters(f -> f.rewritePath("/v3/api-docs/auth-service", "/v3/api-docs"))
