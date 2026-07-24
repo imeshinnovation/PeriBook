@@ -13,48 +13,68 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class RealtimeSteps {
 
-    @Dado("existe una publicación con ID conocido")
+    @Dado("existe una publicacion con ID conocido")
     public void publicacionExistente() {
+        String token = TestContext.getToken();
+        System.out.println("[QA] Token para crear publicacion: " + (token != null ? token.substring(0, 20) + "..." : "NULL"));
+
         Response response = SerenityRest.given()
                 .contentType("application/json")
-                .header("Authorization", "Bearer " + TestContext.getToken())
-                .body(Map.of("contenido", "Publicación para test de likes"))
+                .header("Authorization", "Bearer " + token)
+                .body(Map.of("contenido", "Publicacion para test de likes"))
                 .post("/api/posts");
 
+        System.out.println("[QA] POST /api/posts → " + response.getStatusCode());
+
         if (response.getStatusCode() == 201) {
-            TestContext.setPublicacionId(response.jsonPath().getString("id"));
+            String id = response.jsonPath().getString("id");
+            TestContext.setPublicacionId(id);
+            System.out.println("[QA] Publicacion creada: " + id);
         } else {
-            TestContext.setPublicacionId(UUID.randomUUID().toString());
+            String fallbackId = UUID.randomUUID().toString();
+            TestContext.setPublicacionId(fallbackId);
+            System.out.println("[QA] Publicacion fallback: " + fallbackId);
         }
     }
 
-    @Dado("ya di like a una publicación")
+    @Dado("ya di like a una publicacion")
     public void likePrevio() {
+        String token = TestContext.getToken();
+        String pubId = TestContext.getPublicacionId();
+        System.out.println("[QA] likePrevio: token=" + (token != null ? token.substring(0, 20) + "..." : "NULL") + " pubId=" + pubId);
+
         Response response = SerenityRest.given()
-                .header("Authorization", "Bearer " + TestContext.getToken())
-                .post("/api/likes?publicacionId=" + TestContext.getPublicacionId());
+                .header("Authorization", "Bearer " + token)
+                .post("/api/likes?publicacionId=" + pubId);
+
+        System.out.println("[QA] likePrevio POST /api/likes → " + response.getStatusCode());
         TestContext.setResponse(response);
     }
 
-    @Cuando("doy like a la publicación")
+    @Cuando("doy like a la publicacion")
     public void darLike() {
         Response response = SerenityRest.given()
                 .header("Authorization", "Bearer " + TestContext.getToken())
                 .post("/api/likes?publicacionId=" + TestContext.getPublicacionId());
+        System.out.println("[QA] darLike → " + response.getStatusCode());
         TestContext.setResponse(response);
     }
 
-    @Cuando("vuelvo a dar like a la misma publicación")
+    @Cuando("vuelvo a dar like a la misma publicacion")
     public void darLikeOtraVez() {
         Response response = SerenityRest.given()
                 .header("Authorization", "Bearer " + TestContext.getToken())
                 .post("/api/likes?publicacionId=" + TestContext.getPublicacionId());
+        System.out.println("[QA] darLikeOtraVez → " + response.getStatusCode());
         TestContext.setResponse(response);
     }
 
-    @Entonces("el servicio responde con código {int} o {int}")
+    @Entonces("el servicio responde con codigo {int} o {int}")
     public void verificarCodigoAlternativo(int cod1, int cod2) {
-        assertThat(TestContext.getResponse().getStatusCode()).isIn(cod1, cod2);
+        int actual = TestContext.getResponse().getStatusCode();
+        assertThat(actual)
+                .as("Esperaba %s o %s pero obtuve %s", cod1, cod2, actual)
+                .isIn(cod1, cod2);
     }
 
     @Entonces("la respuesta indica si el like es nuevo")
@@ -72,7 +92,7 @@ public class RealtimeSteps {
         assertThat(TestContext.getResponse().jsonPath().getBoolean("esNuevo")).isFalse();
     }
 
-    // ── WebSocket steps (requieren browser real) ──────────
+    // ── WebSocket (requieren browser) ────────────────────
     @Dado("estoy conectado al WebSocket")
     public void conectadoWebSocket() {}
 
@@ -82,20 +102,12 @@ public class RealtimeSteps {
     @Entonces("recibo un evento LikeRegistrado por WebSocket en menos de {int} segundos")
     public void reciboEventoWebSocket(int segundos) {}
 
-    @Dado("que tengo dos pestañas abiertas con el feed")
+    @Dado("que tengo dos pestanas abiertas con el feed")
     public void dosPestanas() {}
 
-    @Dado("en la pestaña {int} estoy autenticado como {string}")
+    @Dado("en la pestana {int} estoy autenticado como {string}")
     public void autenticadoEnPestana(int pestana, String email) {}
 
-    @Entonces("en la pestaña {int} el contador de likes se incrementa automáticamente sin recargar")
+    @Entonces("en la pestana {int} el contador de likes se incrementa automaticamente sin recargar")
     public void contadorAutomatico(int pestana) {}
-
-    private void autenticarComo(String email) {
-        Response response = SerenityRest.given()
-                .contentType("application/json")
-                .body(Map.of("email", email, "password", "secreto123"))
-                .post("/api/auth/login");
-        TestContext.setToken(response.jsonPath().getString("token"));
-    }
 }
