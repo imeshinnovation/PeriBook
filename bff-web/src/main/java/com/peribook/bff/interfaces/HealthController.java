@@ -7,8 +7,20 @@ import reactor.core.publisher.Mono;
 import java.util.Map;
 
 /**
- * Smoke test endpoint — indica que bff-web está vivo.
- * Se reemplazará con endpoints reales en la Fase 6.
+ * Endpoint de health check para el orquestador y monitoreo.
+ * <p>
+ * Este endpoint es necesario para que Docker Swarm pueda verificar que el
+ * contenedor esta respondiendo (healthcheck en el stack) y para que el equipo
+ * de operaciones confirme rapidamente que el servicio esta vivo despues de
+ * un deploy.
+ * </p>
+ * <p>
+ * A futuro, este endpoint puede extenderse para incluir verificaciones de
+ * dependencias (post-service, user-service, like-service) y exponer metricas
+ * de latencia. Por ahora devuelve un mapa simple con el estado basico.
+ * </p>
+ *
+ * @author Alexander Rubio Caceres
  */
 @RestController
 public class HealthController {
@@ -17,8 +29,7 @@ public class HealthController {
     public Mono<Map<String, String>> root() {
         return Mono.just(Map.of(
                 "service", "bff-web",
-                "status", "running",
-                "fase", "2 — esqueleto"
+                "status", "running"
         ));
     }
 }

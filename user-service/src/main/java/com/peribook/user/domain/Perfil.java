@@ -6,18 +6,55 @@ import java.util.UUID;
 
 /**
  * Agregado raíz del bounded context de perfiles de usuario.
- * Cada Perfil está vinculado 1:1 a un Usuario del bounded context de auth.
+ * <p>
+ * Cada {@code Perfil} está vinculado 1:1 a un {@code Usuario} del bounded context de auth,
+ * pero no contiene una referencia directa al objeto Usuario — solo su UUID. Esto es
+ * intencional: en un sistema con microservicios separados, no quiero que el perfil dependa
+ * de un objeto que vive en otro servicio. La relación es conceptual y se resuelve en
+ * el BFF o en el frontend, no en la base de datos del user-service.
+ * </p>
+ * <p>
+ * Usé constructor privado con fábricas estáticas ({@link #crear(UUID, Email, String, String, String, LocalDate)}
+ * y {@link #reconstituir(UUID, UUID, Email, String, String, String, LocalDate)}) en lugar de
+ * un constructor público o un builder porque quiero dejar claro que hay dos formas legítimas
+ * de obtener un Perfil: una creándolo desde cero (nuevo agregado) y otra reconstituyéndolo
+ * desde persistencia (agregado existente). Cada una tiene validaciones distintas.
+ * </p>
+ *
+ * @author Alexander Rubio Cáceres
  */
 public class Perfil {
 
+    /** Identificador único del perfil. Inmutable. */
     private final UUID id;
-    private final UUID usuarioId;  // referencia al Usuario de auth-service
+
+    /**
+     * Referencia al Usuario del auth-service.
+     * No es una clave foránea JPA — es un identificador conceptual que el BFF usa para
+     * cruzar información entre servicios.
+     */
+    private final UUID usuarioId;
+
+    /** Value Object de email con validación incorporada. */
     private final Email email;
+
+    /** Seudónimo público. Opcional, se normaliza a cadena vacía si es null. */
     private final String alias;
+
+    /** Nombre(s) real(es). Obligatorio, se trimea al crear. */
     private final String nombres;
+
+    /** Apellido(s). Obligatorio, se trimea al crear. */
     private final String apellidos;
+
+    /** Fecha de nacimiento. Opcional. */
     private final LocalDate fechaNacimiento;
 
+    /**
+     * Constructor privado — la única forma de instanciar un Perfil es a través de
+     * las fábricas estáticas. Esto evita que alguien cree un Perfil directamente
+     * sin pasar por las validaciones de dominio.
+     */
     private Perfil(UUID id, UUID usuarioId, Email email, String alias,
                    String nombres, String apellidos, LocalDate fechaNacimiento) {
         this.id = id;
@@ -29,6 +66,21 @@ public class Perfil {
         this.fechaNacimiento = fechaNacimiento;
     }
 
+    /**
+     * Fabrica un Perfil nuevo para un usuario que se acaba de registrar.
+     * Genera un UUID aleatorio como identidad del perfil, valida y normaliza los
+     * campos de texto (trim) y deja el alias vacío si no se proporcionó.
+     * Esta validación es de dominio — no confío en que la capa de aplicación
+     * o el controlador hayan limpiado los datos.
+     *
+     * @param usuarioId       UUID del usuario en auth-service (obligatorio)
+     * @param email           Value Object Email ya validado
+     * @param alias           Seudónimo (opcional, se usa cadena vacía si es null)
+     * @param nombres         Nombre(s) real(es) (obligatorio, no vacío)
+     * @param apellidos       Apellido(s) (obligatorio, no vacío)
+     * @param fechaNacimiento Fecha de nacimiento (opcional)
+     * @return Perfil nuevo con UUID generado
+     */
     public static Perfil crear(UUID usuarioId, Email email, String alias,
                                String nombres, String apellidos, LocalDate fechaNacimiento) {
         Objects.requireNonNull(usuarioId, "usuarioId no puede ser nulo");
@@ -40,11 +92,34 @@ public class Perfil {
                 alias != null ? alias.trim() : "", nombres.trim(), apellidos.trim(), fechaNacimiento);
     }
 
+    /**
+     * Reconstituye un Perfil desde persistencia (base de datos o evento).
+     * No valida los campos porque asumimos que ya pasaron validación al crearse
+     * originalmente. Sí valida que el ID no sea nulo — si el repositorio devuelve
+     * un ID nulo, algo está mal en la capa de infraestructura.
+     * <p>
+     * Decidí mantener esta ruta separada de {@link #crear(UUID, Email, String, String, String, LocalDate)}
+     * porque la reconstitución puede venir de un event store, una proyección o un snapshot,
+     * y en esos casos no quiero que se generen nuevos UUIDs ni se trimeen textos que
+     * ya deberían estar normalizados.
+     * </p>
+     *
+     * @param id              UUID existente del perfil (obligatorio)
+     * @param usuarioId       UUID del usuario asociado
+     * @param email           Value Object Email
+     * @param alias           Seudónimo
+     * @param nombres         Nombre(s)
+     * @param apellidos       Apellido(s)
+     * @param fechaNacimiento Fecha de nacimiento
+     * @return Perfil reconstituido con el ID proporcionado
+     */
     public static Perfil reconstituir(UUID id, UUID usuarioId, Email email, String alias,
                                       String nombres, String apellidos, LocalDate fechaNacimiento) {
         Objects.requireNonNull(id, "id no puede ser nulo");
         return new Perfil(id, usuarioId, email, alias, nombres, apellidos, fechaNacimiento);
     }
+
+    // -- Getters de estilo "componente de record" (porque Perfil no es un record, pero me gusta la nomenclatura)
 
     public UUID id() { return id; }
     public UUID usuarioId() { return usuarioId; }
@@ -54,6 +129,10 @@ public class Perfil {
     public String apellidos() { return apellidos; }
     public LocalDate fechaNacimiento() { return fechaNacimiento; }
 
+    /**
+     * Dos Perfiles son iguales si comparten el mismo ID. Esto es clave en DDD:
+     * la identidad del agregado la define su ID, no sus atributos.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

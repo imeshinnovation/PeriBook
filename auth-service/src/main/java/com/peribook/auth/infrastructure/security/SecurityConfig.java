@@ -28,6 +28,34 @@ import java.security.PrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
+/**
+ * Configuración de seguridad de Spring para el auth-service.
+ * <p>
+ * Esta es la clase más densa del servicio porque define toda la postura de
+ * seguridad: qué endpoints son públicos, cuáles requieren autenticación,
+ * cómo se validan los tokens JWT, cómo se cargan las llaves RSA, y cómo se
+ * manejan los errores de autenticación.
+ * </p>
+ * <p>
+ * Usé {@code proxyBeanMethods = false} en {@code @Configuration} para que
+ * Spring no genere proxies CGLIB — esta clase solo define beans, no tiene
+ * llamadas internas entre {@code @Bean} que necesiten ser interceptadas.
+ * Es una micro-optimización que evita overhead innecesario en el contexto
+ * de la aplicación.
+ * </p>
+ * <p>
+ * Decidí que el {@link SecurityConfig#loadKeyBytes(String)} haga el parsing
+ * PEM manual en vez de usar una librería tipo Bouncy Castle porque:
+ * <ol>
+ *   <li>El formato PEM es trivial de parsear (base64 con headers)</li>
+ *   <li>No quiero agregar una dependencia pesada solo para esto</li>
+ *   <li>Bouncy Castle tiene problemas de tamaño y aprobación en algunos
+ *       entornos corporativos por temas de export control</li>
+ * </ol>
+ * </p>
+ *
+ * @author Alexander Rubio Cáceres
+ */
 @Configuration(proxyBeanMethods = false)
 public class SecurityConfig {
 
@@ -39,21 +67,59 @@ public class SecurityConfig {
     }
 
     // ── Security filter chain ──────────────────────────
+    // Esta es la cadena de filtros que Spring Security aplica a todas las
+    // peticiones HTTP. La configuro como STATELESS porque los servicios no
+    // deben mantener sesiones HTTP — cada request lleva su propio token JWT.
 
+    /**
+     * Define la cadena de filtros de seguridad HTTP.
+     * <p>
+     * Configuro:
+     * <ul>
+     *   <li><strong>CSRF desactivado</strong> — somos una API REST sin estado
+     *       que usa JWT, no cookies de sesión. CSRF no aplica aquí.</li>
+     *   <li><strong>Sin estado (STATELESS)</strong> — no se crean sesiones HTTP.
+     *       Cada request se autentica de forma independiente con su JWT.</li>
+     *   <li><strong>Endpoints públicos</strong> — login, Swagger/OpenAPI y health
+     *       check no requieren token. Todo lo demás sí.</li>
+     *   <li><strong>Resource Server OAuth2</strong> — Spring Security valida el
+     *       JWT automáticamente usando el decoder que configuro en
+     *       {@link #jwtDecoder()}.</li>
+     * </ul>
+     * </p>
+     *
+     * @param http el builder de HttpSecurity de Spring
+     * @return la cadena de filtros construida
+     */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            // Desactivo CSRF porque no uso cookies de sesión.
+            // Las APIs REST con JWT son inmunes a ataques CSRF por diseño.
             .csrf(csrf -> csrf.disable())
+
+            // Política de sesión: STATELESS para no crear HttpSession.
+            // Cada request debe incluir el token JWT en el header Authorization.
             .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+            // Configuración de autorización por endpoint.
             .authorizeHttpRequests(auth -> auth
+                // Login es público porque es el punto de entrada para obtener el token.
                 .requestMatchers("/api/auth/login").permitAll()
+                // Documentación OpenAPI y Swagger UI son públicos.
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll()
+                // Health check para orquestación (Docker Swarm, Kubernetes).
                 .requestMatchers("/actuator/health").permitAll()
+                // Cualquier otro endpoint requiere autenticación.
                 .anyRequest().authenticated()
             )
+
+            // Configuración como Resource Server OAuth2.
+            // Spring Security valida el JWT automáticamente en cada request.
             .oauth2ResourceServer(oauth2 -> oauth2
                 .jwt(jwt -> jwt.decoder(jwtDecoder()))
+                // Entry point personalizado para errores JWT (token expirado, inválido, etc.)
                 .authenticationEntryPoint((request, response, exception) -> {
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
                     response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
@@ -62,6 +128,7 @@ public class SecurityConfig {
                                     "Token JWT requerido o inválido").toString());
                 })
             )
+            // Manejo de excepciones de autenticación general.
             .exceptionHandling(ex -> ex
                 .authenticationEntryPoint((request, response, exception) -> {
                     response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -76,19 +143,45 @@ public class SecurityConfig {
     }
 
     // ── Beans JWT ───────────────────────────────────────
+    // Estos beans se encargan de la criptografía: decodificador de tokens
+    // para verificación, clave privada para firma, y codificador BCrypt.
 
+    /**
+     * Crea un {@link JwtDecoder} usando Nimbus (la implementación por defecto
+     * de Spring Security) con la clave pública RSA.
+     * <p>
+     * Este decoder se usa tanto para verificar tokens entrantes como para que
+     * Spring Security los valide automáticamente en cada request protegido.
+     * </p>
+     *
+     * @return decoder de JWT configurado con la clave pública
+     * @throws IllegalStateException si no se puede cargar la clave pública
+     */
     @Bean
     public JwtDecoder jwtDecoder() {
         try {
+            // Cargo la clave pública y la uso para construir el decoder.
             RSAPublicKey publicKey = (RSAPublicKey) KeyFactory.getInstance("RSA")
                     .generatePublic(new java.security.spec.X509EncodedKeySpec(
                             loadKeyBytes(jwtConfig.rsa().publicKeyPath())));
             return NimbusJwtDecoder.withPublicKey(publicKey).build();
         } catch (Exception e) {
+            // Si la clave pública no se puede cargar, el servicio no puede
+            // verificar tokens — mejor fallar en el arranque que en runtime.
             throw new IllegalStateException("No se pudo cargar la clave pública RSA", e);
         }
     }
 
+    /**
+     * Carga la clave privada RSA desde el archivo PEM para la firma de JWT.
+     * <p>
+     * La clave privada se inyecta como bean en {@link RsaJwtService} para
+     * firmar los tokens emitidos durante el login.
+     * </p>
+     *
+     * @return clave privada RSA lista para usar
+     * @throws IllegalStateException si no se puede cargar la clave privada
+     */
     @Bean
     public PrivateKey privateKey() {
         try {
@@ -100,6 +193,19 @@ public class SecurityConfig {
         }
     }
 
+    /**
+     * Bean de {@link PasswordEncoder} para hashear contraseñas con BCrypt.
+     * <p>
+     * Este bean lo usa Spring Security si se configura autenticación
+     * basada en login form, pero en nuestro caso el hashing se maneja
+     * directamente en el Value Object {@link com.peribook.auth.domain.Password}.
+     * Lo defino aquí por si en el futuro necesito integrar autenticación
+     * HTTP Basic o alguna otra funcionalidad que requiera un
+     * {@code PasswordEncoder} como bean de Spring.
+     * </p>
+     *
+     * @return codificador BCrypt con fuerza por defecto (10 rounds)
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -108,8 +214,25 @@ public class SecurityConfig {
     // ── Helper ──────────────────────────────────────────
 
     /**
-     * Intenta cargar la clave desde sistema de archivos primero (secrets Docker),
-     * luego desde classpath (dev local).
+     * Carga un archivo de clave RSA en formato PEM y lo decodifica a bytes.
+     * <p>
+     * Estrategia de carga (por orden de prioridad):
+     * <ol>
+     *   <li><strong>Sistema de archivos</strong> — para producción cuando las
+     *       claves se montan como secretos de Docker Swarm en /run/secrets/</li>
+     *   <li><strong>Classpath</strong> — para desarrollo local cuando las claves
+     *       están en src/main/resources/</li>
+     * </ol>
+     * </p>
+     * <p>
+     * Después de leer el archivo, remuevo los headers PEM
+     * (-----BEGIN PUBLIC KEY-----, etc.) y decodifico la porción Base64
+     * restante. Es un parsing sencillo pero suficiente.
+     * </p>
+     *
+     * @param path ruta del archivo PEM (filesystem o classpath)
+     * @return bytes decodificados de la clave (formato DER)
+     * @throws IOException si no se puede leer el archivo de ninguna fuente
      */
     private byte[] loadKeyBytes(String path) throws IOException {
         Path filePath = Path.of(path);

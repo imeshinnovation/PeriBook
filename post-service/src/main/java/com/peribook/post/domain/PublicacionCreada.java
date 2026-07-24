@@ -4,8 +4,18 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Domain event: se emite cuando se crea una nueva publicación.
- * Este contrato es JSON — cada servicio que lo consuma define su propio DTO.
+ * Evento de dominio: se emite cuando se crea una nueva publicacion.
+ * <p>
+ * Elegi un {@code record} de Java 21 porque es inmutable por naturaleza, tiene
+ * equals/hashcode/toString generados automaticamente y expresa de forma concisa
+ * que esto es solo un transporte de datos (un DTO de dominio, por llamarlo de algun modo).
+ * <p>
+ * Este evento viaja por RabbitMQ en formato JSON hacia otros servicios (feed-service,
+ * notification-service, etc.). Cada servicio consumidor define su propia interpretacion
+ * del evento — no compartimos clases compiladas entre microservicios. Eso evita
+ * acoplamiento de despliegue y permite que cada equipo evolucione a su ritmo.
+ *
+ * @author Alexander Rubio Caceres
  */
 public record PublicacionCreada(
         UUID publicacionId,
@@ -13,6 +23,17 @@ public record PublicacionCreada(
         String contenido,
         Instant creadaEn
 ) {
+    /**
+     * Construye el evento a partir de una entidad {@link Publicacion}.
+     * <p>
+     * Es un metodo factory que extrae los valores relevantes del agregado raiz para
+     * armar el mensaje que otros servicios consumiran. Decidi que estuviera aqui en
+     * lugar de en el caso de uso para mantener la logica de conversion cerca del
+     * propio evento.
+     *
+     * @param p la entidad Publicacion ya persistida
+     * @return un nuevo evento con los datos de la publicacion
+     */
     public static PublicacionCreada desde(Publicacion p) {
         return new PublicacionCreada(p.id(), p.autorId(), p.contenido(), p.creadaEn());
     }

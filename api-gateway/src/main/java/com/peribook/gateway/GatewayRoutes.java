@@ -5,23 +5,76 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Definición declarativa de todas las rutas del gateway hacia los
+ * microservicios internos.
+ * <p>
+ * Usé {@code proxyBeanMethods = false} porque este {@code @Configuration} no
+ * necesita que Spring intercepte las llamadas entre sus beans — cada
+ * {@code @Bean} es independiente y no hay dependencias circulares. Esto
+ * reduce el overhead de startup y le dice a Spring que no genere proxies CGLIB
+ * innecesarios.
+ * <p>
+ * Todas las rutas usan el nombre del servicio Docker Swarm como hostname
+ * (ej: {@code http://auth-service:8081}). Esto funciona porque Swarm tiene su
+ * propio DNS interno que resuelve los nombres de servicio a los contenedores
+ * correspondientes. No necesito un service discovery externo como Eureka
+ * mientras el despliegue sea en Swarm.
+ * <p>
+ * El orden de las rutas importa: Spring Cloud Gateway evalúa las rutas en el
+ * orden en que se registran. Puse primero las rutas de Swagger porque son las
+ * más específicas (tienen filtros) y luego los microservicios en orden
+ * alfabético para facilitar la legibilidad.
+ *
+ * @author Alexander Rubio Cáceres
+ */
 @Configuration(proxyBeanMethods = false)
 public class GatewayRoutes {
 
+    /**
+     * Registro central de rutas.
+     * <p>
+     * Decidí agrupar todas las rutas en un solo método en lugar de dividirlas
+     * en varios beans porque así el mapa completo de enrutamiento se ve de un
+     * solo vistazo. Cuando un nuevo desarrollador llega al proyecto, abre este
+     * archivo y sabe al instante "ah, estos son los servicios que existen".
+     * <p>
+     * Uso {@link RouteLocatorBuilder} en lugar de anotaciones controller-style
+     * porque la sintaxis fluida de Gateway me permite expresar rutas, filtros y
+     * reescrituras de path en una sola línea, sin dispersar la configuracion
+     * entre varias clases.
+     */
     @Bean
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
-                // ── Swagger UI (servido desde auth-service) ──
+                // ── Documentacion Swagger ──────────────────────────
+                // Decidi servir la documentacion interactiva redirigiendo
+                // /docs al auth-service. Todos los servicios registran sus
+                // endpoints en /v3/api-docs, y el SwaggerAggregator los
+                // agrupa por nombre. Asi el frontend y los desarrolladores
+                // tienen un solo URL para consultar toda la API.
                 .route("swagger-docs", r -> r
                         .path("/docs")
                         .filters(f -> f.rewritePath("/docs", "/swagger-ui/index.html"))
                         .uri("http://auth-service:8081"))
 
+                // Los recursos estaticos de Swagger (CSS, JS, webjars) se
+                // delegan directamente al auth-service sin reescritura.
+                // Prefiero no servir archivos estaticos desde el gateway
+                // porque eso lo convertiria en un servidor de contenido y
+                // complicaria el manejo de cache.
                 .route("swagger-ui", r -> r
                         .path("/swagger-ui/**", "/webjars/**", "/v3/api-docs/**")
                         .uri("http://auth-service:8081"))
 
-                // ── Microservicios ──────────────────────────
+                // ── Microservicios de negocio ──────────────────────
+                // Cada ruta sigue el mismo patron: un path prefix que
+                // identifica el servicio y un forward al contenedor
+                // correspondiente en la overlay network de Swarm.
+                // Decidi mantener los nombres de ruta consistentes con
+                // los nombres de los servicios de Docker para que la
+                // correlacion sea obvia en los logs.
+
                 .route("auth-service", r -> r
                         .path("/api/auth/**")
                         .uri("http://auth-service:8081"))
@@ -38,10 +91,21 @@ public class GatewayRoutes {
                         .path("/api/likes/**")
                         .uri("http://like-service:8084"))
 
+                // Las rutas de WebSocket (/ws/**) van al realtime-service.
+                // No aplique filtros de reescritura ni autenticacion a nivel
+                // de ruta porque el handshake de WebSocket se maneja aparte
+                // en SecurityConfig (se deja pasar sin JWT y la autenticacion
+                // se hace internamente en el servicio de realtime).
                 .route("realtime-service", r -> r
                         .path("/ws/**")
                         .uri("http://realtime-service:8085"))
 
+                // El BFF (Backend For Frontend) es un caso especial: todas
+                // las peticiones /bff/** van a el, y es el BFF quien orquesta
+                // las llamadas a los microservicios internos. Decidi separar
+                // el BFF como un servicio independiente (no como parte del
+                // gateway) para que su logica de orquestacion no contamine
+                // las responsabilidades de enrutamiento del gateway.
                 .route("bff-web", r -> r
                         .path("/bff/**")
                         .uri("http://bff-web:8086"))

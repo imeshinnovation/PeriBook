@@ -10,6 +10,31 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+/**
+ * Sembrador de datos de prueba para el perfil {@code dev}.
+ * <p>
+ * Implementa {@link CommandLineRunner} para ejecutarse automáticamente después
+ * de que el contexto de Spring se haya inicializado. Está anotado con
+ * {@code @Profile("dev")}, así que solo se activa cuando el perfil activo es
+ * {@code dev} — en producción (perfiles {@code prod}, {@code staging}) este
+ * bean ni siquiera se crea.
+ * </p>
+ * <p>
+ * Decidí usar UUIDs fijos para los usuarios de prueba en vez de generarlos
+ * aleatoriamente. Esto es deliberado: tener IDs predecibles facilita las
+ * pruebas manuales y automatizadas (sé exactamente qué ID tiene cada usuario
+ * sin tener que consultar la BD). Además, los IDs fijos son útiles para
+ * entornos de integración donde otros servicios necesitan referenciar estos
+ * usuarios.
+ * </p>
+ * <p>
+ * El seeder es idempotente: verifica si el usuario "ana@peribook.com" ya
+ * existe antes de insertar. Esto permite reiniciar el servicio sin duplicar
+ * datos cada vez.
+ * </p>
+ *
+ * @author Alexander Rubio Cáceres
+ */
 @Component
 @Profile("dev")
 public class DevDataSeeder implements CommandLineRunner {
@@ -21,8 +46,22 @@ public class DevDataSeeder implements CommandLineRunner {
         this.usuarioRepository = usuarioRepository;
     }
 
+    /**
+     * Ejecuta la siembra de datos después del arranque de la aplicación.
+     * <p>
+     * Verifica primero si el seed ya se ejecutó (buscando un usuario conocido).
+     * Si existe, salta la inserción para ser idempotente. Si no existe, inserta
+     * tres usuarios de prueba con roles implícitos: escritor, lector y admin.
+     * </p>
+     *
+     * @param args argumentos de línea de comandos (no se usan)
+     */
     @Override
     public void run(String... args) {
+        // Verificación de idempotencia: si el primer usuario ya existe, asumo
+        // que el seed ya se ejecutó. No verifico los tres porque si el seed
+        // falló a medio camino, esta comprobación tampoco es perfecta, pero
+        // para un entorno dev es suficiente.
         if (usuarioRepository.findByEmail(new Email("ana@peribook.com")).isPresent()) {
             log.info("Seed ya ejecutado — usuarios de prueba existentes. Saltando.");
             return;
@@ -30,18 +69,21 @@ public class DevDataSeeder implements CommandLineRunner {
 
         log.info("Insertando usuarios de prueba (profile dev)...");
 
+        // Usuario 1: ana_writer — pensado para probar funcionalidades de escritura
         usuarioRepository.save(Usuario.reconstituir(
                 java.util.UUID.fromString("11111111-1111-1111-1111-111111111111"),
                 new Email("ana@peribook.com"),
                 Password.fromRaw("secreto123"),
                 "ana_writer"));
 
+        // Usuario 2: carlos_reader — pensado para probar funcionalidades de lectura
         usuarioRepository.save(Usuario.reconstituir(
                 java.util.UUID.fromString("22222222-2222-2222-2222-222222222222"),
                 new Email("carlos@peribook.com"),
                 Password.fromRaw("secreto123"),
                 "carlos_reader"));
 
+        // Usuario 3: admin_root — pensado para probar endpoints administrativos
         usuarioRepository.save(Usuario.reconstituir(
                 java.util.UUID.fromString("33333333-3333-3333-3333-333333333333"),
                 new Email("admin@peribook.com"),

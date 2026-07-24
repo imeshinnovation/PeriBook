@@ -12,6 +12,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+/**
+ * Controlador REST del microservicio Like.
+ * <p>
+ * Expone los endpoints para dar like y consultar el contador de likes de una
+ * publicacion. Decidi mantener el controlador delgado: solo valida parametros
+ * de entrada, delega en el caso de uso y construye la respuesta HTTP. Toda la
+ * logica de negocio queda en la capa de aplicacion/dominio.
+ * </p>
+ *
+ * @author Alexander Rubio Caceres
+ */
 @RestController
 @RequestMapping("/api/likes")
 public class LikeController {
@@ -23,12 +34,33 @@ public class LikeController {
         this.darLikeUseCase = darLikeUseCase;
     }
 
+    /**
+     * GET /api/likes/{publicacionId}/count
+     * <p>
+     * Devuelve el numero total de likes de una publicacion. Es un endpoint
+     * publico dentro del servicio (aunque protegido por JWT a nivel global)
+     * porque cualquier usuario autenticado puede ver los contadores.
+     * </p>
+     */
     @GetMapping("/{publicacionId}/count")
     public ResponseEntity<java.util.Map<String, Long>> contarLikes(@PathVariable UUID publicacionId) {
         long total = darLikeUseCase.contarPorPublicacion(publicacionId);
         return ResponseEntity.ok(java.util.Map.of("total", total));
     }
 
+    /**
+     * POST /api/likes
+     * <p>
+     * Registra un like de un usuario a una publicacion. El {@code usuarioId}
+     * se extrae del token JWT (claim "userId"), asi que el cliente solo envia
+     * el {@code publicacionId} como query param. Esto evita que un cliente
+     * malicioso pueda suplantar a otro usuario.
+     * </p>
+     * <p>
+     * La respuesta distingue entre CREATED (like nuevo) y OK (ya existia,
+     * operacion idempotente).
+     * </p>
+     */
     @PostMapping
     public ResponseEntity<LikeResponse> darLike(
             @RequestParam UUID publicacionId,
@@ -38,10 +70,12 @@ public class LikeController {
 
         DarLikeUseCase.Resultado resultado = darLikeUseCase.ejecutar(publicacionId, usuarioId);
 
+        // totalLikes se deja en 0 porque el like-service no tiene la responsabilidad
+        // de contar en este punto; el BFF lo enriquece en una llamada posterior.
         LikeResponse response = new LikeResponse(
                 resultado.like().id().toString(),
                 publicacionId.toString(),
-                0, // El contador se obtiene del like-service más adelante (Fase 6 BFF)
+                0,
                 resultado.esNuevo()
         );
 
