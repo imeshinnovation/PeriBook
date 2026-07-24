@@ -11,19 +11,21 @@ import java.util.Map;
 
 /**
  * Cliente reactivo para el servicio de publicaciones (post-service).
- * <p>
+ * 
+
  * Este es el cliente que inicia toda la cadena del feed: sin publicaciones
  * no hay nada que enriquecer. Decidi separarlo de los otros clientes porque
  * cada uno tiene su propia URL base, semantica de errores y contrato de API.
  * Mezclarlos en una sola clase habria creado una dependencia oculta entre
  * servicios que no tienen relacion directa.
- * </p>
- * <p>
- * La respuesta se modela como {@code List<Map<String, Object>>} en vez de un
+ * 
+ * 
+
+ * La respuesta se modela como  en vez de un
  * DTO tipado porque el BFF no necesita conocer la estructura completa de una
  * publicacion — solo extrae 4 campos (id, autorId, contenido, creadaEn). Un
  * DTO intermedio agregaria complejidad sin beneficio real en este caso.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */

@@ -5,9 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Punto de entrada del microservicio post-service dentro de PeriBook.
- * <p>
- * Al usar {@code @SpringBootApplication}, Spring Boot escanea automáticamente los paquetes
- * {@code com.peribook.post.*} en busca de beans, controladores REST, configuraciones y
+ * 
+
+ * Al usar , Spring Boot escanea automáticamente los paquetes
+ *  en busca de beans, controladores REST, configuraciones y
  * componentes. Decidí no extender esta clase con nada adicional — prefiero mantenerla
  * minimalista y delegar toda la configuración explícita a clases especializadas
  * (SecurityConfig, RabbitConfig, etc.). Esto facilita las pruebas de integración porque

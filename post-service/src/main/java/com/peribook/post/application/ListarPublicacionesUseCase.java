@@ -9,12 +9,14 @@ import org.springframework.stereotype.Service;
 
 /**
  * Caso de uso: listar publicaciones recientes.
- * <p>
- * Lo mantengo separado de {@link CrearPublicacionUseCase} porque son dos operaciones
+ * 
+
+ * Lo mantengo separado de CrearPublicacionUseCase porque son dos operaciones
  * con diferentes regimenes de concurrencia y requisitos de escalabilidad. Crear es
  * una operacion de escritura que dispara eventos; listar es puramente de lectura y
  * puede cachearse o escalarse horizontalmente sin problemas.
- * <p>
+ * 
+
  * Decidi aplicar un limite maximo de 50 resultados en lugar de confiar ciegamente
  * en el parametro que llega del cliente. Esto evita que alguien pida 10 millones de
  * registros y tumbe la base de datos — es una practica de "defense in depth" que
@@ -37,8 +39,9 @@ public class ListarPublicacionesUseCase {
 
     /**
      * Obtiene las publicaciones mas recientes hasta un maximo de 50.
-     * <p>
-     * El limite se acota con {@code Math.min} para que aunque el cliente envie un
+     * 
+
+     * El limite se acota con  para que aunque el cliente envie un
      * valor desproporcionado, el sistema no se vea afectado. La paginacion real
      * se planea implementar con cursores mas adelante.
      *

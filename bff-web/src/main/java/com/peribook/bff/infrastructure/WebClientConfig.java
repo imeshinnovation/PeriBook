@@ -13,18 +13,20 @@ import java.time.Duration;
 
 /**
  * Configuracion global del cliente HTTP reactivo (WebClient).
- * <p>
- * Uso {@code proxyBeanMethods = false} para que Spring no genere proxies CGLIB
+ * 
+
+ * Uso  para que Spring no genere proxies CGLIB
  * sobre esta configuracion, ya que solo expone un bean y no necesita
  * interdependencias con otros @Bean.
- * </p>
- * <p>
+ * 
+ * 
+
  * Decidi configurar los timeouts a nivel de HttpClient en vez de en cada llamada
  * porque son valores uniformes para todos los clientes del BFF. Si algun cliente
  * necesitara timeouts distintos, se podria sobreescribir en su propia
  * configuracion, pero prefiero empezar con un valor sensato y evitar la
  * repeticion.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -32,14 +34,15 @@ import java.time.Duration;
 public class WebClientConfig {
 
     /**
-     * Fabrica de {@link WebClient.Builder} preconfigurada con timeouts.
-     * <p>
+     * Fabrica de WebClient.Builder preconfigurada con timeouts.
+     * 
+
      * Los valores son de 5 segundos para connect, read y write. En un entorno
      * de microservicios en Docker Swarm, 5s es suficiente para detectar que un
      * servicio esta caido sin que la experiencia del usuario se degrade demasiado.
      * Si un servicio no responde en ese tiempo, el BFF corta la llamada y aplica
      * el fallback correspondiente (ver LikeClient.onErrorReturn).
-     * </p>
+     * 
      */
     @Bean
     public WebClient.Builder webClientBuilder() {

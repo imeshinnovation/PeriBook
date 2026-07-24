@@ -11,19 +11,21 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 /**
- * Entidad JPA que mapea la tabla {@code perfiles} en la base de datos.
- * <p>
+ * Entidad JPA que mapea la tabla  en la base de datos.
+ * 
+
  * Esta clase pertenece exclusivamente a la capa de infraestructura — el dominio
- * no sabe que JPA existe. La conversión bidireccional entre {@link PerfilEntity}
- * y {@link Perfil} ocurre en {@link #fromDomain(Perfil)} y {@link #toDomain()},
+ * no sabe que JPA existe. La conversión bidireccional entre PerfilEntity
+ * y Perfil ocurre en #fromDomain(Perfil) y #toDomain(),
  * manteniendo el dominio limpio de anotaciones Jakarta Persistence.
- * </p>
- * <p>
- * Notar que {@code email} aquí es un {@code String} simple, no un {@link Email}.
- * Esto es deliberado: el Value Object {@code Email} pertenece al dominio y su
+ * 
+ * 
+
+ * Notar que  aquí es un  simple, no un Email.
+ * Esto es deliberado: el Value Object  pertenece al dominio y su
  * validación ya ocurrió antes de llegar aquí. La base de datos guarda el valor
- * plano; al reconstituir, {@code toDomain()} vuelve a crear el Value Object.
- * </p>
+ * plano; al reconstituir,  vuelve a crear el Value Object.
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -49,18 +51,18 @@ public class PerfilEntity {
     @Column(nullable = false, length = 100)
     private String apellidos;
 
-    /** Opcional. No lleva {@code @Column(nullable = false)} porque puede ser null. */
+    /** Opcional. No lleva  porque puede ser null. */
     private LocalDate fechaNacimiento;
 
     /**
      * Constructor protegido requerido por JPA (Hibernate lo usa via reflexión).
      * No es público porque no quiero que nadie en el código cree entidades
-     * vacías — toda creación debe pasar por {@link #fromDomain(Perfil)}.
+     * vacías — toda creación debe pasar por #fromDomain(Perfil).
      */
     protected PerfilEntity() {}
 
     /**
-     * Constructor privado usado internamente por {@link #fromDomain(Perfil)}.
+     * Constructor privado usado internamente por #fromDomain(Perfil).
      */
     private PerfilEntity(UUID id, UUID usuarioId, String email, String alias,
                          String nombres, String apellidos, LocalDate fechaNacimiento) {
@@ -74,8 +76,8 @@ public class PerfilEntity {
     }
 
     /**
-     * Convierte un agregado {@link Perfil} (dominio) en una {@link PerfilEntity}
-     * (JPA) para persistencia. Extrae el valor plano del Value Object {@link Email}.
+     * Convierte un agregado Perfil (dominio) en una PerfilEntity
+     * (JPA) para persistencia. Extrae el valor plano del Value Object Email.
      *
      * @param p Agregado de dominio
      * @return Entidad JPA lista para persistir
@@ -86,8 +88,8 @@ public class PerfilEntity {
     }
 
     /**
-     * Reconstituye un {@link Perfil} (dominio) desde esta entidad JPA.
-     * Vuelve a crear el Value Object {@link Email} aplicando su validación.
+     * Reconstituye un Perfil (dominio) desde esta entidad JPA.
+     * Vuelve a crear el Value Object Email aplicando su validación.
      *
      * @return Agregado de dominio reconstituido
      */

@@ -10,13 +10,14 @@ import java.util.Map;
 
 /**
  * Cliente reactivo para el servicio de usuarios (user-service).
- * <p>
+ * 
+
  * Use-service expone perfiles de usuario. El BFF solo necesita el alias
  * para mostrarlo en el feed — no el email, fecha de registro ni otros datos
  * sensibles. Decidi que este cliente devuelva el Map completo y que el caso
  * de uso extraiga solo "alias", porque asi si manana el feed necesita tambien
  * el avatar del usuario, no hay que cambiar el cliente, solo el caso de uso.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */

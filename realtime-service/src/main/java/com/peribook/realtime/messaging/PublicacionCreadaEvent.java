@@ -5,19 +5,21 @@ import java.util.UUID;
 
 /**
  * DTO (Data Transfer Object) que modela el evento de dominio "PublicacionCreada".
- * <p>
+ * 
+
  * Este record refleja el contrato JSON del evento que publica
- * <strong>post-service</strong> en RabbitMQ cuando un usuario crea una nueva
- * publicación. Al igual que en {@link LikeRegistradoEvent}, prefiero mantener
+ * post-service en RabbitMQ cuando un usuario crea una nueva
+ * publicación. Al igual que en LikeRegistradoEvent, prefiero mantener
  * este DTO duplicado en el servicio consumidor en lugar de compartir un JAR
  * común, para evitar dependencias de compilación entre servicios.
- * </p>
- * <p>
- * El campo {@code contenido} se incluye completo para que el feed en tiempo
+ * 
+ * 
+
+ * El campo  se incluye completo para que el feed en tiempo
  * real pueda mostrar la publicación inmediatamente sin tener que hacer una
  * llamada REST a post-service. Esto reduce la latencia percibida por el
  * usuario y descarga al post-service de peticiones adicionales.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  *

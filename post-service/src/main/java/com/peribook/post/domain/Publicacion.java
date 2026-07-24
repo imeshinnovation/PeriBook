@@ -6,21 +6,24 @@ import java.util.UUID;
 
 /**
  * Agregado raiz del bounded context de publicaciones dentro del dominio de PeriBook.
- * <p>
- * Esta es posiblemente la clase mas importante del post-service. Decidi que {@code Publicacion}
+ * 
+
+ * Esta es posiblemente la clase mas importante del post-service. Decidi que 
  * fuera el agregado raiz siguiendo los principios de DDD (Domain-Driven Design) de Eric Evans.
  * Esto significa que toda operacion sobre una publicacion pasa por esta entidad, que garantiza
  * sus invariantes antes de persistir cualquier cambio.
- * <p>
+ * 
+
  /> Los invariantes que protege son:
- * <ul>
- *   <li>El autor (autorId) no puede ser nulo — toda publicacion pertenece a alguien</li>
- *   <li>El contenido no puede ser nulo ni vacio despues de hacer trim</li>
- *   <li>El contenido no puede exceder los 500 caracteres — decidi este limite para equilibrar
- *       la libertad de expresion con la estabilidad del almacenamiento y la red</li>
- * </ul>
- * <p>
- * Para la identidad use {@code UUID} en lugar de un ID autoincremental. Los UUID permiten
+ * 
+ *    * - El autor (autorId) no puede ser nulo — toda publicacion pertenece a alguien
+ *    * - El contenido no puede ser nulo ni vacio despues de hacer trim
+ *    * - El contenido no puede exceder los 500 caracteres — decidi este limite para equilibrar
+ *       la libertad de expresion con la estabilidad del almacenamiento y la red
+ * 
+ * 
+
+ * Para la identidad use  en lugar de un ID autoincremental. Los UUID permiten
  * generar identificadores en el dominio sin depender de la base de datos, lo cual es esencial
  * en una arquitectura de microservicios donde diferentes servicios pueden necesitar referenciar
  * la misma entidad sin acoplamiento de esquema.
@@ -40,7 +43,7 @@ public class Publicacion {
 
     /**
      * Constructor privado. La unica forma de obtener una instancia es a traves de
-     * los metodos factory {@link #crear(UUID, String)} o {@link #reconstituir(UUID, UUID, String, Instant)}.
+     * los metodos factory String) o UUID, String, Instant).
      * Esto asegura que toda Publicacion en el sistema paso por las validaciones
      * de negocio correspondientes.
      */
@@ -53,14 +56,15 @@ public class Publicacion {
 
     /**
      * Factory method para crear una publicacion nueva.
-     * <p>
+     * 
+
      * Aqui se aplican todas las validaciones de negocio antes de que la entidad exista:
-     * <ul>
-     *   <li>Null safety con {@link Objects#requireNonNull}</li>
-     *   <li>Contenido no vacio despues de limpiar espacios</li>
-     *   <li>Longitud maxima de 500 caracteres</li>
-     * </ul>
-     * El ID se genera con {@link UUID#randomUUID()} y la fecha con {@link Instant#now()}
+     * 
+     *    * - Null safety con Objects#requireNonNull
+     *    * - Contenido no vacio despues de limpiar espacios
+     *    * - Longitud maxima de 500 caracteres
+     * 
+     * El ID se genera con UUID#randomUUID() y la fecha con Instant#now()
      * para que el dominio sea autocontenido y no dependa de la capa de infraestructura
      * para estos valores.
      *
@@ -81,9 +85,10 @@ public class Publicacion {
 
     /**
      * Factory method para reconstituir una publicacion desde persistencia.
-     * <p>
+     * 
+
      * Este metodo se usa exclusivamente cuando se lee una publicacion existente desde
-     * la base de datos. A diferencia de {@link #crear(UUID, String)}, no genera un nuevo
+     * la base de datos. A diferencia de String), no genera un nuevo
      * ID ni una nueva fecha — preserva los valores originales que ya estan en la BD.
      * Tampoco valida el contenido porque asumimos que si ya estaba persistido, ya paso
      * las validaciones en su momento (aunque en teoria podria haber migraciones de datos
@@ -111,7 +116,8 @@ public class Publicacion {
 
     /**
      * Compara publicaciones por identidad (UUID), no por valor.
-     * <p>
+     * 
+
      * Dos publicaciones son iguales si tienen el mismo ID, independientemente de su
      * contenido o fecha. Esto refleja que en nuestro dominio la identidad es absoluta
      * — si dos objetos representan la misma publicacion del mundo real, deben tener
@@ -124,7 +130,7 @@ public class Publicacion {
         return id.equals(p.id);
     }
 
-    /** Hashcode basado unicamente en el UUID, consistente con {@link #equals(Object)}. */
+    /** Hashcode basado unicamente en el UUID, consistente con #equals(Object). */
     @Override
     public int hashCode() { return id.hashCode(); }
 }

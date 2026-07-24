@@ -4,14 +4,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Puerto de salida (driven port) para la persistencia de {@link Like}.
- * <p>
+ * Puerto de salida (driven port) para la persistencia de Like.
+ * 
+
  * Definí esta interfaz en la capa de dominio para que el núcleo no dependa de
  * JPA, Spring Data ni ninguna tecnología en concreto. La implementación concreta
  * vive en infraestructura y se inyecta en tiempo de ejecución. Esto me permite
  * cambiar de base de datos o de estrategia de persistencia sin tocar ni una línea
  * del caso de uso.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -23,7 +24,7 @@ public interface LikeRepository {
     Like save(Like like);
 
     /**
-     * Búsqueda por clave natural {@code (publicacionId, usuarioId)}. La uso en el
+     * Búsqueda por clave natural . La uso en el
      * caso de uso para implementar idempotencia: si ya existe, no duplico el like.
      */
     Optional<Like> buscarPorPublicacionYUsuario(UUID publicacionId, UUID usuarioId);

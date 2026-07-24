@@ -6,20 +6,22 @@ import java.util.UUID;
 
 /**
  * Agregado raíz del bounded context de perfiles de usuario.
- * <p>
- * Cada {@code Perfil} está vinculado 1:1 a un {@code Usuario} del bounded context de auth,
+ * 
+
+ * Cada  está vinculado 1:1 a un  del bounded context de auth,
  * pero no contiene una referencia directa al objeto Usuario — solo su UUID. Esto es
  * intencional: en un sistema con microservicios separados, no quiero que el perfil dependa
  * de un objeto que vive en otro servicio. La relación es conceptual y se resuelve en
  * el BFF o en el frontend, no en la base de datos del user-service.
- * </p>
- * <p>
- * Usé constructor privado con fábricas estáticas ({@link #crear(UUID, Email, String, String, String, LocalDate)}
- * y {@link #reconstituir(UUID, UUID, Email, String, String, String, LocalDate)}) en lugar de
+ * 
+ * 
+
+ * Usé constructor privado con fábricas estáticas (Email, String, String, String, LocalDate)
+ * y UUID, Email, String, String, String, LocalDate)) en lugar de
  * un constructor público o un builder porque quiero dejar claro que hay dos formas legítimas
  * de obtener un Perfil: una creándolo desde cero (nuevo agregado) y otra reconstituyéndolo
  * desde persistencia (agregado existente). Cada una tiene validaciones distintas.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -97,12 +99,13 @@ public class Perfil {
      * No valida los campos porque asumimos que ya pasaron validación al crearse
      * originalmente. Sí valida que el ID no sea nulo — si el repositorio devuelve
      * un ID nulo, algo está mal en la capa de infraestructura.
-     * <p>
-     * Decidí mantener esta ruta separada de {@link #crear(UUID, Email, String, String, String, LocalDate)}
+     * 
+
+     * Decidí mantener esta ruta separada de Email, String, String, String, LocalDate)
      * porque la reconstitución puede venir de un event store, una proyección o un snapshot,
      * y en esos casos no quiero que se generen nuevos UUIDs ni se trimeen textos que
      * ya deberían estar normalizados.
-     * </p>
+     * 
      *
      * @param id              UUID existente del perfil (obligatorio)
      * @param usuarioId       UUID del usuario asociado

@@ -9,21 +9,23 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * Consumidor de eventos {@code PublicacionCreada} desde RabbitMQ.
- * <p>
- * Este componente es el gemelo de {@link LikeRegistradoConsumer} pero para el
+ * Consumidor de eventos  desde RabbitMQ.
+ * 
+
+ * Este componente es el gemelo de LikeRegistradoConsumer pero para el
  * evento de creación de publicaciones. Cuando post-service publica una nueva
- * publicación, este consumidor la recibe de la cola {@code realtime.feed} y la
- * reenvía a todos los clientes WebSocket conectados al topic {@code /topic/feed}.
- * </p>
- * <p>
+ * publicación, este consumidor la recibe de la cola  y la
+ * reenvía a todos los clientes WebSocket conectados al topic .
+ * 
+ * 
+
  * Separé los consumidores por tipo de evento (uno para publicaciones, otro para
  * likes) en lugar de tener un consumidor genérico que discrimine por routing
  * key porque esto facilita el mantenimiento: cada clase tiene una única
  * responsabilidad y se puede modificar, testear o escalar de forma independiente.
  * Además, si un tipo de evento falla (por ejemplo, un error de deserialización),
  * el otro sigue funcionando sin verse afectado.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -37,22 +39,24 @@ public class PublicacionCreadaConsumer {
 
     /**
      * Mapper JSON configurado manualmente con soporte para Java 8+ Time API.
-     * <p>
-     * Igual que en {@link LikeRegistradoConsumer}, uso una instancia propia
-     * de {@code ObjectMapper} para evitar depender de la configuración global
+     * 
+
+     * Igual que en LikeRegistradoConsumer, uso una instancia propia
+     * de  para evitar depender de la configuración global
      * de Spring y tener un control preciso sobre la serialización.
-     * </p>
+     * 
      */
     private final ObjectMapper objectMapper;
 
     /**
      * Constructor que recibe la plantilla STOMP inyectada por Spring.
-     * <p>
-     * Configuro el {@code ObjectMapper} con el módulo {@code JavaTimeModule}
-     * necesario para deserializar los campos {@code Instant} que vienen en el
+     * 
+
+     * Configuro el  con el módulo 
+     * necesario para deserializar los campos  que vienen en el
      * JSON del evento. Sin este módulo, Jackson lanza una excepción al
-     * encontrar tipos de {@code java.time}.
-     * </p>
+     * encontrar tipos de .
+     * 
      *
      * @param messagingTemplate plantilla STOMP para enviar mensajes a los clientes WebSocket
      */
@@ -63,24 +67,26 @@ public class PublicacionCreadaConsumer {
     }
 
     /**
-     * Procesa un evento {@code PublicacionCreada} recibido de la cola de RabbitMQ.
-     * <p>
+     * Procesa un evento  recibido de la cola de RabbitMQ.
+     * 
+
      * La cola se configura externamente mediante la propiedad
-     * {@code app.rabbitmq.queue.feed}, lo que permite cambiar el nombre de la
+     * , lo que permite cambiar el nombre de la
      * cola por entorno (desarrollo, staging, producción) sin modificar el código.
-     * </p>
-     * <p>
+     * 
+     * 
+
      * El flujo de procesamiento:
-     * <ol>
-     *   <li>Deserializar el mensaje JSON a un {@code PublicacionCreadaEvent}</li>
-     *   <li>Registrar en log el ID de la publicación recibida (traza de auditoría)</li>
-     *   <li>Reenviar el evento completo a {@code /topic/feed} para los clientes
-     *       conectados</li>
-     * </ol>
+     * 
+     *    * - Deserializar el mensaje JSON a un 
+     *    * - Registrar en log el ID de la publicación recibida (traza de auditoría)
+     *    * - Reenviar el evento completo a  para los clientes
+     *       conectados
+     * 
      * Envío el evento al mismo topic que los likes para simplificar el frontend:
      * el cliente solo necesita suscribirse a un destino STOMP y recibe todos
      * los eventos del feed en vivo.
-     * </p>
+     * 
      *
      * @param mensaje el mensaje JSON recibido de la cola de RabbitMQ
      */

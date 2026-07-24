@@ -30,29 +30,32 @@ import java.security.spec.PKCS8EncodedKeySpec;
 
 /**
  * Configuración de seguridad de Spring para el auth-service.
- * <p>
+ * 
+
  * Esta es la clase más densa del servicio porque define toda la postura de
  * seguridad: qué endpoints son públicos, cuáles requieren autenticación,
  * cómo se validan los tokens JWT, cómo se cargan las llaves RSA, y cómo se
  * manejan los errores de autenticación.
- * </p>
- * <p>
- * Usé {@code proxyBeanMethods = false} en {@code @Configuration} para que
+ * 
+ * 
+
+ * Usé  en  para que
  * Spring no genere proxies CGLIB — esta clase solo define beans, no tiene
- * llamadas internas entre {@code @Bean} que necesiten ser interceptadas.
+ * llamadas internas entre  que necesiten ser interceptadas.
  * Es una micro-optimización que evita overhead innecesario en el contexto
  * de la aplicación.
- * </p>
- * <p>
- * Decidí que el {@link SecurityConfig#loadKeyBytes(String)} haga el parsing
+ * 
+ * 
+
+ * Decidí que el SecurityConfig#loadKeyBytes(String) haga el parsing
  * PEM manual en vez de usar una librería tipo Bouncy Castle porque:
- * <ol>
- *   <li>El formato PEM es trivial de parsear (base64 con headers)</li>
- *   <li>No quiero agregar una dependencia pesada solo para esto</li>
- *   <li>Bouncy Castle tiene problemas de tamaño y aprobación en algunos
- *       entornos corporativos por temas de export control</li>
- * </ol>
- * </p>
+ * 
+ *    * - El formato PEM es trivial de parsear (base64 con headers)
+ *    * - No quiero agregar una dependencia pesada solo para esto
+ *    * - Bouncy Castle tiene problemas de tamaño y aprobación en algunos
+ *       entornos corporativos por temas de export control
+ * 
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -73,20 +76,21 @@ public class SecurityConfig {
 
     /**
      * Define la cadena de filtros de seguridad HTTP.
-     * <p>
+     * 
+
      * Configuro:
-     * <ul>
-     *   <li><strong>CSRF desactivado</strong> — somos una API REST sin estado
-     *       que usa JWT, no cookies de sesión. CSRF no aplica aquí.</li>
-     *   <li><strong>Sin estado (STATELESS)</strong> — no se crean sesiones HTTP.
-     *       Cada request se autentica de forma independiente con su JWT.</li>
-     *   <li><strong>Endpoints públicos</strong> — login, Swagger/OpenAPI y health
-     *       check no requieren token. Todo lo demás sí.</li>
-     *   <li><strong>Resource Server OAuth2</strong> — Spring Security valida el
+     * 
+     *    * - CSRF desactivado — somos una API REST sin estado
+     *       que usa JWT, no cookies de sesión. CSRF no aplica aquí.
+     *    * - Sin estado (STATELESS) — no se crean sesiones HTTP.
+     *       Cada request se autentica de forma independiente con su JWT.
+     *    * - Endpoints públicos — login, Swagger/OpenAPI y health
+     *       check no requieren token. Todo lo demás sí.
+     *    * - Resource Server OAuth2 — Spring Security valida el
      *       JWT automáticamente usando el decoder que configuro en
-     *       {@link #jwtDecoder()}.</li>
-     * </ul>
-     * </p>
+     *       #jwtDecoder().
+     * 
+     * 
      *
      * @param http el builder de HttpSecurity de Spring
      * @return la cadena de filtros construida
@@ -147,12 +151,13 @@ public class SecurityConfig {
     // para verificación, clave privada para firma, y codificador BCrypt.
 
     /**
-     * Crea un {@link JwtDecoder} usando Nimbus (la implementación por defecto
+     * Crea un JwtDecoder usando Nimbus (la implementación por defecto
      * de Spring Security) con la clave pública RSA.
-     * <p>
+     * 
+
      * Este decoder se usa tanto para verificar tokens entrantes como para que
      * Spring Security los valide automáticamente en cada request protegido.
-     * </p>
+     * 
      *
      * @return decoder de JWT configurado con la clave pública
      * @throws IllegalStateException si no se puede cargar la clave pública
@@ -174,10 +179,11 @@ public class SecurityConfig {
 
     /**
      * Carga la clave privada RSA desde el archivo PEM para la firma de JWT.
-     * <p>
-     * La clave privada se inyecta como bean en {@link RsaJwtService} para
+     * 
+
+     * La clave privada se inyecta como bean en RsaJwtService para
      * firmar los tokens emitidos durante el login.
-     * </p>
+     * 
      *
      * @return clave privada RSA lista para usar
      * @throws IllegalStateException si no se puede cargar la clave privada
@@ -194,15 +200,16 @@ public class SecurityConfig {
     }
 
     /**
-     * Bean de {@link PasswordEncoder} para hashear contraseñas con BCrypt.
-     * <p>
+     * Bean de PasswordEncoder para hashear contraseñas con BCrypt.
+     * 
+
      * Este bean lo usa Spring Security si se configura autenticación
      * basada en login form, pero en nuestro caso el hashing se maneja
-     * directamente en el Value Object {@link com.peribook.auth.domain.Password}.
+     * directamente en el Value Object com.peribook.auth.domain.Password.
      * Lo defino aquí por si en el futuro necesito integrar autenticación
      * HTTP Basic o alguna otra funcionalidad que requiera un
-     * {@code PasswordEncoder} como bean de Spring.
-     * </p>
+     *  como bean de Spring.
+     * 
      *
      * @return codificador BCrypt con fuerza por defecto (10 rounds)
      */
@@ -215,20 +222,22 @@ public class SecurityConfig {
 
     /**
      * Carga un archivo de clave RSA en formato PEM y lo decodifica a bytes.
-     * <p>
+     * 
+
      * Estrategia de carga (por orden de prioridad):
-     * <ol>
-     *   <li><strong>Sistema de archivos</strong> — para producción cuando las
-     *       claves se montan como secretos de Docker Swarm en /run/secrets/</li>
-     *   <li><strong>Classpath</strong> — para desarrollo local cuando las claves
-     *       están en src/main/resources/</li>
-     * </ol>
-     * </p>
-     * <p>
+     * 
+     *    * - Sistema de archivos — para producción cuando las
+     *       claves se montan como secretos de Docker Swarm en /run/secrets/
+     *    * - Classpath — para desarrollo local cuando las claves
+     *       están en src/main/resources/
+     * 
+     * 
+     * 
+
      * Después de leer el archivo, remuevo los headers PEM
      * (-----BEGIN PUBLIC KEY-----, etc.) y decodifico la porción Base64
      * restante. Es un parsing sencillo pero suficiente.
-     * </p>
+     * 
      *
      * @param path ruta del archivo PEM (filesystem o classpath)
      * @return bytes decodificados de la clave (formato DER)

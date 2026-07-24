@@ -6,20 +6,23 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Configuracion de RabbitMQ para el post-service.
- * <p>
- * Use {@code proxyBeanMethods = false} en la anotacion {@code @Configuration} para que
+ * 
+
+ * Use  en la anotacion  para que
  * Spring no genere proxies CGLIB sobre esta clase. Esto es una optimizacion: como aqui
  * todos los beans se usan directamente (no hay llamadas internas entre metodos @Bean),
  * no necesito el costo extra de los proxies. Es un detalle que aprendi depurando
  * problemas de rendimiento en arranque.
- * <p>
- * Defino un exchange de tipo {@link TopicExchange} durable (true) y no-auto-delete (false).
+ * 
+
+ * Defino un exchange de tipo TopicExchange durable (true) y no-auto-delete (false).
  * El patron Topic me permite que los consumidores se suscriban con routing keys
  * parciales (ej: "*.creada" para recibir todo evento de creacion) sin que el publicador
  * necesite conocer a los suscriptores. Esto es fundamental para un sistema basado en
  * eventos como PeriBook.
- * <p>
- * Las colas {@code realtime.feed} y {@code realtime.likes} se declaran aqui mismo para
+ * 
+
+ * Las colas  y  se declaran aqui mismo para
  * que existan desde el primer despliegue. El servicio de feed-service las consumira
  * para actualizar el timeline en tiempo real. Esto evita el problema clasico de
  * "publicar antes de que la cola exista".

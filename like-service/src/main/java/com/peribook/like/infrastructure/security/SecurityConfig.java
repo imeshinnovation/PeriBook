@@ -24,18 +24,20 @@ import java.util.Base64;
 
 /**
  * Configuracion de seguridad del microservicio Like.
- * <p>
+ * 
+
  * Configure el servicio como un resource server OAuth2 con autenticacion
- * stateless via JWT. Decidi exponer {@code /actuator/health} y la doc de
+ * stateless via JWT. Decidi exponer  y la doc de
  * Swagger sin autenticacion porque son endpoints operativos que las
  * herramientas de monitoreo y los desarrolladores necesitan consumir sin
  * un token valido.
- * </p>
- * <p>
- * La clave publica RSA se carga desde {@code keys/jwt-public.pem}. Prefiero
+ * 
+ * 
+
+ * La clave publica RSA se carga desde . Prefiero
  * cargarla desde un archivo PEM plano (en lugar de un keystore PKCS12) porque
  * es mas simple de generar y rotar con el script de bootstrap del swarm.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -44,17 +46,18 @@ public class SecurityConfig {
 
     /**
      * Cadena de filtros de seguridad con prioridad mas alta.
-     * <p>
-     * Use {@code @Order(Ordered.HIGHEST_PRECEDENCE)} para asegurarme de que
+     * 
+
+     * Use  para asegurarme de que
      * este filtro se ejecute antes que cualquier otro filtro de la aplicacion.
-     * </p>
-     * <ul>
-     *   <li>CSRF desactivado: el servicio no mantiene sesiones de usuario ni cookies.</li>
-     *   <li>Politica de sesion STATELESS: cada request lleva su propio token JWT.</li>
-     *   <li>Rutas publicas: health check y Swagger.</li>
-     *   <li>Autenticacion JWT en resource server con decoder personalizado.</li>
-     *   <li>Entry point personalizado que responde con ProblemDetail (RFC 9457).</li>
-     * </ul>
+     * 
+     * 
+     *    * - CSRF desactivado: el servicio no mantiene sesiones de usuario ni cookies.
+     *    * - Politica de sesion STATELESS: cada request lleva su propio token JWT.
+     *    * - Rutas publicas: health check y Swagger.
+     *    * - Autenticacion JWT en resource server con decoder personalizado.
+     *    * - Entry point personalizado que responde con ProblemDetail (RFC 9457).
+     * 
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -79,12 +82,13 @@ public class SecurityConfig {
 
     /**
      * Decodificador JWT configurado con la clave publica RSA.
-     * <p>
+     * 
+
      * Uso NimbusJwtDecoder (el default de Spring Security) con una clave RSA
      * en formato X.509. La clave se carga desde el classpath o desde el
      * sistema de archivos (para entornos Dockerizados donde el secreto se
      * monta como volumen).
-     * </p>
+     * 
      */
     @Bean
     public JwtDecoder jwtDecoder() {
@@ -100,11 +104,12 @@ public class SecurityConfig {
     /**
      * Lee un archivo PEM, extrae la porcion Base64 entre los marcadores
      * BEGIN / END y la decodifica a bytes.
-     * <p>
+     * 
+
      * Soporta tanto el classpath (para desarrollo local) como el sistema de
      * archivos (para Docker Swarm con secretos montados). El metodo primero
      * busca en FileSystem y, si no encuentra, cae al ClassPathResource.
-     * </p>
+     * 
      */
     private byte[] loadPem(String path) throws IOException {
         Path fp = Path.of(path);

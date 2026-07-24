@@ -9,21 +9,23 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Adaptador JPA del puerto {@link PerfilRepository} (patrón Repository / Hexagonal).
- * <p>
+ * Adaptador JPA del puerto PerfilRepository (patrón Repository / Hexagonal).
+ * 
+
  * Esta clase es el "puente" entre el mundo del dominio (donde solo existen
- * {@code Perfil}, {@code Email}, etc.) y el mundo de la infraestructura (JPA,
- * tablas, entidades). Implementa la interfaz de dominio {@code PerfilRepository}
- * usando {@link JpaRepository} de Spring Data para la parte técnica.
- * </p>
- * <p>
- * Decidí heredar de ambas interfaces ({@code PerfilRepository} y {@code JpaRepository})
+ * , , etc.) y el mundo de la infraestructura (JPA,
+ * tablas, entidades). Implementa la interfaz de dominio 
+ * usando JpaRepository de Spring Data para la parte técnica.
+ * 
+ * 
+
+ * Decidí heredar de ambas interfaces ( y )
  * en lugar de crear una clase separada que las componga. Esto evita el boilerplate
- * de una clase intermedia y, al usar métodos {@code default}, Spring Data las reconoce
+ * de una clase intermedia y, al usar métodos , Spring Data las reconoce
  * y las convierte en beans transaccionales sin problemas. La conversión entre
- * {@code PerfilEntity} y {@code Perfil} ocurre aquí mismo, en la frontera del
+ *  y  ocurre aquí mismo, en la frontera del
  * hexágono.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -32,7 +34,7 @@ public interface JpaPerfilRepository extends PerfilRepository, JpaRepository<Per
 
     /**
      * Busca por ID delegando en JPA y mapea la entidad JPA al agregado de dominio.
-     * Uso {@code default} en la interfaz para que Spring Data pueda crear el proxy
+     * Uso  en la interfaz para que Spring Data pueda crear el proxy
      * transaccional sin necesidad de una clase concreta.
      */
     @Override
@@ -42,7 +44,7 @@ public interface JpaPerfilRepository extends PerfilRepository, JpaRepository<Per
 
     /**
      * Persiste el agregado de dominio convirtiéndolo a entidad JPA primero.
-     * Uso {@code saveAndFlush} en lugar de {@code save} para obtener el estado
+     * Uso  en lugar de  para obtener el estado
      * actualizado inmediatamente — en un microservicio con transacciones cortas
      * prefiero la consistencia inmediata al rendimiento diferido.
      */

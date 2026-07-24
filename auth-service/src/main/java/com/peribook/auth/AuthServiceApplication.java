@@ -7,19 +7,21 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 
 /**
  * Punto de entrada del microservicio auth-service de PeriBook.
- * <p>
+ * 
+
  * Este servicio es el encargado de la autenticación y emisión de tokens JWT
  * para toda la plataforma. Decidí mantenerlo como un microservicio independiente
  * porque la autenticación es un cross-cutting concern que debe poder escalarse
  * y desplegarse de forma separada al resto del sistema.
- * </p>
- * <p>
- * Uso {@code @EnableConfigurationProperties} aquí para que {@link JwtConfig},
- * que es un {@code record} inmutable con binding a {@code application.yml},
+ * 
+ * 
+
+ * Uso  aquí para que JwtConfig,
+ * que es un  inmutable con binding a ,
  * quede registrado como bean desde el arranque sin necesidad de escanear paquetes
- * adicionales. Prefiero esta aproximación a {@code @ConfigurationPropertiesScan}
+ * adicionales. Prefiero esta aproximación a 
  * porque hace explícito qué propiedades se habilitan.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */

@@ -6,18 +6,20 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Configuracion de RabbitMQ para el microservicio Like.
- * <p>
- * Defino aqui el exchange topic {@code peribook.events} y las colas que este
- * servicio necesita que existan. Use {@code proxyBeanMethods = false} porque
- * este {@code @Configuration} no requiere que Spring CGLIB intercepte las
- * llamadas entre metodos @Bean — cada {@code @Bean} es independiente.
- * </p>
- * <p>
+ * 
+
+ * Defino aqui el exchange topic  y las colas que este
+ * servicio necesita que existan. Use  porque
+ * este  no requiere que Spring CGLIB intercepte las
+ * llamadas entre metodos @Bean — cada  es independiente.
+ * 
+ * 
+
  * Decidi declarar las colas (feed, likes) y sus bindings aqui mismo, en lugar
  * de hacerlo solo desde el consumidor, para evitar la condicion de carrera
  * donde el publisher envia un evento antes de que el consumidor declare la
  * cola. Con RabbitMQ topic exchange, si la cola no existe el mensaje se pierde.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */

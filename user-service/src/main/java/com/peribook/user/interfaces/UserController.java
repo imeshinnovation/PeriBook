@@ -17,18 +17,20 @@ import java.util.UUID;
 
 /**
  * Controlador REST que expone los endpoints públicos del user-service.
- * <p>
+ * 
+
  * Sigue el patrón "capa de interfaces" de la arquitectura hexagonal:
- * recibe requests HTTP, delega en el caso de uso ({@link ObtenerPerfilUseCase}),
+ * recibe requests HTTP, delega en el caso de uso (ObtenerPerfilUseCase),
  * y mapea el resultado a DTOs. No contiene lógica de negocio — eso es
  * responsabilidad del dominio.
- * </p>
- * <p>
- * El {@code @RequestMapping("/api/users")} establece la raíz de todos los
+ * 
+ * 
+
+ * El  establece la raíz de todos los
  * endpoints. El BFF (bff-web) es quien realmente recibe el tráfico del
  * frontend y redirige aquí; el user-service no está expuesto directamente
  * a internet.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -52,20 +54,22 @@ public class UserController {
 
     /**
      * Obtiene el perfil público de un usuario por su UUID.
-     * <p>
-     * Endpoint: {@code GET /api/users/{id}}
-     * </p>
-     * <p>
+     * 
+
+     * Endpoint: }
+     * 
+     * 
+
      * El flujo es simple pero revela la arquitectura:
-     * <ol>
-     *   <li>El controlador recibe el request HTTP</li>
-     *   <li>Delega en el caso de uso (capa de aplicación)</li>
-     *   <li>El caso de uso usa el repositorio (puerto de dominio) para buscar</li>
-     *   <li>El repositorio (infraestructura) consulta la base de datos</li>
-     *   <li>El resultado se mapea a DTO y se devuelve como JSON</li>
-     * </ol>
+     * 
+     *    * - El controlador recibe el request HTTP
+     *    * - Delega en el caso de uso (capa de aplicación)
+     *    * - El caso de uso usa el repositorio (puerto de dominio) para buscar
+     *    * - El repositorio (infraestructura) consulta la base de datos
+     *    * - El resultado se mapea a DTO y se devuelve como JSON
+     * 
      * Cada capa tiene una responsabilidad y solo esa.
-     * </p>
+     * 
      *
      * @param id UUID del perfil (extraído de la URL)
      * @return 200 OK con el perfil, o 404 si no existe
@@ -78,15 +82,16 @@ public class UserController {
     }
 
     /**
-     * Maneja la excepción {@link PerfilNoEncontradoException} y la traduce a
+     * Maneja la excepción PerfilNoEncontradoException y la traduce a
      * una respuesta HTTP 404 con formato Problem Details (RFC 9457).
-     * <p>
-     * Decidí usar {@link ProblemDetail} de Spring MVC 6 en lugar de crear una
+     * 
+
+     * Decidí usar ProblemDetail de Spring MVC 6 en lugar de crear una
      * clase de error personalizada porque el estándar RFC 9457 ya cubre lo que
      * necesitamos: title, status, detail y campos adicionales si hicieran falta.
      * Además, el BFF puede propagar estos detalles al frontend de forma consistente
      * con otros microservicios.
-     * </p>
+     * 
      *
      * @param ex Excepción lanzada por el caso de uso
      * @return ResponseEntity con status 404 y body en formato Problem Details JSON

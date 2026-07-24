@@ -6,20 +6,22 @@ import java.util.Objects;
 
 /**
  * Value Object inmutable que encapsula una contraseña ya hasheada con BCrypt.
- * <p>
+ * 
+
  * Tomé la decisión consciente de poner BCrypt directamente aquí en el dominio
  * y no en la capa de infraestructura. Normalmente uno diría que el hashing es
- * un detalle técnico, pero en este caso BCrypt {@code PasswordEncoder} de
+ * un detalle técnico, pero en este caso BCrypt  de
  * Spring Security es tan ubicuo como estándar (NIST recomienda BCrypt, el
  * OWASP también), y tratarlo como un detalle de infraestructura intercambiable
  * me pareció sobrediseño. Si mañana quisiera cambiar a Argon2, el cambio
  * estaría aislado en esta clase — no hay riesgo de fuga hacia el dominio.
- * </p>
- * <p>
+ * 
+ * 
+
  * El algoritmo BCrypt incluye un salt automático, así que dos contraseñas
  * iguales producen hashes distintos — eso mitiga ataques de rainbow tables
  * sin que yo tenga que preocuparme por gestionar salts explícitamente.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -27,7 +29,7 @@ public record Password(String hash) {
 
     /**
      * Instancia única del codificador BCrypt.
-     * La hago {@code static final} porque {@code BCryptPasswordEncoder} es
+     * La hago  porque  es
      * thread-safe y no tiene estado mutable relevante, así que reutilizar la
      * instancia evita el overhead de crear una nueva cada vez.
      */
@@ -36,7 +38,7 @@ public record Password(String hash) {
     /**
      * Constructor compacto del record.
      * Valida que el hash no sea nulo ni vacío. No valido el formato del hash
-     * porque BCrypt tiene un prefijo {@code $2a$/$2b$/$2y$} fácil de verificar
+     * porque BCrypt tiene un prefijo  fácil de verificar
      * pero prefiero no acoplar la validación estructural al formato actual;
      * el día que migre a otro algoritmo esta validación estorbaría.
      */
@@ -48,19 +50,20 @@ public record Password(String hash) {
     }
 
     /**
-     * Crea un {@link Password} a partir de una contraseña en texto plano,
+     * Crea un Password a partir de una contraseña en texto plano,
      * aplicando BCrypt automáticamente.
-     * <p>
+     * 
+
      * Esta es la única vía por la que el sistema acepta contraseñas en claro.
      * Decidí que la validación de longitud mínima (8 caracteres) esté aquí
      * y no en el controller, porque es una regla de dominio: la política de
      * seguridad de PeriBook exige mínimo 8 caracteres. Si la política cambia
      * (por ejemplo, a 12), se cambia aquí y el cambio repercute en toda la
      * aplicación sin tener que tocar controllers ni DTOs.
-     * </p>
+     * 
      *
      * @param rawPassword contraseña en texto plano (min. 8 caracteres)
-     * @return un nuevo {@code Password} con el hash BCrypt
+     * @return un nuevo  con el hash BCrypt
      * @throws NullPointerException     si rawPassword es nulo
      * @throws IllegalArgumentException si rawPassword tiene menos de 8 caracteres
      */
@@ -74,14 +77,15 @@ public record Password(String hash) {
 
     /**
      * Verifica si la contraseña en texto plano coincide con el hash almacenado.
-     * <p>
-     * Delega en {@code BCryptPasswordEncoder.matches()}, que compara el texto
+     * 
+
+     * Delega en , que compara el texto
      * plano contra el hash usando el salt extraído del propio hash — así no
      * necesito almacenar el salt por separado.
-     * </p>
+     * 
      *
      * @param rawPassword contraseña en texto plano a verificar
-     * @return {@code true} si coincide, {@code false} en caso contrario
+     * @return  si coincide,  en caso contrario
      * @throws NullPointerException si rawPassword es nulo
      */
     public boolean matches(String rawPassword) {

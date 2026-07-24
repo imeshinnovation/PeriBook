@@ -11,27 +11,30 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 /**
- * Sembrador de datos de prueba para el perfil {@code dev}.
- * <p>
- * Implementa {@link CommandLineRunner} para ejecutarse automáticamente después
+ * Sembrador de datos de prueba para el perfil .
+ * 
+
+ * Implementa CommandLineRunner para ejecutarse automáticamente después
  * de que el contexto de Spring se haya inicializado. Está anotado con
- * {@code @Profile("dev")}, así que solo se activa cuando el perfil activo es
- * {@code dev} — en producción (perfiles {@code prod}, {@code staging}) este
+ * , así que solo se activa cuando el perfil activo es
+ *  — en producción (perfiles , ) este
  * bean ni siquiera se crea.
- * </p>
- * <p>
+ * 
+ * 
+
  * Decidí usar UUIDs fijos para los usuarios de prueba en vez de generarlos
  * aleatoriamente. Esto es deliberado: tener IDs predecibles facilita las
  * pruebas manuales y automatizadas (sé exactamente qué ID tiene cada usuario
  * sin tener que consultar la BD). Además, los IDs fijos son útiles para
  * entornos de integración donde otros servicios necesitan referenciar estos
  * usuarios.
- * </p>
- * <p>
+ * 
+ * 
+
  * El seeder es idempotente: verifica si el usuario "ana@peribook.com" ya
  * existe antes de insertar. Esto permite reiniciar el servicio sin duplicar
  * datos cada vez.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -48,11 +51,12 @@ public class DevDataSeeder implements CommandLineRunner {
 
     /**
      * Ejecuta la siembra de datos después del arranque de la aplicación.
-     * <p>
+     * 
+
      * Verifica primero si el seed ya se ejecutó (buscando un usuario conocido).
      * Si existe, salta la inserción para ser idempotente. Si no existe, inserta
      * tres usuarios de prueba con roles implícitos: escritor, lector y admin.
-     * </p>
+     * 
      *
      * @param args argumentos de línea de comandos (no se usan)
      */

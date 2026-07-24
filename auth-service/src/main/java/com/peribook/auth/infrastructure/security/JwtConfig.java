@@ -5,26 +5,29 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.time.Duration;
 
 /**
- * Configuración de JWT injectada desde {@code application.yml} mediante
- * Spring Boot {@code @ConfigurationProperties(prefix = "jwt")}.
- * <p>
- * Es un {@code record} inmutable con binding automático a las propiedades
- * {@code jwt.issuer}, {@code jwt.expiration}, {@code jwt.rsa.public-key-path}
- * y {@code jwt.rsa.private-key-path}. Uso {@code kebab-case} en el YAML y
+ * Configuración de JWT injectada desde  mediante
+ * Spring Boot .
+ * 
+
+ * Es un  inmutable con binding automático a las propiedades
+ * , , 
+ * y . Uso  en el YAML y
  * Spring Boot hace la correspondencia automática con los campos del record.
- * </p>
- * <p>
- * Decidí agrupar las rutas de las claves RSA en un sub-record {@link RsaKeys}
+ * 
+ * 
+
+ * Decidí agrupar las rutas de las claves RSA en un sub-record RsaKeys
  * para mantener la jerarquía de propiedades limpia y porque ambas rutas están
  * conceptualmente relacionadas. Si en el futuro agrego más configuraciones
  * JWT (algoritmos alternativos, rotación de claves, etc.), el record crece
  * de forma ordenada.
- * </p>
- * <p>
+ * 
+ * 
+
  * La habilitación de este record como bean se hace en
- * {@link com.peribook.auth.AuthServiceApplication} con
- * {@code @EnableConfigurationProperties(JwtConfig.class)}.
- * </p>
+ * com.peribook.auth.AuthServiceApplication con
+ * .
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -41,11 +44,12 @@ public record JwtConfig(
 ) {
     /**
      * Rutas del sistema de archivos donde están las claves RSA.
-     * <p>
+     * 
+
      * En producción las claves se montan como secretos de Docker Swarm en
-     * {@code /run/secrets/}. En desarrollo local se cargan desde el classpath.
-     * La lógica de carga está en {@link SecurityConfig#loadKeyBytes(String)}.
-     * </p>
+     * . En desarrollo local se cargan desde el classpath.
+     * La lógica de carga está en SecurityConfig#loadKeyBytes(String).
+     * 
      */
     public record RsaKeys(
             /** Ruta a la clave pública en formato PEM */

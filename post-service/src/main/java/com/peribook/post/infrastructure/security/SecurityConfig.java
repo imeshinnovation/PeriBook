@@ -26,22 +26,25 @@ import java.util.Base64;
 
 /**
  * Configuracion de seguridad del post-service.
- * <p>
+ * 
+
  * Implemento autenticacion stateless mediante JSON Web Tokens (JWT) usando RSA.
  * El servicio actua como Resource Server de OAuth2: no emite tokens, solo los valida.
  * Los tokens son emitidos por el API Gateway (BFF) despues de que el usuario se
  * autentica. Cada microservicio valida el token por su cuenta usando la clave publica
  * compartida, lo que evita llamadas sincronas a un servicio de autenticacion central.
- * <p>
+ * 
+
  * Decidi deshabilitar CSRF porque usamos autenticacion stateless basada en tokens.
  * En una API REST sin cookies de sesion, CSRF no tiene sentido. La session management
  * esta en modo STATELESS porque no queremos sesiones HTTP del lado del servidor.
- * <p>
+ * 
+
  /> Los endpoints publicos son:
- * <ul>
- *   <li>{@code /actuator/health} — para health checks del orquestador (Docker Swarm)</li>
- *   <li>{@code /v3/api-docs/**} y {@code /swagger-ui/**} — para la documentacion OpenAPI</li>
- * </ul>
+ * 
+ *    * -  — para health checks del orquestador (Docker Swarm)
+ *    * -  y  — para la documentacion OpenAPI
+ * 
  * Todo lo demas requiere un token JWT valido.
  *
  * @author Alexander Rubio Caceres
@@ -53,13 +56,15 @@ public class SecurityConfig {
 
     /**
      * Cadena de filtros de seguridad de Spring Security.
-     * <p>
-     * Marque este bean con {@code @Order(HIGHEST_PRECEDENCE)} para que se ejecute antes
+     * 
+
+     * Marque este bean con  para que se ejecute antes
      * que cualquier otro filtro. Esto es importante porque queremos que la autenticacion
      * ocurra lo antes posible en la cadena de filtros, antes de que cualquier otro
      * componente procese la peticion.
-     * <p>
-     * El punto de entrada de autenticacion usa {@link ProblemDetail} de Spring 6 para
+     * 
+
+     * El punto de entrada de autenticacion usa ProblemDetail de Spring 6 para
      * devolver errores en formato RFC 7807 (Problem Details for HTTP APIs). Prefiero
      * este formato sobre un simple JSON porque es un estandar y facilita la integracion
      * con herramientas como Spring Cloud Gateway.
@@ -95,12 +100,14 @@ public class SecurityConfig {
 
     /**
      * Decodificador JWT que usa la clave publica RSA para validar los tokens.
-     * <p>
-     * La clave publica se carga desde {@code keys/jwt-public.pem} usando el metodo
-     * {@link #loadPem(String)}. Intenta primero desde el sistema de archivos (para
+     * 
+
+     * La clave publica se carga desde  usando el metodo
+     * #loadPem(String). Intenta primero desde el sistema de archivos (para
      * desarrollo local con Docker Compose) y si no encuentra el archivo, busca en
      * el classpath (para despliegues empaquetados en JAR).
-     * <p>
+     * 
+
      * Decidi usar RSA en lugar de HMAC porque con RSA solo el emisor necesita la
      * clave privada; los microservicios solo tienen la clave publica. Esto significa
      * que si un microservicio se ve comprometido, el atacante no puede emitir tokens
@@ -123,13 +130,15 @@ public class SecurityConfig {
 
     /**
      * Carga un archivo PEM, extrae la parte codificada en Base64 y la decodifica.
-     * <p>
+     * 
+
      * Soporta dos origenes: primero intenta leer desde el sistema de archivos
      * (para desarrollo) y si falla, desde el classpath (para produccion). Esto
      * permite que el mismo JAR funcione en ambos entornos.
-     * <p>
-     * Elimina los encabezados {@code -----BEGIN PUBLIC KEY-----} y
-     * {@code -----END PUBLIC KEY-----} y cualquier espacio en blanco antes de
+     * 
+
+     * Elimina los encabezados  y
+     *  y cualquier espacio en blanco antes de
      * decodificar.
      *
      * @param path ruta del archivo PEM (relativa a la raiz del proyecto o classpath)

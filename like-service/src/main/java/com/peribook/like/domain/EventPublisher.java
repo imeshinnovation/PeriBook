@@ -2,13 +2,14 @@ package com.peribook.like.domain;
 
 /**
  * Puerto de salida para la publicacion de eventos de dominio.
- * <p>
- * Al igual que {@link LikeRepository}, esta interfaz pertenece al dominio para
+ * 
+
+ * Al igual que LikeRepository, esta interfaz pertenece al dominio para
  * no acoplar el caso de uso a un broker de mensajeria concreto. La implementacion
- * con RabbitMQ ({@code RabbitEventPublisher}) se inyecta desde infraestructura.
+ * con RabbitMQ () se inyecta desde infraestructura.
  * Si en el futuro quisiera cambiar a Kafka, Pulsar o incluso una cola en memoria
  * para pruebas, solo necesito escribir un nuevo adaptador que implemente esta interfaz.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */

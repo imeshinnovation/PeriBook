@@ -9,17 +9,18 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Adaptador del repositorio de dominio ({@link LikeRepository}) usando Spring
+ * Adaptador del repositorio de dominio (LikeRepository) usando Spring
  * Data JPA como mecanismo de persistencia.
- * <p>
- * Esta interfaz extiende tanto el puerto de dominio ({@code LikeRepository})
- * como la interfaz tecnica de Spring Data ({@code JpaRepository<LikeEntity, UUID>}).
- * Decidi usar metodos {@code default} para implementar la traduccion entre el
+ * 
+
+ * Esta interfaz extiende tanto el puerto de dominio ()
+ * como la interfaz tecnica de Spring Data ().
+ * Decidi usar metodos  para implementar la traduccion entre el
  * dominio y la entidad JPA, evitando asi una clase separada de adaptador y
  * manteniendo el codigo compacto. Spring Data se encarga de generar las
- * implementaciones de {@code findByPublicacionIdAndUsuarioId} y
- * {@code countByPublicacionId} a partir del nombre del metodo.
- * </p>
+ * implementaciones de  y
+ *  a partir del nombre del metodo.
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -28,12 +29,12 @@ public interface JpaLikeRepository extends LikeRepository, JpaRepository<LikeEnt
 
     /**
      * Metodo derivado de Spring Data: genera automáticamente la query
-     * {@code SELECT e FROM LikeEntity e WHERE e.publicacionId = ?1 AND e.usuarioId = ?2}.
+     * .
      */
     Optional<LikeEntity> findByPublicacionIdAndUsuarioId(UUID publicacionId, UUID usuarioId);
 
     /**
-     * Metodo derivado de Spring Data: genera un {@code SELECT COUNT(*)}.
+     * Metodo derivado de Spring Data: genera un .
      */
     long countByPublicacionId(UUID publicacionId);
 

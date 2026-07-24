@@ -22,19 +22,21 @@ import java.util.Base64;
 
 /**
  * Configuracion de seguridad para el BFF usando Spring Security Reactive y JWT.
- * <p>
+ * 
+
  * Decidi usar OAuth2 Resource Server con JWTs en vez de sesiones porque el BFF
  * es stateless: no mantiene estado de autenticacion en memoria ni en Redis. Cada
  * request lleva su token JWT en el header Authorization, y el BFF lo valida con
  * la clave publica RSA antes de propagarlo a los servicios internos.
- * </p>
- * <p>
+ * 
+ * 
+
  * Deshabilito CSRF porque este BFF solo sirve APIs REST (no hay formularios HTML
  * que proteger) y el cliente es una SPA que envia tokens JWT, no cookies de sesion.
- * Tambien uso {@code NoOpServerSecurityContextRepository} para que Spring Security
+ * Tambien uso  para que Spring Security
  * no intente guardar el contexto de autenticacion en sesion HTTP — eso seria
  * incompatible con el modelo stateless reactivo.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -46,10 +48,11 @@ public class SecurityConfig {
 
     /**
      * Cadena de filtros de seguridad WebFlux.
-     * <p>
+     * 
+
      * Los endpoints publicos son: raiz (health check) y Swagger/OpenAPI para
      * documentacion. Todo lo demas requiere un JWT valido.
-     * </p>
+     * 
      */
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -78,12 +81,13 @@ public class SecurityConfig {
 
     /**
      * Decodificador de JWT usando clave publica RSA (asimetrica).
-     * <p>
+     * 
+
      * Decidi usar RSA asimetrico en vez de HMAC simetrico porque la clave privada
      solo la tiene el servicio de autenticacion que emite los tokens. El BFF solo
      * necesita la clave publica para validar firmas, lo que reduce el riesgo si
      * alguien compromete este servicio: no podria emitir tokens falsos.
-     * </p>
+     * 
      */
     @Bean
     public ReactiveJwtDecoder jwtDecoder() {
@@ -100,12 +104,13 @@ public class SecurityConfig {
 
     /**
      * Lee un archivo PEM, extrae la seccion base64 y decodifica los bytes.
-     * <p>
+     * 
+
      * Soporta dos ubicaciones: primero busca en el sistema de archivos (para
      * secretos montados por Docker Swarm), y si no encuentra, carga desde el
      * classpath (para desarrollo local). Esto permite usar el mismo JAR en
      * ambos entornos sin recompilar.
-     * </p>
+     * 
      */
     private byte[] loadPem(String path) throws IOException {
         Path fp = Path.of(path);

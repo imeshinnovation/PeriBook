@@ -10,18 +10,20 @@ import java.util.Map;
 
 /**
  * Cliente reactivo para el servicio de likes (like-service).
- * <p>
+ * 
+
  * Decidi crear un cliente dedicado en lugar de usar WebClient directamente
  * en el caso de uso porque asi encapsulo la URL, el timeout y la logica de
  * parsing en un solo lugar. Si la API de like-service cambia, solo toco esta
  * clase; el caso de uso no se entera.
- * </p>
- * <p>
+ * 
+ * 
+
  * Este cliente aplica el patron de tolerancia a fallos parciales: si
  * like-service no responde, devuelve 0 likes en vez de lanzar una excepcion
  * que derribe el feed completo. Es mejor mostrar una publicacion sin contador
  * que no mostrarla.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -39,11 +41,12 @@ public class LikeClient {
 
     /**
      * Obtiene el total de likes de una publicacion.
-     * <p>
+     * 
+
      * El endpoint /api/likes/{publicacionId}/count devuelve un JSON con un campo
      * "total". Parseamos el Map y extraemos el valor numerico. Si la respuesta
      * no es la esperada o el servicio falla, retornamos 0 como fallback silencioso.
-     * </p>
+     * 
      */
     @SuppressWarnings("unchecked")
     public Mono<Long> contarLikes(String publicacionId, String bearerToken) {

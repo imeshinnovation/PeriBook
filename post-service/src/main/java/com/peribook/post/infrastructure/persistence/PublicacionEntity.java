@@ -11,18 +11,21 @@ import java.util.UUID;
 
 /**
  * Entidad JPA que persiste las publicaciones en la tabla "publicaciones".
- * <p>
+ * 
+
  * Esta clase es el "adaptador de persistencia" en la terminologia de Hexagonal Architecture.
  * Existe unicamente para el mapeo ORM y nunca debe usarse fuera de la capa de infraestructura.
- * El dominio trabaja exclusivamente con la entidad {@link Publicacion}, que no tiene
+ * El dominio trabaja exclusivamente con la entidad Publicacion, que no tiene
  * anotaciones JPA ni conoce nada sobre la base de datos.
- * <p>
+ * 
+
  * Decidi usar el mismo UUID como clave primaria en lugar de un ID autoincremental.
  * Esto simplifica el mapeo porque no necesito una estrategia de generacion de IDs
  * hibrida entre JPA y el dominio. El dominio genera el UUID, y JPA lo usa tal cual.
- * <p>
+ * 
+
  * El constructor vacio protegido es requerido por JPA/Hibernate para la creacion de
- * instancias via reflection. Lo marque {@code protected} en lugar de {@code private}
+ * instancias via reflection. Lo marque  en lugar de 
  * para que solo el framework y el mismo paquete puedan accederlo, pero las clases
  * externas (como servicios) no puedan crear entidades vacias accidentalmente.
  *
@@ -49,7 +52,7 @@ public class PublicacionEntity {
 
     /**
      * Constructor privado. Solo se accede a traves del factory method
-     * {@link #fromDomain(Publicacion)}.
+     * #fromDomain(Publicacion).
      */
     private PublicacionEntity(UUID id, UUID autorId, String contenido, Instant creadaEn) {
         this.id = id;
@@ -70,7 +73,7 @@ public class PublicacionEntity {
 
     /**
      * Convierite esta entidad JPA de vuelta a una entidad de dominio.
-     * Usa el metodo {@link Publicacion#reconstituir(UUID, UUID, String, Instant)}
+     * Usa el metodo UUID, String, Instant)
      * que no aplica validaciones de negocio (se asume que los datos ya fueron
      * validados al crearse).
      *

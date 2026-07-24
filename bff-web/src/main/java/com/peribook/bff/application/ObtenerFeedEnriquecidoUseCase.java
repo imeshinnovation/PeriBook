@@ -14,20 +14,22 @@ import java.util.Map;
 
 /**
  * Caso de uso principal del BFF: construir el feed enriquecido que vera el usuario.
- * <p>
+ * 
+
  * Decidi modelar esto como un caso de uso explícito (un solo @Component con un metodo
- * publico llamado {@code ejecutar}) en lugar de esparcir la logica en el controlador.
+ * publico llamado ) en lugar de esparcir la logica en el controlador.
  * Esto sigue Clean Architecture: la capa de aplicacion orquesta, el controlador solo
  * recibe la request y delega. Si manana el feed necesita cache, paginacion con cursor,
  * o filtros, este es el unico lugar que cambia.
- * </p>
- * <p>
+ * 
+ * 
+
  * La estrategia reactiva es clave aca: cada publicacion del feed se enriquece con el
  * alias del autor y el contador de likes. Son tres llamadas HTTP (post-service,
- * user-service, like-service) que resuelvo de forma asincrona con {@code Mono.zip}.
+ * user-service, like-service) que resuelvo de forma asincrona con .
  * Netty no bloquea hilos mientras esperamos, asi que el BFF escala con muy pocos
  * hilos del SO.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -66,11 +68,12 @@ public class ObtenerFeedEnriquecidoUseCase {
 
     /**
      * Enriquece una publicacion con datos de user-service y like-service.
-     * <p>
-     * Llama a ambos servicios en paralelo con {@code Mono.zip} y combina los resultados
-     * en un {@link FeedItem}. Si user-service falla, el alias cae a "desconocido" en vez
+     * 
+
+     * Llama a ambos servicios en paralelo con  y combina los resultados
+     * en un FeedItem. Si user-service falla, el alias cae a "desconocido" en vez
      * de reventar el feed completo (tolerancia a fallos parciales).
-     * </p>
+     * 
      */
     private Mono<FeedItem> enriquecerPublicacion(Map<String, Object> post, String bearerToken) {
         String publicacionId = (String) post.get("id");

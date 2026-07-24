@@ -14,12 +14,13 @@ import java.util.UUID;
 
 /**
  * Controlador REST del microservicio Like.
- * <p>
+ * 
+
  * Expone los endpoints para dar like y consultar el contador de likes de una
  * publicacion. Decidi mantener el controlador delgado: solo valida parametros
  * de entrada, delega en el caso de uso y construye la respuesta HTTP. Toda la
  * logica de negocio queda en la capa de aplicacion/dominio.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -36,11 +37,12 @@ public class LikeController {
 
     /**
      * GET /api/likes/{publicacionId}/count
-     * <p>
+     * 
+
      * Devuelve el numero total de likes de una publicacion. Es un endpoint
      * publico dentro del servicio (aunque protegido por JWT a nivel global)
      * porque cualquier usuario autenticado puede ver los contadores.
-     * </p>
+     * 
      */
     @GetMapping("/{publicacionId}/count")
     public ResponseEntity<java.util.Map<String, Long>> contarLikes(@PathVariable UUID publicacionId) {
@@ -50,16 +52,18 @@ public class LikeController {
 
     /**
      * POST /api/likes
-     * <p>
-     * Registra un like de un usuario a una publicacion. El {@code usuarioId}
+     * 
+
+     * Registra un like de un usuario a una publicacion. El 
      * se extrae del token JWT (claim "userId"), asi que el cliente solo envia
-     * el {@code publicacionId} como query param. Esto evita que un cliente
+     * el  como query param. Esto evita que un cliente
      * malicioso pueda suplantar a otro usuario.
-     * </p>
-     * <p>
+     * 
+     * 
+
      * La respuesta distingue entre CREATED (like nuevo) y OK (ya existia,
      * operacion idempotente).
-     * </p>
+     * 
      */
     @PostMapping
     public ResponseEntity<LikeResponse> darLike(

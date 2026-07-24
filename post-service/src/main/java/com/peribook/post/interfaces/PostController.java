@@ -20,19 +20,22 @@ import java.util.UUID;
 
 /**
  * Controlador REST que expone los endpoints de publicaciones.
- * <p>
+ * 
+
  * Esta es la capa de interfaces (inbound adapters en Hexagonal Architecture).
  * Su unica responsabilidad es traducir peticiones HTTP en llamadas a casos de uso
  * de la capa de aplicacion, y traducir las respuestas del dominio a DTOs JSON.
  * No contiene logica de negocio — toda la logica importante esta en los use cases
  * y en el dominio.
- * <p>
- * El endpoint {@code POST /api/posts} recibe el contenido del post del cuerpo de
+ * 
+
+ * El endpoint  recibe el contenido del post del cuerpo de
  * la peticion y extrae el ID del autor del token JWT. Esto asegura que el autor
  * siempre es quien hizo la peticion autenticada, no un valor que el cliente pueda
  * manipular.
- * <p>
- * El endpoint {@code GET /api/posts} lista publicaciones recientes con un limite
+ * 
+
+ * El endpoint  lista publicaciones recientes con un limite
  * configurable via query parameter (default 20).
  *
  * @author Alexander Rubio Caceres
@@ -62,7 +65,8 @@ public class PostController {
 
     /**
      * Crea una nueva publicacion.
-     * <p>
+     * 
+
      * El autor se obtiene del token JWT autenticado (claim "userId"). El contenido
      * viene del cuerpo de la peticion, validado por Jakarta Validation.
      * Devuelve HTTP 201 Created con la publicacion creada.
@@ -83,8 +87,9 @@ public class PostController {
 
     /**
      * Lista las publicaciones mas recientes.
-     * <p>
-     * El parametro {@code limite} tiene un valor por defecto de 20 y se acota a 50
+     * 
+
+     * El parametro  tiene un valor por defecto de 20 y se acota a 50
      * en el caso de uso. Es un endpoint publico para usuarios autenticados (no requiere
      * roles especiales).
      *

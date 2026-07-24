@@ -5,19 +5,21 @@ import java.util.UUID;
 
 /**
  * Puerto de repositorio en la capa de dominio (hexagonal/DDD).
- * <p>
- * Esta interfaz pertenece al dominio porque el caso de uso {@code ObtenerPerfilUseCase}
- * necesita recuperar y persistir agregados {@code Perfil} sin conocer los detalles
+ * 
+
+ * Esta interfaz pertenece al dominio porque el caso de uso 
+ * necesita recuperar y persistir agregados  sin conocer los detalles
  * de infraestructura (JPA, MongoDB, cache, lo que sea). La implementación concreta
- * vive en {@code infrastructure.persistence} y se inyecta en tiempo de ejecución.
- * </p>
- * <p>
+ * vive en  y se inyecta en tiempo de ejecución.
+ * 
+ * 
+
  * Decidí mantener el interfaz minimalista a propósito: solo las operaciones que
  * el dominio necesita realmente. Cualquier consulta compleja (búsqueda por alias,
- * listado paginado) pertenecería a un {@code PerfilQueryRepository} separado si
+ * listado paginado) pertenecería a un  separado si
  * hiciera falta — no voy a contaminar el puerto del dominio con métodos de
  * proyección que solo la UI necesita.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */

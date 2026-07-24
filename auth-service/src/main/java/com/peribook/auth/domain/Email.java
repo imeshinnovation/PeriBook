@@ -5,20 +5,22 @@ import java.util.regex.Pattern;
 
 /**
  * Value Object inmutable que representa un email de usuario validado.
- * <p>
- * Elegí implementarlo como un {@code record} de Java 21 porque los records
- * me dan de forma gratuita: inmutabilidad, {@code equals}/{@code hashCode}
+ * 
+
+ * Elegí implementarlo como un  de Java 21 porque los records
+ * me dan de forma gratuita: inmutabilidad, /
  * basados en el valor, constructor canónico y un formato declarativo que
  * comunica la intención sin boilerplate. En DDD los Value Objects deben ser
- * inmutables y compararse por valor — justo lo que un {@code record} garantiza.
- * </p>
- * <p>
+ * inmutables y compararse por valor — justo lo que un  garantiza.
+ * 
+ * 
+
  * La validación del formato ocurre en el constructor compacto, así que es
  * imposible crear una instancia con un email inválido. Esto aplica el principio
  * de "fail fast" en la frontera del dominio: cualquier email que llegue aquí
  * ya pasó por validación de infraestructura (Bean Validation en el controller),
  * pero no confío en eso — el dominio debe protegerse solo.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -37,8 +39,8 @@ public record Email(String value) {
     /**
      * Constructor compacto del record.
      * Valida que el email no sea nulo, no esté vacío y cumpla el patrón.
-     * Al lanzar {@link NullPointerException} con mensaje para nulos y
-     * {@link IllegalArgumentException} para formato incorrecto, el llamante
+     * Al lanzar NullPointerException con mensaje para nulos y
+     * IllegalArgumentException para formato incorrecto, el llamante
      * puede distinguir el tipo de error si lo necesita.
      */
     public Email {

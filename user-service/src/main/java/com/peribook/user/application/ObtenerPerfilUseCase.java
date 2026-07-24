@@ -9,19 +9,21 @@ import org.springframework.stereotype.Service;
 
 /**
  * Caso de uso: "Obtener perfil por ID".
- * <p>
+ * 
+
  * Este caso de uso es intencionalmente simple — sigue el principio de
  * Responsabilidad Única: recibe un ID, delega la búsqueda al repositorio,
  * y si no encuentra el perfil lanza una excepción de dominio que el controlador
  * sabe cómo traducir a HTTP 404. Punto.
- * </p>
- * <p>
- * Marcado con {@code @Service} porque es un servicio de aplicación (orquestador),
+ * 
+ * 
+
+ * Marcado con  porque es un servicio de aplicación (orquestador),
  * no un servicio de dominio. No contiene lógica de negocio — solo coordina
  * la interacción entre el mundo exterior (controlador) y el dominio.
  * Si en el futuro este caso de uso necesitara, por ejemplo, invalidar una cache
  * o publicar un evento, este es el lugar donde agregaría esa coordinación.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -33,7 +35,7 @@ public class ObtenerPerfilUseCase {
     /**
      * Inyección por constructor — mi estilo preferido porque hace explícitas
      * las dependencias, facilita los tests unitarios (sin reflexión ni mocking
-     * mágico) y deja los campos como {@code final}.
+     * mágico) y deja los campos como .
      */
     public ObtenerPerfilUseCase(PerfilRepository perfilRepository) {
         this.perfilRepository = perfilRepository;

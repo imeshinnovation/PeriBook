@@ -6,27 +6,30 @@ import com.peribook.auth.domain.UsuarioRepository;
 
 /**
  * Caso de uso: "Autenticar usuario".
- * <p>
+ * 
+
  * Representa la operación de login siguiendo el patrón Use Case de
  * Clean Architecture / DDD. Esta clase orquesta el flujo completo:
  * valida el email, busca el usuario en el repositorio, verifica la
- * contraseña delegando en {@link Usuario#autenticar(String)} y genera
- * el JWT a través de {@link JwtService}.
- * </p>
- * <p>
+ * contraseña delegando en Usuario#autenticar(String) y genera
+ * el JWT a través de JwtService.
+ * 
+ * 
+
  * Aplico el Principio de Responsabilidad Única (SRP): esta clase solo
  * se ocupa de orquestar la autenticación. La lógica de hashing está en
- * {@link com.peribook.auth.domain.Password}, la búsqueda en el repositorio
- * está abstraída detrás de {@link UsuarioRepository}, y la generación del
- * token está en {@link JwtService}. Si mañana cambia el algoritmo de firma
+ * com.peribook.auth.domain.Password, la búsqueda en el repositorio
+ * está abstraída detrás de UsuarioRepository, y la generación del
+ * token está en JwtService. Si mañana cambia el algoritmo de firma
  * o la fuente de datos, no toco esta clase.
- * </p>
- * <p>
- * Está anotada con {@code @Service} de Spring, pero eso es un detalle de
+ * 
+ * 
+
+ * Está anotada con  de Spring, pero eso es un detalle de
  * infraestructura para que el contenedor la registre como bean. La clase
  * en sí no usa nada de Spring excepto la anotación — si migro a Micronaut
  * o Quarkus, solo cambio la anotación.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -41,7 +44,7 @@ public class LoginUseCase {
     /**
      * Inyección por constructor — la forma que recomiendo porque hace
      * explícitas las dependencias, facilita el testing con mocks y evita
-     * la complejidad de {@code @Autowired} en campos privados.
+     * la complejidad de  en campos privados.
      */
     public LoginUseCase(UsuarioRepository usuarioRepository, JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
@@ -50,17 +53,18 @@ public class LoginUseCase {
 
     /**
      * Ejecuta el caso de uso de inicio de sesión.
-     * <p>
+     * 
+
      * El flujo es simple pero crítico:
-     * <ol>
-     *   <li>Crea un Value Object {@link Email} (lanza excepción si el formato es inválido)</li>
-     *   <li>Busca el usuario en el repositorio — si no existe, falla con
-     *       {@link AutenticacionFallidaException} sin revelar si el email existe o no</li>
-     *   <li>Verifica la contraseña contra el hash BCrypt almacenado</li>
-     *   <li>Genera el JWT con RS256</li>
-     *   <li>Devuelve un {@link LoginResult} inmutable con token y datos del usuario</li>
-     * </ol>
-     * </p>
+     * 
+     *    * - Crea un Value Object Email (lanza excepción si el formato es inválido)
+     *    * - Busca el usuario en el repositorio — si no existe, falla con
+     *       AutenticacionFallidaException sin revelar si el email existe o no
+     *    * - Verifica la contraseña contra el hash BCrypt almacenado
+     *    * - Genera el JWT con RS256
+     *    * - Devuelve un LoginResult inmutable con token y datos del usuario
+     * 
+     * 
      *
      * @param emailStr    email en texto plano (se valida al construir el Value Object)
      * @param rawPassword contraseña en texto plano para verificar
@@ -90,13 +94,14 @@ public class LoginUseCase {
 
     /**
      * Resultado exitoso del login.
-     * <p>
-     * Usé un {@code record} interno (Java 21) porque es inmutable, conciso
+     * 
+
+     * Usé un  interno (Java 21) porque es inmutable, conciso
      * y no necesita una clase separada en otro archivo — su contexto es
      * únicamente el caso de uso de login. Si en el futuro necesito más datos
      * en la respuesta (roles, permisos, etc.), este record evoluciona junto
      * con el caso de uso.
-     * </p>
+     * 
      */
     public record LoginResult(String token, String userId, String alias) {}
 }

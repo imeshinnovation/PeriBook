@@ -5,11 +5,13 @@ import java.util.UUID;
 
 /**
  * Evento de dominio: se emite cuando se crea una nueva publicacion.
- * <p>
- * Elegi un {@code record} de Java 21 porque es inmutable por naturaleza, tiene
+ * 
+
+ * Elegi un  de Java 21 porque es inmutable por naturaleza, tiene
  * equals/hashcode/toString generados automaticamente y expresa de forma concisa
  * que esto es solo un transporte de datos (un DTO de dominio, por llamarlo de algun modo).
- * <p>
+ * 
+
  * Este evento viaja por RabbitMQ en formato JSON hacia otros servicios (feed-service,
  * notification-service, etc.). Cada servicio consumidor define su propia interpretacion
  * del evento — no compartimos clases compiladas entre microservicios. Eso evita
@@ -24,8 +26,9 @@ public record PublicacionCreada(
         Instant creadaEn
 ) {
     /**
-     * Construye el evento a partir de una entidad {@link Publicacion}.
-     * <p>
+     * Construye el evento a partir de una entidad Publicacion.
+     * 
+
      * Es un metodo factory que extrae los valores relevantes del agregado raiz para
      * armar el mensaje que otros servicios consumiran. Decidi que estuviera aqui en
      * lugar de en el caso de uso para mantener la logica de conversion cerca del

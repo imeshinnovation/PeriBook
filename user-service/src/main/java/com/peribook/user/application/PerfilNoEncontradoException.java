@@ -4,13 +4,14 @@ import java.util.UUID;
 
 /**
  * Excepción lanzada cuando se solicita un perfil que no existe en el repositorio.
- * <p>
- * Extiende {@link RuntimeException} (unchecked) porque no quiero forzar al
+ * 
+
+ * Extiende RuntimeException (unchecked) porque no quiero forzar al
  * llamante a declararla en su firma — en Spring MVC las excepciones no verificadas
- * se manejan centralizadamente con {@code @ExceptionHandler}. Si usara excepciones
+ * se manejan centralizadamente con . Si usara excepciones
  * checked, cada capa intermedia tendría que declararlas o atraparlas, agregando
  * ruido sin beneficio real en una arquitectura con manejo centralizado de errores.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */

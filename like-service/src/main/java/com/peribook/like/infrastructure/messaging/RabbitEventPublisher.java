@@ -10,15 +10,16 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * Adaptador de infraestructura que implementa {@link EventPublisher} usando
+ * Adaptador de infraestructura que implementa EventPublisher usando
  * RabbitMQ como broker de mensajeria.
- * <p>
+ * 
+
  * Este es el "adapter" en terminos de Hexagonal Architecture: implementa el
  * puerto de salida definido en el dominio. Decidi usar RabbitMQ porque es
  * ligero, maduro y encaja bien con el modelo de topic exchange para eventos
  * de dominio. Si en el futuro el volumen escala, podria reemplazar este
  * adaptador por uno de Kafka sin tocar el caso de uso.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */

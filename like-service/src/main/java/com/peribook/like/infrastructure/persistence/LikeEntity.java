@@ -7,18 +7,20 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Entidad JPA que persiste un {@link Like} en la base de datos.
- * <p>
- * Decidi separar la entidad de persistencia ({@code LikeEntity}) del agregado
- * de dominio ({@code Like}) para no contaminar el nucleo con anotaciones de
+ * Entidad JPA que persiste un Like en la base de datos.
+ * 
+
+ * Decidi separar la entidad de persistencia () del agregado
+ * de dominio () para no contaminar el nucleo con anotaciones de
  * JPA. Esta separacion me da libertad de cambiar de ORM o incluso de base de
  * datos sin afectar el modelo de dominio.
- * </p>
- * <p>
- * La {@code @UniqueConstraint} sobre (publicacionId, usuarioId) refuerza a nivel
+ * 
+ * 
+
+ * La  sobre (publicacionId, usuarioId) refuerza a nivel
  * de base de datos la invariante de negocio: un usuario no puede dar like dos
  * veces a la misma publicacion.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -54,7 +56,7 @@ public class LikeEntity {
 
     /**
      * Reconstituye un Like de dominio desde esta entidad.
-     * Uso {@link Like#reconstituir} para preservar el timestamp original.
+     * Uso Like#reconstituir para preservar el timestamp original.
      */
     public Like toDomain() {
         return Like.reconstituir(id, publicacionId, usuarioId, creadoEn);

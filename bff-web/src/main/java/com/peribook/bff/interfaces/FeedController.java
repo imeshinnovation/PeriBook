@@ -9,18 +9,20 @@ import reactor.core.publisher.Flux;
 
 /**
  * Controlador REST del BFF que expone el endpoint de feed enriquecido.
- * <p>
+ * 
+
  * Decidi mantener este controlador extremadamente delgado: solo recibe la
  * request, delega en el caso de uso, y devuelve el resultado. No hay logica
  * de negocio aqui. Esto sigue el principio de separacion de capas de Clean
  * Architecture: la interfaz (el controlador) solo maneja HTTP, no decide
  * como construir el feed.
- * </p>
- * <p>
+ * 
+ * 
+
  * El uso de WebFlux (Flux como tipo de retorno) permite streaming reactivo:
  * a medida que el caso de uso va enriqueciendo publicaciones, estas se envian
  * al cliente sin esperar a que todas esten listas.
- * </p>
+ * 
  *
  * @author Alexander Rubio Caceres
  */
@@ -37,12 +39,13 @@ public class FeedController {
 
     /**
      * Obtiene el feed enriquecido del usuario autenticado.
-     * <p>
-     * El parametro {@code limite} tiene un valor por defecto de 20 y se limita
+     * 
+
+     * El parametro  tiene un valor por defecto de 20 y se limita
      * a 50 como maximo para evitar que un cliente pida 10.000 publicaciones de
      * una sola vez. La limitacion se aplica del lado del servidor porque confiar
      * solo en el cliente para esto no es seguro.
-     * </p>
+     * 
      *
      * @param limite    maximo de items a retornar (default 20, maximo 50)
      * @param authHeader token JWT en el header Authorization

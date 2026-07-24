@@ -5,13 +5,15 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Puerto de repositorio para el agregado {@link Publicacion}.
- * <p>
+ * Puerto de repositorio para el agregado Publicacion.
+ * 
+
  * En la terminologia de Hexagonal Architecture, esto es un "puerto de salida"
  * (outbound port). La capa de dominio define el contrato para persistir y recuperar
  * publicaciones, pero no tiene idea de si la implementacion usa JPA, MongoDB, una
  * API REST externa o simplemente una lista en memoria.
- * <p>
+ * 
+
  * Decidi mantener el minimo de operaciones necesario: guardar, buscar por ID y
  * listar recientes. No incluyo actualizacion ni borrado porque en esta version del
  * dominio las publicaciones no se editan ni se eliminan — si en el futuro se

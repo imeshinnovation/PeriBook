@@ -10,20 +10,23 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Adaptador JPA del puerto {@link PublicacionRepository} (Arquitectura Hexagonal).
- * <p>
+ * Adaptador JPA del puerto PublicacionRepository (Arquitectura Hexagonal).
+ * 
+
  * Esta interfaz es la joya de la adaptacion: extiende tanto el puerto de dominio
- * ({@link PublicacionRepository}) como la interfaz tecnica de Spring Data JPA
- * ({@link JpaRepository}). Esto me permite implementar los metodos del dominio
+ * (PublicacionRepository) como la interfaz tecnica de Spring Data JPA
+ * (JpaRepository). Esto me permite implementar los metodos del dominio
  * usando consultas derivadas de Spring Data sin perder la abstraccion del dominio.
- * <p>
- * Use metodos {@code default} en la interfaz para hacer la conversion entre
- * {@link PublicacionEntity} (JPA) y {@link Publicacion} (dominio). Prefiero esta
+ * 
+
+ * Use metodos  en la interfaz para hacer la conversion entre
+ * PublicacionEntity (JPA) y Publicacion (dominio). Prefiero esta
  * estrategia antes que crear una clase separada "RepositoryAdapter" porque mantiene
  * todo en un solo lugar y es mas facil de leer. La conversion la delego a los
- * metodos {@code fromDomain()} y {@code toDomain()} de la entidad JPA.
- * <p>
- * Llame {@code saveAndFlush()} en lugar de {@code save()} para forzar el flush
+ * metodos  y  de la entidad JPA.
+ * 
+
+ * Llame  en lugar de  para forzar el flush
  * inmediato y asegurar que el ID generado (aunque lo generamos en dominio) se
  * refleje en la base de datos antes de publicar el evento. Esto evita condiciones
  * de carrera si un consumidor del evento intenta leer la publicacion antes de que
@@ -57,10 +60,11 @@ public interface JpaPublicacionRepository
      * Lista las publicaciones mas recientes usando una query method de Spring Data,
      * limitando el resultado en memoria (por ahora). El limite se pasa desde el
      * caso de uso que ya lo acoto a 50.
-     * <p>
+     * 
+
      * Se que hacer el limit en memoria no es ideal para grandes volumenes de datos,
      * pero para la escala inicial de PeriBook es suficiente. Cuando crezca, cambiare
-     * esto por una consulta nativa con {@code LIMIT} o paginacion con cursores.
+     * esto por una consulta nativa con  o paginacion con cursores.
      */
     @Override
     default List<Publicacion> listarRecientes(int limite) {
@@ -73,7 +77,7 @@ public interface JpaPublicacionRepository
 
     /**
      * Metodo de query derivado de Spring Data: genera automaticamente
-     * {@code SELECT p FROM PublicacionEntity p ORDER BY p.creadaEn DESC}.
+     * .
      * La convencion de nombre de Spring Data me evita escribir JPQL manual.
      */
     List<PublicacionEntity> findAllByOrderByCreadaEnDesc();

@@ -27,18 +27,20 @@ import java.util.Base64;
 
 /**
  * Configuración de seguridad del microservicio user-service.
- * <p>
+ * 
+
  * Este servicio confía en el auth-service para emitir JWTs — el user-service solo
  * necesita validar la firma del token usando la clave pública RSA. No gestiona
  * sesiones, no tiene login propio, no almacena credenciales. Es un diseño
  * stateless de extremo a extremo.
- * </p>
- * <p>
- * Decidí usar {@code SessionCreationPolicy.STATELESS} y deshabilitar CSRF porque
+ * 
+ * 
+
+ * Decidí usar  y deshabilitar CSRF porque
  * este es un servicio REST consumido por un BFF (Backend For Frontend) y no por
  * navegadores directamente. El BFF es quien maneja las sesiones web; el user-service
- * solo recibe tokens JWT en el header {@code Authorization}.
- * </p>
+ * solo recibe tokens JWT en el header .
+ * 
  *
  * @author Alexander Rubio Cáceres
  */
@@ -49,17 +51,18 @@ public class SecurityConfig {
 
     /**
      * Cadena de filtros de seguridad HTTP.
-     * Marcada con {@code @Order(Ordered.HIGHEST_PRECEDENCE)} para que se registre
+     * Marcada con  para que se registre
      * antes que cualquier otro filtro — así aseguramos que el manejo de tokens
      * JWT y las rutas públicas (health check, Swagger) estén definidas al inicio.
-     * <p>
+     * 
+
      * Rutas públicas:
-     * <ul>
-     *   <li>{@code /actuator/health} — para el health check de Docker Swarm</li>
-     *   <li>{@code /v3/api-docs/**}, {@code /swagger-ui/**} — documentación OpenAPI</li>
-     * </ul>
+     * 
+     *    * -  — para el health check de Docker Swarm
+     *    * - ,  — documentación OpenAPI
+     * 
      * Todo lo demás requiere un JWT válido.
-     * </p>
+     * 
      */
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -93,13 +96,14 @@ public class SecurityConfig {
      * Decodificador JWT basado en RSA.
      * Lee la clave pública desde la ruta configurada (primero el sistema de archivos
      * local para desarrollo, luego el classpath para el JAR empaquetado).
-     * La clave se genera con {@code infra/bootstrap-swarm.sh} y se monta como
+     * La clave se genera con  y se monta como
      * secreto de Docker Swarm en producción.
-     * <p>
-     * Elegí {@code NimbusJwtDecoder} porque es el que Spring Security recomienda
+     * 
+
+     * Elegí  porque es el que Spring Security recomienda
      * y soporta tanto RSA como HMAC. Además, ya viene como dependencia transitiva
-     * de {@code spring-boot-starter-oauth2-resource-server}.
-     * </p>
+     * de .
+     * 
      */
     @Bean
     public JwtDecoder jwtDecoder() {
@@ -116,11 +120,12 @@ public class SecurityConfig {
      * Carga un archivo PEM (formato Base64 con cabeceras) desde disco o classpath.
      * Intenta primero la ruta absoluta/relativa al directorio de trabajo (útil en
      * desarrollo local con Docker Compose) y fallback al classpath (útil en el JAR
-     * empaquetado de producción con secretos montados en {@code /run/secrets/}).
-     * <p>
-     * Este método extrae el contenido Base64 entre las cabeceras {@code -----BEGIN PUBLIC KEY-----}
-     * y {@code -----END PUBLIC KEY-----}, elimina espacios y lo decodifica.
-     * </p>
+     * empaquetado de producción con secretos montados en ).
+     * 
+
+     * Este método extrae el contenido Base64 entre las cabeceras 
+     * y , elimina espacios y lo decodifica.
+     * 
      *
      * @param path Ruta del archivo PEM
      * @return Arreglo de bytes con la clave decodificada

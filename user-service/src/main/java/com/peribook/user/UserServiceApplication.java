@@ -5,12 +5,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * Punto de entrada del microservicio user-service.
- * <p>
- * No necesita {@code @EnableEurekaClient}, {@code @EnableFeignClients} ni nada adicional
+ * 
+
+ * No necesita ,  ni nada adicional
  * porque Spring Boot 3 detecta automáticamente las dependencias en el classpath y configura
  * lo que haga falta. Decidí mantenerlo limpio intencionalmente — un solo microservicio no
  * debería arrastrar configuración global que no necesita.
- * </p>
+ * 
  *
  * @author Alexander Rubio Cáceres
  */

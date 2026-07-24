@@ -8,19 +8,22 @@ import org.springframework.context.annotation.Configuration;
 /**
  * Definición declarativa de todas las rutas del gateway hacia los
  * microservicios internos.
- * <p>
- * Usé {@code proxyBeanMethods = false} porque este {@code @Configuration} no
+ * 
+
+ * Usé  porque este  no
  * necesita que Spring intercepte las llamadas entre sus beans — cada
- * {@code @Bean} es independiente y no hay dependencias circulares. Esto
+ *  es independiente y no hay dependencias circulares. Esto
  * reduce el overhead de startup y le dice a Spring que no genere proxies CGLIB
  * innecesarios.
- * <p>
+ * 
+
  * Todas las rutas usan el nombre del servicio Docker Swarm como hostname
- * (ej: {@code http://auth-service:8081}). Esto funciona porque Swarm tiene su
+ * (ej: ). Esto funciona porque Swarm tiene su
  * propio DNS interno que resuelve los nombres de servicio a los contenedores
  * correspondientes. No necesito un service discovery externo como Eureka
  * mientras el despliegue sea en Swarm.
- * <p>
+ * 
+
  * El orden de las rutas importa: Spring Cloud Gateway evalúa las rutas en el
  * orden en que se registran. Puse primero las rutas de Swagger porque son las
  * más específicas (tienen filtros) y luego los microservicios en orden
@@ -33,13 +36,15 @@ public class GatewayRoutes {
 
     /**
      * Registro central de rutas.
-     * <p>
+     * 
+
      * Decidí agrupar todas las rutas en un solo método en lugar de dividirlas
      * en varios beans porque así el mapa completo de enrutamiento se ve de un
      * solo vistazo. Cuando un nuevo desarrollador llega al proyecto, abre este
      * archivo y sabe al instante "ah, estos son los servicios que existen".
-     * <p>
-     * Uso {@link RouteLocatorBuilder} en lugar de anotaciones controller-style
+     * 
+
+     * Uso RouteLocatorBuilder en lugar de anotaciones controller-style
      * porque la sintaxis fluida de Gateway me permite expresar rutas, filtros y
      * reescrituras de path en una sola línea, sin dispersar la configuracion
      * entre varias clases.
