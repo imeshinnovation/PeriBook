@@ -63,14 +63,39 @@ public class GatewayRoutes {
                         .filters(f -> f.rewritePath("/docs", "/swagger-ui/index.html"))
                         .uri("http://auth-service:8081"))
 
-                // Los recursos estaticos de Swagger (CSS, JS, webjars) se
-                // delegan directamente al auth-service sin reescritura.
-                // Prefiero no servir archivos estaticos desde el gateway
-                // porque eso lo convertiria en un servidor de contenido y
-                // complicaria el manejo de cache.
+                // Recursos de Swagger UI (CSS, JS, webjars) se sirven desde
+                // auth-service para no recargar al gateway.
                 .route("swagger-ui", r -> r
-                        .path("/swagger-ui/**", "/webjars/**", "/v3/api-docs/**")
+                        .path("/swagger-ui/**", "/webjars/**")
                         .uri("http://auth-service:8081"))
+
+                // Cada servicio tiene su propia ruta de documentacion OpenAPI.
+                // Swagger UI carga /v3/api-docs/{nombre} y el gateway reescribe
+                // el path a /v3/api-docs antes de enviarlo al servicio correspondiente.
+                .route("auth-service-docs", r -> r
+                        .path("/v3/api-docs/auth-service")
+                        .filters(f -> f.rewritePath("/v3/api-docs/auth-service", "/v3/api-docs"))
+                        .uri("http://auth-service:8081"))
+
+                .route("user-service-docs", r -> r
+                        .path("/v3/api-docs/user-service")
+                        .filters(f -> f.rewritePath("/v3/api-docs/user-service", "/v3/api-docs"))
+                        .uri("http://user-service:8082"))
+
+                .route("post-service-docs", r -> r
+                        .path("/v3/api-docs/post-service")
+                        .filters(f -> f.rewritePath("/v3/api-docs/post-service", "/v3/api-docs"))
+                        .uri("http://post-service:8083"))
+
+                .route("like-service-docs", r -> r
+                        .path("/v3/api-docs/like-service")
+                        .filters(f -> f.rewritePath("/v3/api-docs/like-service", "/v3/api-docs"))
+                        .uri("http://like-service:8084"))
+
+                .route("bff-web-docs", r -> r
+                        .path("/v3/api-docs/bff-web")
+                        .filters(f -> f.rewritePath("/v3/api-docs/bff-web", "/v3/api-docs"))
+                        .uri("http://bff-web:8086"))
 
                 // ── Microservicios de negocio ──────────────────────
                 // Cada ruta sigue el mismo patron: un path prefix que
