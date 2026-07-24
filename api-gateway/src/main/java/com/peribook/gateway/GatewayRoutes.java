@@ -53,11 +53,20 @@ public class GatewayRoutes {
     public RouteLocator routeLocator(RouteLocatorBuilder builder) {
         return builder.routes()
                 // ── Documentacion Swagger unificada ───────────────
-                // El gateway sirve Swagger UI en /docs usando springdoc.
-                // Cada /v3/api-docs/{servicio} se reescribe al /v3/api-docs
-                // del microservicio correspondiente, y springdoc los agrupa
-                // en un solo Swagger UI via urls[] en application.yml.
+                // Swagger UI (HTML, CSS, JS) se sirve desde auth-service
+                // porque usa Spring MVC donde springdoc funciona sin problemas.
+                // La configuracion de agregacion (urls[]) esta en auth-service.
+                .route("swagger-docs", r -> r
+                        .path("/docs")
+                        .filters(f -> f.rewritePath("/docs", "/swagger-ui/index.html"))
+                        .uri("http://auth-service:8081"))
 
+                .route("swagger-ui", r -> r
+                        .path("/swagger-ui/**", "/webjars/**")
+                        .uri("http://auth-service:8081"))
+
+                // Cada /v3/api-docs/{servicio} se reescribe al /v3/api-docs
+                // del microservicio correspondiente.
                 .route("auth-service-docs", r -> r
                         .path("/v3/api-docs/auth-service")
                         .filters(f -> f.rewritePath("/v3/api-docs/auth-service", "/v3/api-docs"))
@@ -82,6 +91,13 @@ public class GatewayRoutes {
                         .path("/v3/api-docs/bff-web")
                         .filters(f -> f.rewritePath("/v3/api-docs/bff-web", "/v3/api-docs"))
                         .uri("http://bff-web:8086"))
+
+                // Catch-all para /v3/api-docs/swagger-config y cualquier
+                // otra ruta de springdoc que no sea de un servicio especifico.
+                // Va al final para que las rutas por servicio tengan prioridad.
+                .route("swagger-config", r -> r
+                        .path("/v3/api-docs/**")
+                        .uri("http://auth-service:8081"))
 
                 // ── Microservicios de negocio ──────────────────────
                 // Cada ruta sigue el mismo patron: un path prefix que

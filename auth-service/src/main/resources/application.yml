@@ -26,6 +26,19 @@ jwt:
 springdoc:
   api-docs:
     path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: auth-service
+        url: /v3/api-docs/auth-service
+      - name: user-service
+        url: /v3/api-docs/user-service
+      - name: post-service
+        url: /v3/api-docs/post-service
+      - name: like-service
+        url: /v3/api-docs/like-service
+      - name: bff-web
+        url: /v3/api-docs/bff-web
 
 logging:
   level:
