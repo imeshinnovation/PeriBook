@@ -24,9 +24,25 @@ import { DatePipe, NgIf } from '@angular/common';
     </div>
   `,
 })
+/**
+ * Componente de perfil de usuario.
+ *
+ * Muestra los datos del perfil del usuario autenticado: nombre completo,
+ * alias y fecha de nacimiento. Usa una signal local para el estado del
+ * perfil en lugar de un store global porque los datos del perfil son
+ * específicos de esta vista y no los necesita ningún otro componente.
+ *
+ * Decidí usar FeedService.obtenerPerfil en lugar de crear un servicio
+ * separado de perfiles porque por ahora solo hay una llamada relacionada.
+ * Si el perfil creciera en funcionalidades (editar, avatar, estadisticas),
+ * lo moveria a un ProfileService dedicado.
+ *
+ * @author Alexander Rubio Cáceres
+ */
 export class ProfileComponent implements OnInit {
   private feedService = inject(FeedService);
   private authStore = inject(AuthStore);
+  /** Signal local con los datos del perfil. Inicia como null y se llena al cargar. */
   perfil = signal<PerfilResponse | null>(null);
 
   ngOnInit() {

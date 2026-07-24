@@ -1,5 +1,19 @@
 import { Routes } from '@angular/router';
 
+/**
+ * Definición de rutas de la aplicación.
+ *
+ * Usé lazy loading con loadComponent en lugar de cargar los componentes
+ * de forma eager. Esto reduce el bundle inicial porque cada pantalla se
+ * descarga bajo demanda cuando el usuario navega a ella.
+ *
+ * La ruta vacía redirige a /login y el wildcard ** atrapa cualquier ruta
+ * no definida redirigiendo también al login. Es una decisión consciente:
+ * como PeriBook requiere autenticación para casi todo, tiene sentido que
+ * caer al login sea el comportamiento por defecto.
+ *
+ * @author Alexander Rubio Cáceres
+ */
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   {

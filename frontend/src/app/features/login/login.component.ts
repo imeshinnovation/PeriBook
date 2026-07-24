@@ -47,6 +47,24 @@ import { NgIf } from '@angular/common';
     </div>
   `,
 })
+/**
+ * Componente de inicio de sesión.
+ *
+ * Usa ReactiveFormsModule con validación en tiempo real: el boton de
+ * submit se deshabilita mientras el formulario sea inválido. Decidí
+ * usar formularios reactivos en lugar de template-driven porque:
+ *
+ * 1. La validación es más declarativa y fácil de extender.
+ * 2. Es más sencillo escribir tests unitarios sobre el formulario.
+ * 3. El estado del formulario está desacoplado del template.
+ *
+ * Al iniciar sesión exitosamente, además de guardar el token en el store,
+ * conecta el WebSocket para recibir actualizaciones en tiempo real.
+ * Esto lo hago aquí y no en el guard de ruta porque la conexión WebSocket
+ * debe ocurrir explicitamente después de obtener el token.
+ *
+ * @author Alexander Rubio Cáceres
+ */
 export class LoginComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
@@ -54,14 +72,23 @@ export class LoginComponent {
   private realtimeService = inject(RealtimeService);
   private router = inject(Router);
 
+  /** Formulario reactivo con validadores de email y contraseña. */
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
 
+  /** Bandera para mostrar el estado de carga mientras se procesa la petición. */
   cargando = false;
+  /** Mensaje de error visible en el template cuando las credenciales son inválidas. */
   error: string | null = null;
 
+  /**
+   * Procesa el envío del formulario.
+   * Si el formulario es inválido, no hace nada (el botón ya está deshabilitado,
+   * pero esta guarda es por seguridad). Al recibir respuesta exitosa, persiste
+   * la sesión en el store, conecta WebSocket y navega al feed.
+   */
   onSubmit() {
     if (this.form.invalid) return;
     this.cargando = true;
