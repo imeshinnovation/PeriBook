@@ -16,6 +16,7 @@ Feature: Likes en tiempo real
   @idempotency
   Scenario: Like duplicado es idempotente
     Given que estoy autenticado como "ana@peribook.com"
+    And existe una publicación con ID conocido
     And ya di like a una publicación
     When vuelvo a dar like a la misma publicación
     Then el servicio responde con código 200
