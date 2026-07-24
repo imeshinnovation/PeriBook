@@ -15,7 +15,6 @@ public class RealtimeSteps {
 
     @Dado("existe una publicación con ID conocido")
     public void publicacionExistente() {
-        autenticarComo("ana@peribook.com");
         Response response = SerenityRest.given()
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + TestContext.getToken())
@@ -31,15 +30,14 @@ public class RealtimeSteps {
 
     @Dado("ya di like a una publicación")
     public void likePrevio() {
-        autenticarComo("ana@peribook.com");
-        SerenityRest.given()
+        Response response = SerenityRest.given()
                 .header("Authorization", "Bearer " + TestContext.getToken())
                 .post("/api/likes?publicacionId=" + TestContext.getPublicacionId());
+        TestContext.setResponse(response);
     }
 
     @Cuando("doy like a la publicación")
     public void darLike() {
-        autenticarComo("ana@peribook.com");
         Response response = SerenityRest.given()
                 .header("Authorization", "Bearer " + TestContext.getToken())
                 .post("/api/likes?publicacionId=" + TestContext.getPublicacionId());
@@ -48,7 +46,6 @@ public class RealtimeSteps {
 
     @Cuando("vuelvo a dar like a la misma publicación")
     public void darLikeOtraVez() {
-        autenticarComo("ana@peribook.com");
         Response response = SerenityRest.given()
                 .header("Authorization", "Bearer " + TestContext.getToken())
                 .post("/api/likes?publicacionId=" + TestContext.getPublicacionId());
