@@ -24,24 +24,6 @@ jwt:
     public-key-path: keys/jwt-public.pem
     private-key-path: keys/jwt-private.pem
 
-springdoc:
-  swagger-ui:
-    path: /docs
-    urls:
-      - name: auth-service
-        url: /v3/api-docs/auth-service
-      - name: user-service
-        url: /v3/api-docs/user-service
-      - name: post-service
-        url: /v3/api-docs/post-service
-      - name: like-service
-        url: /v3/api-docs/like-service
-      - name: bff-web
-        url: /v3/api-docs/bff-web
-  api-docs:
-    groups:
-      enabled: true
-
 logging:
   level:
     com.peribook: DEBUG

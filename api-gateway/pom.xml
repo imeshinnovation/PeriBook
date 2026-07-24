@@ -21,7 +21,6 @@
     <java.version>21</java.version>
     <maven.compiler.release>21</maven.compiler.release>
     <spring-cloud.version>2025.0.0</spring-cloud.version>
-    <springdoc.version>2.8.10</springdoc.version>
     <resilience4j.version>2.2.0</resilience4j.version>
       <commons-lang3.version>3.18.0</commons-lang3.version>
   </properties>
@@ -60,13 +59,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
-    </dependency>
-
-    <!-- Documentación OpenAPI (WebFlux UI) -->
-    <dependency>
-      <groupId>org.springdoc</groupId>
-      <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
-      <version>${springdoc.version}</version>
     </dependency>
 
     <!-- Resiliencia (Circuit Breaker para llamadas salientes) -->
