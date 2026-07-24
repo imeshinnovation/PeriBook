@@ -56,9 +56,14 @@ public class GatewayRoutes {
                 // Swagger UI (HTML, CSS, JS) se sirve desde auth-service
                 // porque usa Spring MVC donde springdoc funciona sin problemas.
                 // La configuracion de agregacion (urls[]) esta en auth-service.
-                .route("swagger-docs", r -> r
+                .route("swagger-docs-root", r -> r
                         .path("/docs")
                         .filters(f -> f.rewritePath("/docs", "/swagger-ui/index.html"))
+                        .uri("http://auth-service:8081"))
+
+                .route("swagger-docs-resources", r -> r
+                        .path("/docs/**")
+                        .filters(f -> f.rewritePath("/docs/(?<remaining>.*)", "/swagger-ui/${remaining}"))
                         .uri("http://auth-service:8081"))
 
                 .route("swagger-ui", r -> r
